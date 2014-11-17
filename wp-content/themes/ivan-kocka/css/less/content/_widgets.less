@@ -1,0 +1,155 @@
+/*****************************
+ *****************************
+ *
+ * Widgets (only WP default widgets)
+ *
+ * Displayed inside sidebars, e.g. text, categories, search and others.
+ *
+ *****************************
+*****************************/
+
+.sidebar, .content-wrapper .wpb_widgetised_column {
+
+	// Single Widget
+	.widget {
+
+		margin-bottom: 45px;
+
+		.widget-title {
+			//padding: 0 0 7px;
+			margin: 0 0 20px;
+
+			font-size: 15px;
+			line-height: 1.25;
+
+			font-weight: 400;
+
+			text-transform: uppercase;
+
+			position: relative;
+			
+			/*
+			&:after {
+
+				content: "";
+
+				width: 25px;
+				height: 2px;
+				background: @headings-color;
+
+				display: block;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+			}
+			*/
+		}
+
+		// Links
+		a {
+			&:visited, &:hover {
+
+			}
+		}
+
+		// Paragraph
+		p {
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		// Lists
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+
+		ol {
+			margin: 0;
+			padding: 0 0 0 @lateral-padding;
+			list-style-type: decimal;
+		}
+
+		li {
+			padding: 0;
+			margin-bottom: 7px;
+			position: relative;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		// Recent Posts Data
+		.post-date {
+			display: block;
+			font-size: 85%;
+			//color: darken( @footer-color, 20% );
+		}
+
+		// Tag Cloud
+		&.widget_tag_cloud a {
+			font-size: 13px !important;
+			//text-transform: uppercase;
+			display: inline-block;
+			margin-right: 5px;
+			margin-bottom: 5px;
+			padding: 5px 8px;
+
+			color: @tag-color;
+			//border: 1px solid @tag-border;
+
+			background-color: @tag-bg;
+
+			&:hover {
+				border-color: @tag-border-hover;
+				background-color: @tag-bg-hover;
+				color: @tag-color-hover;
+			}
+		}
+
+		&.widget_tag_cloud a:after {}
+		&.widget_tag_cloud a:before {}
+
+		&:last-child {
+			margin-bottom: 0;
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+
+		/* Search Form Fast Rule */
+		#searchform #searchsubmit {
+			margin-top: 10px;
+		}
+	}
+	
+}/* #.sidebar */
+
+.content-wrapper .wpb_widgetised_column {
+	.widget:last-child {
+		margin-bottom: 0 !important;
+		border-bottom: none !important;
+		padding-bottom: 0px !important;
+	}
+}
+
+/*****************************
+ *****************************
+ *
+ * Responsive Styles
+ *
+ *****************************
+*****************************/
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {
+
+	.sidebar {
+		padding-top: 60px;
+		margin-top: 60px;
+		border-top: 3px solid @entry-divider;
+	}
+}

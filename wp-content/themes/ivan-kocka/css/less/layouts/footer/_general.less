@@ -1,0 +1,284 @@
+/*****************************
+ *****************************
+ *
+ * GENERAL STYLES TO FOOTER
+ *
+ *****************************
+*****************************/
+
+	.iv-layout.footer {
+
+		background: @footer-block-bg;
+		padding: @footer-vertical-padding;
+
+		font-family: @footer-font-family;
+
+		color: @footer-color;
+
+		z-index: 3;
+
+		position: relative;
+
+		a {
+			color: @footer-color;
+			
+			// Transition
+			.iv-transition-all();
+			
+			&:hover {
+				color: @footer-color-active;
+				text-decoration: none;
+			}
+		}
+
+		// Constrast Color Class
+		.constrast-text {
+			color: #fff;
+
+			a {
+				color: @brand-primary;
+
+				&:hover {
+					color: darken(@brand-primary, 5%);
+				}
+			}
+		}
+
+	}
+
+/*****************************
+ *****************************
+ *
+ * WIDGET RULES
+ *
+ *****************************
+*****************************/
+
+.iv-layout.footer, .dynamic-footer .wpb_widgetised_column {
+
+	/* Widgets */
+	.widget {
+
+		margin-bottom: 35px;
+		//padding: 0 0 30px;
+
+		//border-bottom: 1px dotted @footer-module-border;
+
+		.widget-title {
+			font-family: @footer-wtitle-font;
+			font-size: @footer-wtitle-size;
+			line-height: @footer-wtitle-line-height;
+			color: @footer-wtitle-color;
+			font-weight: @footer-wtitle-weight;
+
+			//text-transform: uppercase;
+
+			padding: 0;
+			margin: 0 0 @footer-wtitle-margin;
+		}
+
+		// Link
+		a {
+			&:visited, &:hover {
+
+			}
+		}
+
+		// Paragraph
+		p {
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		// Lists
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+
+		ol {
+			margin: 0;
+			padding: 0 0 0 @lateral-padding;
+			list-style-type: decimal;
+		}
+
+		li {
+			padding: 0;
+			margin-bottom: 7px;
+			position: relative;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		// Input
+
+		input[type="text"],
+		input[type="email"],
+		input[type="password"],
+		input[type="search"],
+		textarea {
+			display: block;
+			padding: 10px 10px;
+			max-width: 100%;
+			width: 100%;
+
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+
+			border: 1px solid @footer-border;
+			color: @footer-color;
+			background: @footer-bg;
+			font-family: @footer-font-family;
+
+			&:focus {
+				border-color: @footer-border-active;
+				color: @footer-color-active;
+				background: @footer-bg-active;
+				outline: none;
+			}
+		}
+
+		::-webkit-input-placeholder {
+			color: @footer-color;
+		}
+
+		:-moz-placeholder {
+			color: @footer-color;
+		}
+
+		::-moz-placeholder {
+			color: @footer-color;
+		}
+
+		:-ms-input-placeholder {
+			color: @footer-color;
+		}
+
+		input[type="submit"] {
+			.iv-button-header( 10px 15px );
+
+			color: @footer-color;
+			background: @footer-bg;
+			font-family: @footer-font-family;
+			border-color: @footer-border;
+
+			&:hover {
+				border-color: @footer-border-active;
+				color: @footer-color-active;
+				background: @footer-bg-active;
+				outline: none;
+			}
+		}
+
+		// Recent Posts Data
+		.post-date {
+			display: block;
+			font-size: 85%;
+			color: darken( @footer-color, 20% );
+		}
+
+		// Tag Cloud
+		&.widget_tag_cloud a {
+			font-size: 11px !important;
+			text-transform: uppercase;
+			display: inline-block;
+			margin-right: 5px;
+			margin-bottom: 5px;
+			padding: 5px 8px;
+
+			color: @footer-color;
+			border: 1px solid @footer-border;
+
+			font-weight: @weight-light;
+
+			&:hover {
+				border-color: @footer-border-active;
+				color: @footer-color-active;
+			}
+		}
+
+		&.widget_tag_cloud a:after {}
+		&.widget_tag_cloud a:before {}
+
+		&:last-child {
+			margin-bottom: 0;
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+
+		// Social Icons
+		.iv-social-icon {
+			display: inline-block;
+			font-size: 18px;
+			margin-right: 8px;
+			margin-bottom: 3px;
+
+			&.circle, &.square {
+				background: darken(@footer-block-bg, 3%);
+				color: @footer-color;
+
+				&:hover {
+					background: @brand-primary;
+					color: @brand-color;
+				}
+			}
+		} // Social Icon
+
+		/* Search Form Fast Rule */
+		#searchform #searchsubmit {
+			margin-top: 10px;
+		}
+	}
+
+} // !ends .iv-layout.footer
+
+.dynamic-footer .wpb_widgetised_column {
+	.widget:last-child {
+		margin-bottom: 0 !important;
+		border-bottom: none !important;
+		padding-bottom: 0px !important;
+	}
+}
+
+//
+// General Responsive Rules
+// --------------------------------------------------
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {
+
+	.widget-col {
+		margin: 0 0 30px;
+
+		&:last-child {
+			margin: 0;
+		}
+	}
+
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+	
+}

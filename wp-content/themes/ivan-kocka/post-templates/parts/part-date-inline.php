@@ -1,0 +1,1 @@
+<span class="date-inline"><span class="day"><?php the_time("d"); ?></span> <span class="month"><?php the_time("M"); ?></span></span>

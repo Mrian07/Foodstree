@@ -1,0 +1,1 @@
+<h1 class="entry-title"><?php get_template_part('post-templates/parts/part', 'date-inline'); ?> <a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a></h1>

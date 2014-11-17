@@ -1,0 +1,22 @@
+<wpml-config>
+	<custom-types>
+		<custom-type translate="1">ivan_vc_projects</custom-type>
+	</custom-types>
+	<taxonomies>
+		<taxonomy translate="1">ivan_vc_projects_cats</taxonomy>
+		<taxonomy translate="1">ivan_vc_projects_portfolios</taxonomy>
+	</taxonomies>
+	<admin-texts>
+		<key name="iv_aries">
+			<key name="header-text-content" />
+			<key name="top-header-text-content" />
+			<key name="bottom-footer-text-content" />
+			<key name="title-text-blog" />
+			<key name="title-desc-blog" />
+			<key name="title-text-shop" />
+			<key name="title-desc-shop" />
+			<key name="woo-product-extra-tab-title" />
+			<key name="woo-product-extra-tab-content" />
+		</key>
+	</admin-texts>
+</wpml-config>

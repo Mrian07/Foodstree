@@ -1,0 +1,1134 @@
+/*****************************
+ *****************************
+ *
+ * GENERAL STYLES TO HEADER
+ *
+ *****************************
+*****************************/
+
+	// Styles the main block
+	.iv-layout.header {
+
+		// Basic and shared styles
+		background: @header-block-bg;
+		font-family: @header-font-family;
+		font-size: 14px;
+		line-height: 1.25;
+		color: @header-color;
+
+		border: none;
+		z-index: 14000;
+		position: relative;
+
+		// General Links
+		a {
+			color: @header-color;
+			font-weight: @weight-light;
+
+			// Apply Default Transitions to Links
+			.iv-transition-all();
+			
+			&:hover {
+				color: @header-color-active;
+				text-decoration: none;
+			}
+		}
+
+		// NO MODS > Configurations of Backgrounds, Negative Height and others.
+		&.transparent-bg {
+			background: transparent;
+
+			.become-transparent {
+				background: transparent;
+			}
+		}
+
+		&.negative-height {
+			display: none;
+		}
+
+		&.display-after-fold {
+			visibility: hidden;
+		}
+
+		&.keep-logo-before-fold {
+			.logo {
+				visibility: visible;
+			}
+		}
+
+		&.light.semi-transparent-bg {
+			// Change Semi Transparent Bg (Dark Bg)
+			background: rgba(0, 0, 0, 0.5);
+		}
+
+		&.light.semi-transparent-bg {
+
+			.become-transparent {
+				background: transparent;
+			}
+		}
+
+		&.dark.semi-transparent-bg {
+			// Change Semi Transparent Bg (Light Bg)
+			background: rgba(255, 255, 255, 0.7);
+
+			.become-transparent {
+				background: transparent;
+			}
+		}
+
+		// Logo Alternative Colors Configuration
+		&.light, &.dark {
+			
+			.has-alt .logo-normal {
+				display: none;
+			}
+
+			.has-alt .logo-alt {
+				display: block;
+			}
+		}
+
+		&.stuck {
+			
+			.has-alt .logo-normal {
+				display: block;
+			}
+
+			.has-alt .logo-alt {
+				display: none;
+			}
+		}
+
+		// Logo Adjust
+		&.stuck .logo {
+			margin: 20px 0 !important;
+		}
+
+		// Ensure Boxed/Semi-Transparent Header Gets the right color when stuck
+		&.simple-boxed-menu.stuck {
+			background: @header-block-bg !important;
+		}
+	}
+
+	// Stuck Rules
+	.iv-layout.header.stuck {
+		position: fixed;
+		width: 100%;
+		top: 0px;
+		left: 0px;
+		margin: 0 !important;
+
+		// Uncomment the line below to add semi-transparent stuck menu
+		//background: fade( @header-block-bg, 90% );
+
+		-webkit-box-shadow: @header-block-shadow;
+		-moz-box-shadow:    @header-block-shadow;
+		box-shadow:         @header-block-shadow;
+
+		&.transparent-bg {
+			background: @header-block-bg;
+		}
+	}
+
+	// Fix: Moves header stuck down when Admin Bar is visible
+	.admin-bar .iv-layout.header.stuck {
+		top: 32px;
+	}
+
+	// Fix: Disable Negative Height when using Visual Composer Front-End Editor...
+	.vc-editor .iv-layout.header.negative-height {
+		display: block;
+	}
+
+	// Button Styles
+	.iv-button-header( @padding ) {
+		color: @header-sec-color;
+		border: @header-sec-border-width solid @header-sec-border;
+		background: @header-sec-bg;
+
+		font-weight: @weight-light;
+
+		padding: @padding;
+
+		// Don't forget this must be the same than the header main font-size...
+		font-size: 13px;
+
+		&:hover {
+			color: @header-sec-bg-constrast-color;
+			border-color: @header-sec-border-active; // Border same as border active...
+			background: @header-sec-bg-active;
+		}
+
+		&:active, &:focus {
+			outline: none;
+		}
+	}
+
+/*****************************
+ *****************************
+ *
+ * MODULES RULES
+ *
+ *****************************
+*****************************/
+
+	.iv-layout.header {
+
+		// Input styles are built thinking in the second level
+		input[type="text"],
+		input[type="email"],
+		input[type="password"],
+		input[type="search"],
+		textarea {
+
+			border: @header-sec-border-width solid @header-sec-border;
+			color: @header-sec-color;
+			background: transparent;
+
+			&:focus {
+				border-color: @header-sec-border-active;
+				color: @header-sec-color-active;
+				background: transparent;
+				outline: none;
+			}
+		}
+
+		input[type="submit"] {
+			.iv-button-header( 10px 15px );
+		}
+
+		//
+		// Inner Boxes / Module Boxes
+		//
+		.inner-form {
+			background: @header-sec-block-bg;
+			border: @header-sec-border-width solid @header-sec-block-border;
+
+			padding: 20px 20px;
+
+			border-radius: 0px;
+			-webkit-border-radius: 0px;
+
+			// Optional Top Border
+			//.arrow(8px, @header-sec-block-bg, top, 90%, @header-sec-border-width, @header-sec-block-border);
+
+			// Apply a few default styles to overwrite main header...
+			color: @header-sec-color;
+
+			// General Links
+			a {
+				color: @header-sec-color;
+				
+				&:hover {
+					color: @header-sec-color-active;
+				}
+			}
+		}
+
+		&.light, &.dark {
+			.inner-form {
+				// General Links
+				a {
+					color: @header-sec-color;
+					
+					&:hover {
+						color: @header-sec-color-active;
+					}
+				}
+			}
+		}
+
+		//
+		// Module > Mobile Menu
+		//
+		.responsive-menu {
+			.mobile-menu-trigger {
+				font-size: 18px; // Not all sizes work properly to this icon, so stay tuned
+			}
+		}
+
+		//
+		// Module > Live Search
+		//
+		.live-search {
+
+			.trigger {
+				font-size: 16px;
+			}
+
+			input[type="search"] {
+
+				// Fix: Ensure the focus border keeps the same with this input...
+				&:focus {
+					border: @header-sec-border-width solid @header-sec-border;
+				}
+
+				height: 50px;
+
+				padding-right: 50px;
+			}
+
+			// The search button
+			.submit-form {
+				color: @header-sec-color-active;
+				background: transparent; // This bg is the same as border to create the effect...
+				border-left: @header-sec-border-width solid @header-sec-border;
+				border-right: 0px solid @header-sec-border; // RTL uses this
+
+				width: 40px;
+				height: 50px;
+				line-height: 50px;
+				top: 20px;
+				right: 20px;
+			}
+
+		}
+
+		//
+		// Module > Social Icons
+		//
+		.social-icons {
+
+			a {
+				font-size: 16px;
+				margin-right: 5px;
+				text-align: center;
+
+				&:last-child {
+					margin: 0;
+				}
+			}
+		}
+
+		//
+		// Module > Custom Text
+		//
+		.custom-text {
+
+			.iv-separator {
+				display: inline-block;
+				border-left: 1px dotted @header-border;
+				margin: 0 15px;
+			}
+		}
+
+		//
+		// Module > Woo Cart
+		//
+		.woo-cart {
+
+			.cart-total {
+				display: none;
+			}
+
+			.cart-total .amount {
+				font-weight: normal;
+			}
+
+			.basket-wrapper {
+
+				.top {
+					border: 2px solid @header-color;
+					border-bottom: none;
+				}
+
+				.basket {
+					background: transparent;
+					border: 2px solid @header-color;
+					
+					// Uses default font to better alignment...
+					font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+					font-weight: bold;
+				}
+			}
+
+			// Adds transition to basket too...
+			.top, .basket, .cart-total .amount {
+				.iv-transition-all();
+			}
+
+			&:hover {
+
+				.top, .basket, .cart-total .amount {
+					border-color: @header-color-active;
+					color: @header-color-active;
+				}
+
+			}
+
+			/* Woo Cart Content */
+
+			.cart_list {
+
+				img {
+					border: 1px solid @header-sec-border;
+				}
+
+				a {
+					font-weight: @weight-bolder;
+
+					&:hover {
+						
+					}
+				}
+
+				span {
+					color: @header-sec-color;
+				}
+
+				dl dt {
+					color: @header-sec-color;
+				}
+			}
+
+			.total {
+				border-top: 1px dotted @header-sec-border;
+				text-transform: uppercase;
+				font-size: 13px;
+			}
+
+			.cart_list li {
+				text-transform: uppercase;
+				font-size: 13px;
+
+				a {
+					margin-bottom: 3px;
+				}
+			}
+
+			.buttons {
+
+				a {
+					.iv-button-header( 10px 10px );
+				}
+
+			} //.buttons
+
+		} //.woo-cart
+
+		//
+		// Module > Login AJAX
+		//
+		.login-ajax {
+
+			.trigger {
+				font-size: 16px;
+			}
+
+			.lwa {
+
+				// Title
+				.lwa-title {
+					margin-bottom: 15px;
+					font-weight: @weight-bolder;
+					text-transform: uppercase;
+					font-size: 13px;
+				}
+
+				.lwa-field {
+					margin-bottom: 15px;
+
+					.fa {
+						color: @header-sec-color-active;
+						border-right: 1px solid @header-sec-border; // This bg is the same as border to create the effect...
+						
+						width: 40px;
+						height: 44px;
+						line-height: 44px;
+					}
+
+				}
+
+				input {
+					height: 44px;
+					padding-left: 50px;
+
+					&:focus {
+						border: @header-sec-border-width solid @header-sec-border;
+					}
+				}
+
+				// Submit Field
+				input[type="submit"] {
+					
+					.iv-button-header( 10px 10px );
+
+					height: auto;
+					text-align: center;
+					margin-bottom: 10px;
+
+					&:hover {
+
+					}
+				}
+
+				.lwa-register input[type="submit"] {
+					margin-top: 10px;
+				}
+
+				.lwa-info {
+
+					li {
+						padding-bottom: 8px;
+						margin-bottom: 8px;
+						border-bottom: 1px dotted @header-sec-border;
+
+						&:last-child {
+							margin-bottom: 0;
+							padding-bottom: 0;
+							border-bottom: none;
+						}
+					}
+
+				}
+			}
+
+		}//.login-ajax
+
+	} // !ends .iv-layout.header
+
+/*****************************
+ *****************************
+ *
+ * MEGA MENU RULES
+ *
+ *****************************
+*****************************/
+
+	.header .mega_main_menu {
+
+		// 1st Level
+		.mega_main_menu_ul > li {
+
+			position: relative;
+
+			// Links
+			> .item_link {
+				padding: 15px 15px;
+				font-weight: @weight-light;
+				//text-transform: uppercase;
+
+				//background: #ddd;
+
+				&:hover {
+					//background: #f5f5f5;
+				}
+
+				// Description
+				span.description_text {
+					font-size: 11px;
+					font-weight: normal;
+					text-transform: initial;
+				}
+
+				// Custom Icons
+				&.with_icon i:before {
+					min-width: 14px;
+				}
+			}
+
+			&.current-menu-ancestor,
+			&.current-menu-item {
+				> .item_link {
+					color: @header-color-active;
+					//background: #f5f5f5;
+				}
+			}
+
+			// Highlight Style
+			&.highlight_style > .item_link {
+				color: @header-color-active;
+
+				&:hover {
+					color: @header-color-active;
+				}
+			}
+
+		}
+
+		// Button Style
+
+		&.direction-horizontal .mega_main_menu_ul > li {
+			// Button Style
+			&.button_style > .item_link {
+
+				> .item_link_content {
+
+					.iv-transition-all();
+
+					padding: 7px 18px;
+					border: 1px solid @header-color;
+
+					text-transform: uppercase;
+
+					display: block;
+
+					font-size: 12px;
+					line-height: 1;
+					font-weight: @weight-light;
+
+					cursor: pointer;
+					
+					//border-radius: 5px;
+					//-webkit-border-radius: 5px;
+
+					i {
+						font-size: 100%;
+					}
+				}
+
+				&:hover {
+
+					// Avoid bg of hovers being applied in buttons
+					background: transparent;
+
+					> .item_link_content {
+						color: @header-color-active;
+						border-color: @header-border-active;
+					}
+				}
+			}
+
+			// Don't remove, avoid colors being applied
+			&.button_style {
+				&.current-menu-ancestor,
+				&.current-menu-item {
+					> .item_link {
+						background: transparent;
+
+						> .item_link_content {
+							color: @header-color;
+						}
+					}
+				}
+			}
+
+		} // .button_style
+
+		// 2nd Level
+
+		.default_dropdown > ul,
+		.default_dropdown li > ul,
+		.multicolumn_dropdown > ul,
+		.widgets_dropdown > ul {
+			background: @header-sec-block-bg;
+			border: @header-sec-border-width solid @header-sec-block-border;
+
+			//padding: 20px 20px;
+
+			border-radius: 0px;
+			-webkit-border-radius: 0px;
+
+			// Apply a few default styles to overwrite main header...
+			color: @header-sec-color;
+
+			a {
+				color: @header-sec-color;
+
+				&:hover {
+					color: @header-sec-color-active;
+				}
+			}
+
+			// Links
+			.item_link {
+
+				color: @header-sec-color;
+				font-weight: @weight-light;
+
+				&:hover {
+					color: @header-sec-color-active;
+				}
+
+				// Description
+				span.description_text {
+					font-size: 11px;
+					font-weight: normal;
+					text-transform: initial;
+				}
+			}
+			li.current-menu-item {
+				> .item_link {
+					color: @header-sec-color-active;
+				}
+			}
+
+			.widgettitle,
+			li.section_header_style > .item_link {
+				font-weight: @weight-bolder;
+				color: @header-sec-color-active;
+				text-transform: uppercase;
+				font-size: 13px;
+			}
+
+			.widgettitle {
+				padding: 11px 0;
+			}
+		}
+
+		// Widget Specific
+		.widget {
+			li {
+				margin-bottom: 5px;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+	} // .header .mega_main_menu
+
+/*****************************
+ *****************************
+ *
+ * LIGHT/DARK SCHEMES
+ *
+ *****************************
+*****************************/
+
+	.iv-layout.header.light {
+
+		color: #fff;
+
+		a {
+			color: #fff;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+
+		.menu-area-wrapper {
+			border-color: rgba(255, 255, 255, 0.3);
+		}
+
+		.iv-module {
+
+			&:after {
+				border-color: #fff;
+			}
+		}
+
+		.custom-text {
+			.iv-separator {
+				border-color: #fff;
+			}
+		}
+
+		.woo-cart {
+
+			.basket-wrapper {
+
+				.top {
+					border-color: #fff;
+				}
+
+				.basket {
+					border-color: #fff;
+					color: #fff;
+				}
+			}
+
+			&:hover {
+
+				.top, .basket, .cart-total .amount {
+					border-color: #fff;
+					color: #fff;
+				}
+
+			}
+		}
+
+		// Mega Menu
+		.mega_main_menu {
+
+			// 1st Level
+			.mega_main_menu_ul > li {
+
+				// Links
+				> .item_link {
+
+					color: #fff;
+
+					&:hover {
+						//background: #f5f5f5;
+						color: #fff;
+					}
+
+					// Description
+					span.description_text {
+						color: #fff;
+					}
+				}
+
+				&.current-menu-ancestor,
+				&.current-menu-item,
+				&:hover {
+					> .item_link {
+						color: #fff;
+					}
+				}
+
+				// Highlight Style
+				&.highlight_style > .item_link {
+					color: #fff;
+
+					&:hover {
+						color: #fff;
+					}
+				}
+
+			}
+
+			// Button Style
+
+			&.direction-horizontal .mega_main_menu_ul > li {
+				// Button Style
+				&.button_style > .item_link {
+
+					> .item_link_content {
+						border-color: #fff;
+						color: #fff;
+					}
+
+					&:hover {
+						> .item_link_content {
+							border-color: #fff;
+							color: #fff;
+						}
+					}
+				}
+			}
+		} // .mega_main_menu
+
+		// Aside Menu
+		&.simple-left-right .mega_main_menu .mega_main_menu_ul > li > .item_link {
+			border-bottom: 1px solid rgba(255,255,255, 0.1);
+		}
+
+		// Widgets
+
+		.widget-area .widget {
+			color: rgba(255,255,255,0.6);
+		}
+
+		// Widgets
+		.widget-area .widget {
+
+			.widget-title {
+				color: #fff;
+			}
+
+			// Link
+			a {
+				color: #fff;
+
+				&:visited, &:hover {
+					color: #fff;
+				}
+			}
+
+			&.widget_tag_cloud a {
+				color: #fff;
+				border-color: #fff;
+				background-color: rgba(255,255,255, 0.1);
+
+				&:hover {
+					color: #fff;
+					border-color: #fff;
+					background-color: rgba(255,255,255, 0.1);
+				}
+			}
+
+			// Input
+			input[type="text"],
+			input[type="email"],
+			input[type="password"],
+			input[type="search"],
+			textarea {
+				color: #fff;
+				border-color: #fff;
+
+				&:focus {
+					color: #fff;
+					border-color: #fff;
+				}
+
+				.placeholder(#fff);
+			}
+
+			input[type="submit"] {
+				color: #fff;
+				border-color: #fff;
+				background: transparent;
+
+				&:focus, &:hover {
+					color: #fff;
+					border-color: #fff;
+					background: transparent;
+				}
+			}
+
+		} // end widgets
+
+
+	} // .iv-layout.header.light
+
+	.iv-layout.header.dark {
+
+		color: #222;
+
+		a {
+			color: #222;
+
+			&:hover {
+				color: #222;
+			}
+		}
+
+		.menu-area-wrapper {
+			border-color: rgba(255, 255, 255, 0.3);
+		}
+
+		.iv-module {
+
+			&:after {
+				border-color: #222;
+			}
+		}
+
+		.custom-text {
+			.iv-separator {
+				border-color: #222;
+			}
+		}
+
+		.woo-cart {
+
+			.basket-wrapper {
+
+				.top {
+					border-color: #222;
+				}
+
+				.basket {
+					border-color: #222;
+					color: #222;
+				}
+			}
+
+			&:hover {
+
+				.top, .basket, .cart-total .amount {
+					border-color: #222;
+					color: #222;
+				}
+
+			}
+		}
+
+		// Mega Menu
+		.mega_main_menu {
+
+			// 1st Level
+			.mega_main_menu_ul > li {
+
+				// Links
+				> .item_link {
+
+					color: #222;
+
+					&:hover {
+						//background: #f5f5f5;
+						color: #222;
+					}
+
+					// Description
+					span.description_text {
+						color: #222;
+					}
+				}
+
+				&.current-menu-ancestor,
+				&.current-menu-item,
+				&:hover {
+					> .item_link {
+						color: #222;
+					}
+				}
+
+				// Highlight Style
+				&.highlight_style > .item_link {
+					color: #222;
+
+					&:hover {
+						color: #222;
+					}
+				}
+
+			}
+
+			// Button Style
+
+			&.direction-horizontal .mega_main_menu_ul > li {
+				// Button Style
+				&.button_style > .item_link {
+
+					> .item_link_content {
+						border-color: #222;
+						color: #222;
+					}
+
+					&:hover {
+						> .item_link_content {
+							border-color: #222;
+							color: #222;
+						}
+					}
+				}
+			}
+		} // .mega_main_menu
+
+		// Aside Menu
+		&.simple-left-right .mega_main_menu .mega_main_menu_ul > li > .item_link {
+			border-bottom: 1px solid rgba(0,0,0, 0.1);
+		}
+
+		// Widgets
+
+		.widget-area .widget {
+			color: rgba(0,0,0, 0.7);
+		}
+
+		// Widgets
+		.widget-area .widget {
+
+			.widget-title {
+				color: #222;
+			}
+
+			// Link
+			a {
+				color: #222;
+
+				&:visited, &:hover {
+					color: #222;
+				}
+			}
+
+			&.widget_tag_cloud a {
+				color: #222;
+				border-color: #222;
+				background-color: transparent;
+
+				&:hover {
+					color: #222;
+					border-color: #222;
+					background-color: transparent;
+				}
+			}
+
+			// Input
+			input[type="text"],
+			input[type="email"],
+			input[type="password"],
+			input[type="search"],
+			textarea {
+				color: #222;
+				border-color: #222;
+
+				&:focus {
+					color: #222;
+					border-color: #222;
+				}
+
+				.placeholder(#222);
+			}
+
+			input[type="submit"] {
+				color: #222;
+				border-color: #222;
+				background: transparent;
+
+				&:focus, &:hover {
+					color: #222;
+					border-color: #222;
+					background: transparent;
+				}
+			}
+
+		} // end widgets
+
+
+	} // .iv-layout.header.dark
+
+/*****************************
+ *****************************
+ *
+ * RESPONSIVE RULES
+ *
+ *****************************
+*****************************/
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {	
+	.admin-bar .iv-layout.header.stuck {
+		top: 0px;
+	}
+
+	.iv-layout.header.lateral-lines .iv-module {
+		&:after {
+			display: none;
+		}
+	}
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) {
+	// Center logo in centered layouts...
+	.header-center-area {
+		.logo {
+			text-align: center;
+
+			img {
+				display: inline-block;
+			}
+		}
+	}
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+	
+}
+
+/**
+* IE Specific Styles
+*/
+
+/*
+html[data-useragent*='MSIE 10.0'] .header.iv-layout .live-search .submit-form {
+	height: 45px;	
+	line-height: 47px;	
+}
+*/
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	.header.iv-layout .live-search .submit-form {
+		height: 45px;	
+		line-height: 47px;	
+	}
+}

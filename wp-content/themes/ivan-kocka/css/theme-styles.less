@@ -1,0 +1,161 @@
+/*!
+ * Kocka WordPress Theme Stylesheet
+ *
+ * !IMPORTANT: Don't modify these files, use custom-styles.css or
+ * use a Child Theme (example provided in package) since this file
+ * is updated frequently.
+ *
+ * Licensed under ThemeForest Standard License
+ *
+ */
+
+ /*------------------------------------------------------------------
+ [Table of contents]
+
+ 1. Plugin: Elite Addons for Visual Composer
+ 2. Bootstrap Normalize
+ 3. Bootstrap Core
+ 	3.1. Scaffolding
+ 	3.2. Typography
+ 	3.3. Code
+ 	3.4. Grid
+ 	3.5. Tables
+ 	3.6. Forms
+ 	3.7. Buttons
+ 4. Main Layouts
+ 	4.1. General
+ 	4.2. Normal
+ 	4.3. Aside Layout
+ 5. Modules
+ 6. Layouts
+ 	6.1. Top Header
+ 	6.2. Header
+ 	6.3. Footer
+ 	6.4. Bottom Footer
+ 	6.5. Title Wrapper
+ 7. Content
+ 	7.1. WP Elements
+ 	7.2. General
+ 	7.3. Post Listing / Blog
+ 	7.4. Post Formats
+ 	7.5. Navigation
+ 	7.6. Pagination
+ 	7.7. Single
+ 	7.8. Widgets
+ 	7.9. Modules
+
+ -------------------------------------------------------------------*/
+
+/* Plugin: Elite Addons for Visual Composer
+----------------------------------------------- */
+@import 'less/bootstrap/_variables.less'; // ( !IMPORTANT: file usually modified by developers )
+@import 'less/shortcodes/_modules.less';
+
+/* Bootstrap Vars and Mixins
+----------------------------------------------- */
+@import 'less/bootstrap/_variables.less'; // ( !IMPORTANT: file usually modified by developers )
+@import 'less/bootstrap/_mixins.less';
+@import 'less/bootstrap/_lesshat-prefixed.less';
+
+/* Bootstrap Normalize
+----------------------------------------------- */
+@import 'less/bootstrap/_normalize.less';
+@import 'less/bootstrap/_print.less';
+
+/* Bootstrap Core
+----------------------------------------------- */
+@import 'less/bootstrap/_scaffolding.less';
+@import 'less/bootstrap/_type.less';
+@import 'less/bootstrap/_code.less';
+@import 'less/bootstrap/_grid.less';
+@import 'less/bootstrap/_tables.less';
+@import 'less/bootstrap/_forms.less';
+@import 'less/bootstrap/_buttons.less';
+
+/* Libs Used
+----------------------------------------------- */
+@import 'libs/selectordie/_selectordie.less';
+
+/* Main Layouts
+----------------------------------------------- */
+@import 'less/main-layouts/_general.less';
+@import 'less/main-layouts/_normal.less';
+@import 'less/main-layouts/_aside_left_right.less';
+
+/* Modules
+----------------------------------------------- */
+@import 'less/modules/_general.less';
+@import 'less/modules/_mega_menu.less';
+@import 'less/modules/_live_search.less';
+@import 'less/modules/_logo.less';
+@import 'less/modules/_menu.less';
+@import 'less/modules/_social_icons.less';
+@import 'less/modules/_woo_cart.less';
+@import 'less/modules/_login_ajax.less';
+@import 'less/modules/_responsive_menu.less';
+@import 'less/modules/_ads.less';
+@import 'less/modules/_wpml.less';
+
+/* Layouts
+----------------------------------------------- */
+
+	/* Layouts > Top Header
+	----------------------------------------------- */
+	@import 'less/layouts/top_header/_variables.less';
+	@import 'less/layouts/top_header/_general.less';
+	@import 'less/layouts/top_header/_two_columns.less';
+
+	/* Layouts > Header
+	----------------------------------------------- */
+	@import 'less/layouts/header/_variables.less';
+	@import 'less/layouts/header/_general.less';
+	@import 'less/layouts/header/_simple_right_menu.less';
+	@import 'less/layouts/header/_simple_boxed_menu.less';
+	@import 'less/layouts/header/_classic_right_area.less';
+	@import 'less/layouts/header/_simple_logo_centered.less';
+	@import 'less/layouts/header/_classic_logo_centered.less';
+	@import 'less/layouts/header/_simple_left_right.less';
+	@import 'less/layouts/header/_only_menu.less';
+
+	/* Layouts > Footer
+	----------------------------------------------- */
+	@import 'less/layouts/footer/_variables.less';
+	@import 'less/layouts/footer/_general.less';
+	@import 'less/layouts/footer/_normal.less';
+
+	/* Layouts > Bottom Footer
+	----------------------------------------------- */
+	@import 'less/layouts/bottom_footer/_variables.less';
+	@import 'less/layouts/bottom_footer/_general.less';
+	@import 'less/layouts/bottom_footer/_two_columns.less';
+
+	/* Layouts > Title Wrapper
+	----------------------------------------------- */
+	@import 'less/layouts/title_wrapper/_variables.less';
+	@import 'less/layouts/title_wrapper/_general.less';
+	@import 'less/layouts/title_wrapper/_normal.less';
+
+/* Content
+----------------------------------------------- */
+	@import 'less/content/_variables.less';
+	@import 'less/content/_wp_elements.less';
+	@import 'less/content/_general.less';
+	@import 'less/content/_post-listing.less';
+	@import 'less/content/_post-formats.less';
+	@import 'less/content/_navigation.less';
+	@import 'less/content/_pagination.less';
+	@import 'less/content/_single.less';
+	@import 'less/content/_widgets.less';
+	@import 'less/content/_modules.less';
+
+	.bypostauthor, .sticky { display: block; }
+
+/* Plugins
+----------------------------------------------- */
+	// Nothing yet...
+	
+/* Responsive Section
+----------------------------------------------- */
+
+@import 'less/bootstrap/_responsive-utilities.less';
+@import 'less/bootstrap/_utilities.less';
