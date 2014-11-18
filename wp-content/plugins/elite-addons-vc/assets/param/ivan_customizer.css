@@ -1,0 +1,30 @@
+.wpb_el_type_ivan_customizer > .wpb_element_label {
+  background: #f1f1f1;
+  padding: 10px 10px;
+  margin-bottom: 10px;
+}
+.wpb_el_type_ivan_customizer .edit_form_line {
+  padding: 0 2px;
+}
+.wpb_el_type_ivan_customizer .vc-ivan-customizer input,
+.wpb_el_type_ivan_customizer .vc-ivan-customizer select,
+.wpb_el_type_ivan_customizer .vc-ivan-customizer .color-group {
+  margin-top: 5px !important;
+}
+.wpb_el_type_ivan_customizer .vc-ivan-customizer .small-label {
+  color: #aaa;
+  font-size: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.wpb_el_type_ivan_customizer .vc-settings {
+  margin-bottom: 10px;
+}
+.wpb_el_type_ivan_customizer .vc-settings:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.wpb_el_type_ivan_customizer_id {
+  display: none;
+}

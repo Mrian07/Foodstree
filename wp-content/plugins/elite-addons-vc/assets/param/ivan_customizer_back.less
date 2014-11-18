@@ -1,0 +1,121 @@
+.wpb_el_type_ivan_customizer {
+	.wpb_element_label {
+		background: #f1f1f1;
+		padding: 10px 10px;
+		margin-bottom: 10px;
+		margin-top: 10px;
+	}
+
+	.edit_form_line {
+		padding: 0 2px;
+	}
+
+	.vc-ivan-customizer {
+		input, select, .color-group {
+			margin-top: 5px !important;
+		}
+
+		.small-label {
+			color: #aaa;
+			font-size: 10px;
+			line-height: 1;
+			text-transform: uppercase;
+		}
+
+		&.row.vc-row [class*="vc_span"] {
+			margin-right: 1.5%;
+			margin-left: 0 !important;
+			min-height: auto !important;
+		}
+	}
+
+	.vc-settings {
+		margin-bottom: 10px;
+	}
+
+	.vc-settings:after {
+		content: "";
+		display: block;
+		clear: both;
+	}
+}
+
+/**
+ *	Hot Fix to ensure styles are being applied properly...
+**/
+
+.vc_panel {
+
+	.ui-widget {
+		font-size: inherit !important;
+	}
+
+	.vc_panel-tabs.ui-tabs {
+		padding: 0;
+		border-radius: 0;
+		-webkit-border-radius: 0;
+		border: none;
+	}
+
+	.ui-tabs .ui-tabs-panel {
+		padding: 5px 0px 0px 0px;
+	}
+
+	.vc_panel-tabs > .ui-tabs-nav {
+	  margin: -10px 0 10px 0px;
+	  padding: 0;
+	  padding-left: 10px;
+	  display: table;
+	  width: 100%;
+	  background-color: #e6e6e6 !important;
+	  background-image: none !important;
+	  border-radius: 0;
+	  -webkit-border-radius: 0;
+	}
+
+	.vc_panel-tabs > .ui-tabs-nav li {
+	  display: list-item;
+	  list-style: none;
+	  float: left;
+	  position: relative;
+	  top: 0;
+	  margin: 7px 2px 0 0;
+	  border: 1px solid transparent;
+	  border-top-left-radius: 4px;
+	  border-top-right-radius: 4px;
+	  border-bottom-width: 0;
+	  padding: 0;
+	  white-space: nowrap;
+	  font-weight: normal;
+	  color: #949494;
+
+	  background-color: transparent !important;
+	  background-image: none !important;
+	}
+	.vc_panel-tabs > .ui-tabs-nav li a {
+	  color: #949494;
+	  float: left;
+	  padding: 11px 15px;
+	  text-decoration: none;
+	  outline: none;
+	  font-size: 12px;
+	}
+	.vc_panel-tabs > .ui-tabs-nav li.ui-state-active {
+	  background-color: #ffffff !important;
+	  font-weight: normal;
+	  color: #595959;
+	}
+	.vc_panel-tabs > .ui-tabs-nav li.ui-state-active a {
+	  color: #595959;
+	}
+	.vc_panel-tabs > .ui-tabs-nav > :first-child {
+	  margin-left: 6px;
+	}
+	.vc_panel-tabs > div {
+	  display: none;
+	}
+}
+
+.wpb_el_type_ivan_customizer_id {
+	display: none;
+}

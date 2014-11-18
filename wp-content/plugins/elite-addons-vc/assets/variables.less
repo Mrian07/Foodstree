@@ -1,0 +1,316 @@
+/***
+ *
+ * Variables
+ *
+***/
+	
+	//
+	// Styles
+	//
+	// - Opaque/Default > default with no bgs (all modules has this one by default)
+	// - Gray > uses light gray bg - initial and soft
+	// - Dark > user dark colored bgs and light text
+	//
+	// - Clean > uses light color and opaque bgs
+	// - Light > uses light bg and normal color
+	// - Primary > uses primary bg and primary color
+
+	//
+	// Margins
+	//
+		@modules-margin-bottom: 20px;
+		@modules-margin-bottom-wrapper: 45px;
+		@modules-margin-bottom-rows: 30px;
+		@modules-margin-bottom-half: 10px;
+
+	//
+	// Gray Spectro
+	//	
+		// http://www.macmillandictionary.com/thesaurus-category/british/General-words-used-to-describe-colours
+		@gray-dark: #222;
+		@gray-darken: #444;
+		@gray-normal: #7F7F7F;
+		@gray-normal-soft: #999;
+
+		@gray-initial: #bbb;
+		@gray-soft: #c0c0c0;
+		@gray-soften: #ccc;
+		@gray-light: #ddd;
+		@gray-lighten: #eee;
+		@gray-cleaning: #f5f5f5;
+		@gray-clean: #F7F7F7; // used in gray style
+
+	//
+	// Backgrounds
+	//
+		@bg-base: #fff;
+
+	//
+	// Heading
+	//
+		@heading-color: #222;
+
+	//
+	// Primary Colors
+	//
+		@primary: #2AC56C;
+		@primary-color: #fff;
+
+	//
+	// Dark Style
+	//
+		@dark-style: #2B333B;
+		@dark-color: #fff;
+
+	//
+	// Borders
+	//
+
+		@border-width: 1px;
+		@border-color: #e5e5e5;
+			@border-color-hover: #ccc;
+		@border-radius: 0px;
+
+	//
+	// Separator
+	//
+
+		@separator-height: 1px;
+		@separator-color: #f2f2f2;
+
+			@separator-small-width: 32px;
+			@separator-small-height: 1px;
+			@separator-small-color: #303030; // Color to combine with heading color
+
+	//
+	// Accordion and Toggle
+	//
+
+		// 3 Styles avaliable, toggle, boxed and boxed with arrow...
+		@acc-title-font: 14px;
+		@acc-color: @gray-dark;
+		@acc-border-radius: 4px;
+
+			// Toggle Style
+			@acc-toggle-border: @gray-clean;
+			@acc-toggle-bg: transparent;
+			@acc-toggle-color: @gray-soft;
+
+			@acc-toggle-border-hover: @gray-clean;
+			@acc-toggle-bg-hover: @gray-clean;
+			@acc-toggle-color-hover: @gray-darken;
+
+			// Boxed Style
+			@acc-boxed-bg: @gray-clean;
+
+			// Boxed Arrows Style
+			@acc-arrow-bg: @gray-clean;
+			@acc-arrow-color: @acc-color;
+
+			@acc-arrow-bg-hover: @primary;
+			@acc-arrow-color-hover: @primary-color;
+
+	//
+	// Tabs
+	//
+
+		@tab-title-font: 14px;
+		@tab-color: @gray-initial;
+		@tab-color-hover: @gray-darken;
+
+		@tab-block-border: @gray-clean;
+		@tab-block-bg: @gray-clean;
+		@tab-block-color: @gray-dark;
+
+		@tab-block-border-hover: @primary;
+		@tab-block-bg-hover: @primary;
+		@tab-block-color-hover: @primary-color;
+
+		@tab-block-radius: 4px;
+
+		@tab-bg-base: #fff; // it's the content box background
+
+		@tab-v-border: @gray-cleaning;
+		@tab-v-color: @gray-initial;
+		@tab-v-color-hover: @gray-normal;
+		@tab-v-radius: 4px;
+
+
+
+	//
+	// Blockquotes
+	//
+
+		@quote-border-radius: 4px;
+
+	//
+	// Message Boxes
+	//
+
+		@msg-border-radius: 4px;
+
+		@msg-info:    #008cdc;
+		@msg-error:   #ff3e47;
+		@msg-success: #00bfb3;
+		@msg-warning: #f7ae38;
+
+	//
+	// Icon Box
+	//
+
+		@i-box-border-radius: 4px;
+
+	//
+	// Progress Bar
+	//
+
+		@p-bar-border-radius: 4px;
+		@p-bar-primary-bg-outer: #f2f2f2;
+
+	//
+	// Service Block
+	//
+
+		@s-block-border-radius: 4px;
+
+	//
+	// Image Block
+	//
+
+		@img-block-border-radius: 30px;
+
+	//
+	// Pricing Table
+	//
+
+		@pricing-main-border-radius: 4px;
+		@pricing-border-radius: 30px;
+		@pricing-black-bg: #222;
+		@pricing-black-featured: #0f0f0f;
+
+	//
+	// Buttons
+	//
+
+		@btn-size: 16px;
+		@btn-weight: 600;
+
+		@btn-border-width: 2px;
+		@btn-color: @gray-normal;
+		@btn-border: @gray-normal;
+		@btn-bg: #fff;
+
+		@btn-color-hover: @primary-color;
+		@btn-border-hover: @primary;
+		@btn-bg-hover: @primary;
+
+		@btn-radius-round: 50px;
+		@btn-radius-round-square: 5px;
+
+		// Medium Sizes
+			@btn-medium-w: 53px;
+			@btn-medium-h: 53px;
+			@btn-medium-icon: 18px;
+			@btn-medium-only-icon: 25px;
+
+			@btn-medium-v-padding: 12px;
+			@btn-medium-h-padding: 20px;
+			@btn-medium-h-padding-half: 10px;
+			@btn-medium-h-padding-third: 15px;
+			@btn-medium-h-padding-cover: 13px;
+			@btn-medium-h-padding-only-icon: 16px;
+
+			@btn-medium-desc-main: 13px;
+			@btn-medium-desc-inner: 11px;
+
+		// Large Sizes
+			@btn-large-size: 18px;
+			@btn-large-w: 67px;
+			@btn-large-h: 67px;
+			@btn-large-icon: 22px;
+			@btn-large-only-icon: 28px;
+
+			@btn-large-v-padding: 16px;
+			@btn-large-h-padding: 24px;
+			@btn-large-h-padding-half: 12px;
+			@btn-large-h-padding-third: 19px;
+			@btn-large-h-padding-cover: 17px;
+			@btn-large-h-padding-only-icon: 20px;
+
+			@btn-large-desc-main: 13px;
+			@btn-large-desc-inner: 13px;
+
+		// eXtra Large Sizes
+			@btn-x-large-size: 20px;
+			@btn-x-large-w: 85px;
+			@btn-x-large-h: 85px;
+			@btn-x-large-icon: 26px;
+			@btn-x-large-only-icon: 34px;
+
+			@btn-x-large-v-padding: 22px;
+			@btn-x-large-h-padding: 36px;
+			@btn-x-large-h-padding-half: 18px;
+			@btn-x-large-h-padding-third: 27px;
+			@btn-x-large-h-padding-cover: 25px;
+			@btn-x-large-h-padding-only-icon: 30px;
+
+			@btn-x-large-desc-main: 14px;
+			@btn-x-large-desc-inner: 13px;
+
+		// Compact Sizes
+			@btn-compact-size: 14px;
+			@btn-compact-w: 36px;
+			@btn-compact-h: 36px;
+			@btn-compact-icon: 16px;
+			@btn-compact-only-icon: 14px;
+
+			@btn-compact-v-padding: 5px;
+			@btn-compact-h-padding: 10px;
+			@btn-compact-h-padding-half: 5px;
+			@btn-compact-h-padding-third: 7px;
+			@btn-compact-h-padding-cover: 10px;
+			@btn-compact-h-padding-only-icon: 7px;
+
+			@btn-compact-desc-main: 11px;
+			@btn-compact-desc-inner: 10px;
+
+	//
+	// Call to Action
+	//
+
+		@call-border-radius: 4px;
+
+	//
+	// Social Icons Colors
+	//
+
+		@facebook: #3b5998;
+		@twitter: #00aced;
+		@pinterest: #cb2027;
+		@linkedin: #007bb6;
+		@youtube: #bb0000;
+		@instagram: #517fa4;
+		@flickr: #ff0084;
+		@tumblr: #32506d;
+		@vk: #45668e;
+		@vimeo-green: #44bbff;
+		@google-plus: #c63d2d;
+		@foursquare: #0072b1;
+		@yahoo: #720e9e;
+		@dribbble: #ea4c89;
+		@wordpress: #21759b;
+		@stumbleupon: #eb4823;
+		@soundcloud: #ff3a00;
+		@skype: #12a5f4;
+		@vine: #00bf8f;
+
+		@xing: #006567;
+		@weibo: #d72928;
+		@tencent: #00aced;
+		@twitch: #6441a5;
+		@renren: #005aab;
+		@git: #4CACCF;
+
+		//@quora: #a82400;
+		//@forrst: #5b9a68;
+		//@blogger: #fb8f3d;

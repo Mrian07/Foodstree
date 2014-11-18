@@ -1,0 +1,33 @@
+.ivan-carousel-preview {
+  display: none;
+}
+.ivan-script {
+  display: none !important;
+}
+body.compose-mode .ivan-carousel-preview {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 15px;
+  background-color: #F9B418;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  z-index: 1000;
+  font-size: 13px;
+}
+body.compose-mode .ivan-carousel-preview.vc-empty-element {
+  display: none !important;
+}
+body.compose-mode .ivan-carousel-preview a {
+  display: inline-block;
+  padding: 0 5px;
+  color: #fff;
+}
+body.compose-mode .ivan-carousel-preview a:hover {
+  color: #916707;
+}
+body.compose-mode .owl-item .vc-vc_row_inner {
+  padding-top: 0 !important;
+}

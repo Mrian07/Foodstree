@@ -1,0 +1,10 @@
+<wpml-config>
+	<custom-types>
+		<custom-type translate="1">ivan_vc_projects</custom-type>
+	</custom-types>
+	<taxonomies>
+		<taxonomy translate="1">ivan_vc_projects_sizes</taxonomy>
+		<taxonomy translate="1">ivan_vc_projects_cats</taxonomy>
+		<taxonomy translate="1">ivan_vc_projects_portfolios</taxonomy>
+	</taxonomies>
+</wpml-config>
