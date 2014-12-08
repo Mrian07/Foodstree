@@ -24,6 +24,7 @@ add_action('admin_head', 'wmp_admin_head');
 add_action( 'user_register', 'wmp_seller_additionaldata_save', 10, 1 );
 
 function wmp_seller_additionaldata_save( $user_id ) {
+  global $aj_csvimport;
 
   if ( isset( $_POST['seller_name'] ) ){
     update_user_meta($user_id, 'seller_name', $_POST['seller_name']);
@@ -42,6 +43,19 @@ function wmp_seller_additionaldata_save( $user_id ) {
 
 
     update_user_meta($user_id, 'activate', $_POST['activate']);
+    
+    //update sellers pin codes they sell to 
+    if(isset($_FILES['seller_pincode_list']) && $aj_csvimport->is_valid_file($_FILES['seller_pincode_list'])){
+            unset_user_pincodes($user_id);
+            $csv_json = $aj_csvimport->parseCSV($_FILES['seller_pincode_list']['tmp_name']);
+            
+            $pincodeData = json_decode($csv_json);
+            $i=1;
+            while ($i <= count($pincodeData) ) {
+                update_seller_to_pincode($user_id,$pincodeData[$i][0]);
+                $i++;
+            }
+    }
 
   }
 
@@ -236,4 +250,96 @@ function wmp_get_readable_seller_rating( $seller_id ) {
         <span class="text"><a href="#"><?php printf( $long_text, $rating['rating'], $rating['count'] ); ?></a></span>
 
     <?php
+}
+
+// function to hook into CSV plugin filter and configure csv upload components
+function theme_add_csv_components($defined_csv_components){
+
+    $defined_csv_components['pincodes'] = array('pincode',
+                                                'Taluk',
+                                                'statename');
+    return $defined_csv_components;
+
+}
+add_filter('add_csv_components_filter','theme_add_csv_components',10,1);
+
+// function to import a pincode record by hooking into the CSV plugin filter ajci_import_record_pincodes
+function import_csv_pincode_record($import_response,$record){
+ 
+    if(count($record) != 3){
+       $import_response['imported'] = false;
+       $import_response['reason'] = 'Column count does not match';
+    }
+    elseif(pincode_exists_db($record[0])){
+       $import_response['imported'] = false;
+       $import_response['reason'] = 'Pin code already exists';       
+    }
+    else{
+       //insert pincode entry 
+       add_pincode_db($record); 
+       $import_response['imported'] = true;
+    }
+    
+    return $import_response;
+}
+add_filter('ajci_import_record_pincodes','import_csv_pincode_record',10,2);
+
+function pincode_exists_db($pincode){
+    global $wpdb;
+
+    $query = $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}pincodes WHERE pincode LIKE %s", $pincode );
+    $record = $wpdb->get_var( $query );
+
+    return is_numeric( $record );
+}
+
+function add_pincode_db($record){
+    global $wpdb;
+    $pincode_data = array('pincode'=>$record[0],'city'=>$record[1],'state'=>$record[2]);
+    $wpdb->insert( $wpdb->prefix . "pincodes",
+    $pincode_data );
+
+    return $wpdb->insert_id;
+}
+
+function update_seller_to_pincode($user_id,$pincode){
+    global $wpdb;
+
+    $update_seller_ids = array();
+    $query = $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode LIKE %s", $pincode );
+    $seller_ids = $wpdb->get_var( $query );
+    if(is_null($seller_ids)){
+        $update_seller_ids = array();
+        $update_seller_ids[] = $user_id;
+    }
+    else{
+        //var_dump($seller_ids);
+        $update_seller_ids = maybe_unserialize($seller_ids);
+        if(!in_array($user_id, $update_seller_ids)){
+            $update_seller_ids[] = $user_id;
+        }
+    }
+    
+    if(!empty($update_seller_ids)){
+        $wpdb->update( $wpdb->prefix . "pincodes",array('seller_id' => maybe_serialize($update_seller_ids)),array('pincode'=>$pincode) );
+    }
+}
+
+function unset_user_pincodes($user_id){
+    global $wpdb;
+    
+    $like_string = '%"'.$user_id.'";%';
+    $query = $wpdb->prepare( "SELECT id,seller_id FROM {$wpdb->prefix}pincodes WHERE seller_id LIKE %s", $like_string );
+    $seller_pincodes = $wpdb->get_results( $query );
+    
+    foreach($seller_pincodes as $pincode){
+        $seller_ids = maybe_unserialize($pincode->seller_id);
+        
+        if (($key = array_search($user_id, $seller_ids)) !== FALSE) {
+            unset($seller_ids[$key]);
+        }
+        
+        $wpdb->update( $wpdb->prefix . "pincodes",array('seller_id' => maybe_serialize($seller_ids)),array('id'=>$pincode->id) );
+    }
+    
 }

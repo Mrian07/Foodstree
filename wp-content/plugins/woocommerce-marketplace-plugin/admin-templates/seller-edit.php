@@ -75,7 +75,7 @@ if ( current_user_can( 'edit_user' ) ) {
  * @since 3.0.0
  */
 ?>
-<form id="your-profile" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
+<form id="your-profile" enctype="multipart/form-data" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
 <?php wp_nonce_field('update-user_' . $user_id) ?>
 
 <p>

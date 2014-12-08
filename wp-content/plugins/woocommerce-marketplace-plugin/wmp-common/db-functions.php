@@ -14,7 +14,9 @@ function wmp_activate() {
   $sql = "CREATE TABLE $table_name (
     `id` int(11) NOT NULL AUTO_INCREMENT,
   `pincode` varchar(6) NOT NULL,
-  `seller_id` int(11) DEFAULT NULL,
+  `seller_id` longtext DEFAULT NULL,
+  `city` varchar(25) NOT NULL,
+  `state` varchar(25) NOT NULL,
   PRIMARY KEY (`id`)
   ) $charset_collate;";
 
