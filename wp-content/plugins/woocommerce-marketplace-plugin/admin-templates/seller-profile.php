@@ -1,7 +1,7 @@
 <?php
 
 
-$user_id = $_GET['seller'];
+$user_id = get_current_user_id();
 
 $action = $_GET['action'];
 
@@ -34,7 +34,7 @@ if ( !current_user_can('edit_user', get_current_user_id()) )
 
 
 if ( !is_wp_error( $errors ) ) {
-	$redirect = '?page=edit-seller&action=update&updated=1&seller=' . $user_id;
+	$redirect = '?page=seller-profile&action=update&updated=1&seller=' . $user_id;
 	wp_redirect($redirect);
 	exit;
 }
@@ -51,7 +51,7 @@ if ( !current_user_can('edit_user',get_current_user_id()) )
 
 <?php if ( isset($_GET['updated']) ) : ?>
 	<div id="message" class="updated">
-		<p><strong><?php _e('Seller updated.') ?></strong></p>
+		<p><strong><?php _e('Profile updated.') ?></strong></p>
 	</div>
 <?php endif; ?>
 
@@ -65,7 +65,7 @@ if ( !current_user_can('edit_user',get_current_user_id()) )
 <div class="wrap">
 <h2 id="edit-seller"> <?php
 if ( current_user_can( 'edit_user', get_current_user_id()) ) {
-	echo _x( 'Edit Seller', 'wmp' ).'<a class="add-new-h2">'.$profileuser->user_login.'</a>';
+	echo _x( 'Profile', 'wmp' ).'<a class="add-new-h2">'.$profileuser->user_login.'</a>';
 } ?>
 </h2>
 <?php
@@ -75,7 +75,7 @@ if ( current_user_can( 'edit_user', get_current_user_id()) ) {
  * @since 3.0.0
  */
 ?>
-<form id="your-profile" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
+<form id="your-profile" action="<?php echo '?page=seller-profile&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
 <?php wp_nonce_field('update-user_' . $user_id) ?>
 
 <p>
@@ -159,16 +159,6 @@ if ( current_user_can( 'edit_user', get_current_user_id()) ) {
 		<td><input type="file" name="seller_pincode_list" id="seller_pincode_list" /><span class="description"><?php _e('Update pincode list where the seller ships items. Only CSV supported.'); ?></span></td>
 	</tr>
 
-	<tr>
-		<th scope="row"><label for="seller_activate"><?php _e('Activate Seller?') ?></label></th>
-		<td><input type="checkbox" name="seller_activate" id="seller_activate" <?php checked( get_user_meta( $user_id, 'seller_activate', true ) ); ?>  value="1" /><span class="description"><?php _e('Activate/deactivate the seller.'); ?></span></td>
-
-	</tr>
-
-	
-
-	
-
 </table>
 
 
@@ -235,7 +225,7 @@ if ( $show_password_fields ) :
 <input type="hidden" name="action" value="update" />
 <input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr($user_id); ?>" />
 
-<?php submit_button( __('Update Seller') ); ?>
+<?php submit_button( __('Update Profile') ); ?>
 
 
 

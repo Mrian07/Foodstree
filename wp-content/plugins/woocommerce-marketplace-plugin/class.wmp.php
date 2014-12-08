@@ -39,7 +39,6 @@ if ( ! class_exists( 'AJENCY_WMP' ) ) {
             add_filter( 'query_vars', array( $this, 'sellerpage_rewrite_add_var') );
             add_action('init', array( $this, 'sellerpage_rewrite_rule'));
             add_action( 'template_redirect', array( $this, 'sellerpage_rewrite_catch') );
-
         }
 
 
@@ -64,6 +63,7 @@ if ( ! class_exists( 'AJENCY_WMP' ) ) {
         	add_menu_page(__( 'Sellers', 'wmp' ), __( 'Sellers', 'wmp' ), 'manage_options', 'sellers', array(&$this, 'sellersListing'), '', 21);
             add_submenu_page( 'sellers', __( 'Add New Seller', 'wmp' ), __( 'Add New', 'wmp' ), 'manage_options', 'add-new-seller', array(&$this, 'newSeller'));
             add_submenu_page( 'null', __( 'Edit Seller', 'wmp' ), __( 'Edit Seller', 'wmp' ), 'manage_options', 'edit-seller', array(&$this, 'editSeller'));
+            
         }
 
 
@@ -81,6 +81,9 @@ if ( ! class_exists( 'AJENCY_WMP' ) ) {
          public function editSeller(){
             include(WMP_DIR.'admin-templates/seller-edit.php');
         }
+
+
+        
 
 
 
@@ -117,7 +120,6 @@ function sellerpage_rewrite_catch() {
 
  }
 }
-
 
 
 

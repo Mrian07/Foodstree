@@ -66,6 +66,27 @@ function wmp_get_seller_orders_number( $seller_id, $status = 'all' ) {
     return $count;
 }
 
+
+
+
+
+//Check if seller has orders
+function wmp_is_seller_has_orders( $seller_id ) {
+  global $wpdb;
+  $where = "WHERE seller_id = " . $seller_id;
+  $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wmp_orders $where" );
+  if($count<=0){
+    return false;
+  }else{
+    return true;
+  }
+}
+
+
+
+
+
+
 /**
  * Get all the orders from a specific seller
  *

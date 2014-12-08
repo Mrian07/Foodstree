@@ -49,11 +49,6 @@ function wmp_constructor() {
     require_once( 'wmp-common/wmp-functions.php' );
     require_once( 'wmp-common/order-functions.php' );
     require_once( 'wmp-common/admin-functions.php' );
-    /*require_once( 'class.yith-wcan-admin.php' );
-    require_once( 'class.yith-wcan-frontend.php' );
-    require_once( 'class.yith-wcan-helper.php' );
-    require_once( 'widgets/class.yith-wcan-navigation-widget.php' );
-    require_once( 'widgets/class.yith-wcan-reset-navigation-widget.php' );*/
     require_once( 'wmp-list-table.php' );
     require_once( 'class.wmp.php' );
 

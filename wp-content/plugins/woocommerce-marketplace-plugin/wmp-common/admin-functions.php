@@ -36,6 +36,8 @@ add_filter( 'woocommerce_reports_get_order_report_query', 'wmp_admin_order_repor
  * @return array
  */
 function wmp_admin_shop_order_edit_columns( $existing_columns ) {
+    $current_role = get_user_role(get_current_user_id());
+
     $columns = array();
 
     $columns['cb']               = '<input type="checkbox" />';
@@ -49,8 +51,11 @@ function wmp_admin_shop_order_edit_columns( $existing_columns ) {
     $columns['order_date']       = __( 'Date', 'wmp' );
     $columns['order_total']      = __( 'Total', 'wmp' );
     $columns['order_actions']    = __( 'Actions', 'wmp' );
+
+    if($current_role != 'seller'){
     $columns['seller']        = __( 'Seller', 'wmp' );
     $columns['suborder']        = __( 'Sub Order', 'wmp' );
+    }
 
     return $columns;
 }
@@ -129,6 +134,8 @@ add_filter( 'post_class', 'wmp_admin_shop_order_row_classes', 10, 2);
  * @return void
  */
 function wmp_admin_shop_order_scripts() {
+
+    $current_role = get_user_role(get_current_user_id());
     ?>
     <script type="text/javascript">
     jQuery(function($) {
@@ -149,11 +156,32 @@ function wmp_admin_shop_order_scripts() {
             }
         });
 
-        $('button.toggle-sub-orders').on('click', function(e) {
+
+<?php if($current_role == 'seller'){ ?>
+$('.post-type-shop_order ul.subsubsub').css('display','none');
+$('.post-type-shop_order #filter-by-date').css('display','none');
+$('.post-type-shop_order #dropdown_customers_chosen').css('display','none');
+$('.post-type-shop_order #post-query-submit').css('display','none');
+$('.post-type-shop_order tr.sub-order').toggle();
+
+<?php if(!wmp_is_seller_has_orders( get_current_user_id() )){ ?>
+$('.post-type-shop_order #the-list').empty();
+$('.post-type-shop_order #the-list').html("<tr class='no-items'><td class='colspanchange' colspan='8'>No Orders found</td></tr>");
+$('.post-type-shop_order span.displaying-num').css('display','none');
+<?php } ?>
+
+
+<?php }else{ ?>
+$('button.toggle-sub-orders').on('click', function(e) {
             e.preventDefault();
 
             $('tr.sub-order').toggle();
         });
+<?php } ?>
+
+        
+
+
     });
     </script>
 
@@ -165,7 +193,52 @@ function wmp_admin_shop_order_scripts() {
     <?php
 }
 
+
+
+function wmp_is_seller(){
+   if(get_user_role(get_current_user_id()) == 'seller' ){
+    return true;
+   }else{
+    return false;
+   } 
+}
+
+
+
+
+function wmp_seller_product_listing_scripts() {
+    $current_role = get_user_role(get_current_user_id());
+    ?>
+    <script type="text/javascript">
+    jQuery(function($) {
+        <?php if($current_role == 'seller'){ ?>
+            $('.post-type-product ul.subsubsub').css('display','none');
+            $('.post-type-product #filter-by-date').css('display','none');
+            $('.post-type-product .dropdown_product_cat').css('display','none');
+            $('.post-type-product #dropdown_product_type').css('display','none');
+            $('.post-type-product #post-query-submit').css('display','none');
+            <?php if(count_seller_products( get_current_user_id() ) <=0 ){ ?>
+                $('.post-type-product #the-list').empty();
+                $('.post-type-product #the-list').html("<tr class='no-items'><td class='colspanchange' colspan='12'>No Products found</td></tr>");
+                $('.post-type-product span.displaying-num').css('display','none');
+                <?php } ?>
+
+
+                <?php } ?>
+
+            });
+    </script> <?php
+}
+
+
+
+
+
+
+
 add_action( 'admin_footer-edit.php', 'wmp_admin_shop_order_scripts' );
+
+add_action( 'admin_footer-edit.php', 'wmp_seller_product_listing_scripts' );
 
 /**
  * Delete sub orders when parent order is trashed
@@ -241,7 +314,12 @@ function wmp_admin_shop_order_toggle_sub_orders() {
     global $wp_query;
 
     if ( isset( $wp_query->query['post_type'] ) && $wp_query->query['post_type'] == 'shop_order' ) {
+
+
+if(get_user_role(get_current_user_id()) != 'seller'){
         echo '<button class="toggle-sub-orders button">' . __( 'Toggle Sub-orders', 'wmp' ) . '</button>';
+}
+
     }
 }
 
@@ -266,3 +344,48 @@ function wmp_send_notification_on_product_publish( $post ) {
 }
 
 add_action( 'pending_to_publish', 'wmp_send_notification_on_product_publish' );
+
+
+
+
+
+
+
+
+function wmp_seller_profile_menu() {
+    add_menu_page( 'Profile', 'Profile', 'read', 'seller-profile', 'wmp_create_seller_profile' );
+}
+
+function wmp_create_seller_profile() {
+    include(WMP_DIR.'admin-templates/seller-profile.php');
+}
+
+function seller_login_redirect($redirect_to, $request, $user) {
+$redirect_url = admin_url( 'index.php' );
+ if(get_user_role($user->ID) == 'seller'){
+return $redirect_url;
+}else{
+  return admin_url('index.php');
+}
+
+}
+
+
+
+//remove profile menu
+function remove_profile_menu(){
+  remove_menu_page( 'profile.php' ); 
+}
+
+
+
+if(wmp_is_seller()){
+add_action('admin_menu', 'wmp_seller_profile_menu' );
+add_action( 'admin_menu', 'remove_profile_menu' );
+}
+
+add_filter("login_redirect", "seller_login_redirect", 10, 3);
+
+
+
+

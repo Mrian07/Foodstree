@@ -4,6 +4,7 @@
 function count_seller_products( $seller_id ) {
 global $wpdb;
 $count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $seller_id AND post_type IN ('product') and post_status = 'publish'" );
+return $count;
 }
 
 
@@ -11,7 +12,11 @@ $count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = 
 //Change default icon for 'Sellers' dashboard menu
 function wmp_admin_head(){
 ?>
-<style type="text/css">#adminmenu #toplevel_page_sellers div.wp-menu-image:before { content: "\f307"; }</style>
+<style type="text/css">
+#adminmenu #toplevel_page_sellers div.wp-menu-image:before { content: "\f307"; }
+#adminmenu #menu-posts-shop_order div.wp-menu-image:before { content: "\f157"; }
+#adminmenu #toplevel_page_seller-profile div.wp-menu-image:before { content: "\f110"; }
+</style>
 <?php
 }   
 
@@ -170,7 +175,11 @@ function seller_listing($seller_id){
 //get user role
 function get_user_role($uid) {
     global $wpdb;
-$role = $wpdb->get_var("SELECT meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'wp_capabilities' AND user_id = {$uid}");
+if ( is_multisite() ) { 
+$role = $wpdb->get_var("SELECT meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'wp_".get_current_blog_id()."_capabilities' AND user_id = {$uid}");
+}else{
+  $role = $wpdb->get_var("SELECT meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'wp_capabilities' AND user_id = {$uid}");
+}
   if(!$role) return 'non-user';
 $rarr = unserialize($role);
 $roles = is_array($rarr) ? array_keys($rarr) : array('non-user');

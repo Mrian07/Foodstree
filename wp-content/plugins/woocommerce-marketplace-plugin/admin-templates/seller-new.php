@@ -21,12 +21,21 @@ if ( isset($_REQUEST['action']) && 'createuser' == $_REQUEST['action'] ) {
 	if ( ! current_user_can('create_users') )
 		wp_die(__('Cheatin&#8217; uh?'));
 
-	if ( ! is_multisite() ) {
+	//if ( ! is_multisite() ) {
 		$user_id = edit_user();
+
+
+		
 
 		if ( is_wp_error( $user_id ) ) {
 			$add_user_errors = $user_id;
 		} else {
+
+if ( is_multisite() ) {
+$user = get_userdata( $user_id );
+$user->set_role('seller');
+}
+
 			if ( current_user_can( 'list_users' ) )
 				$redirect = '?page=sellers&update=add&id=' . $user_id;
 			else
@@ -34,7 +43,7 @@ if ( isset($_REQUEST['action']) && 'createuser' == $_REQUEST['action'] ) {
 			wp_redirect( $redirect );
 			die();
 		}
-	} 
+	//} 
 }
 
 
