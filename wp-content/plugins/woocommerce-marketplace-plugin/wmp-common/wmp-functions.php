@@ -44,18 +44,7 @@ function wmp_seller_additionaldata_save( $user_id ) {
 
     update_user_meta($user_id, 'activate', $_POST['activate']);
     
-    //update sellers pin codes they sell to 
-    if(isset($_FILES['seller_pincode_list']) && $aj_csvimport->is_valid_file($_FILES['seller_pincode_list'])){
-            unset_user_pincodes($user_id);
-            $csv_json = $aj_csvimport->parseCSV($_FILES['seller_pincode_list']['tmp_name']);
-            
-            $pincodeData = json_decode($csv_json);
-            $i=1;
-            while ($i <= count($pincodeData) ) {
-                update_seller_to_pincode($user_id,$pincodeData[$i][0]);
-                $i++;
-            }
-    }
+
 
   }
 
@@ -252,12 +241,20 @@ function wmp_get_readable_seller_rating( $seller_id ) {
     <?php
 }
 
-// function to hook into CSV plugin filter and configure csv upload components
+//hook into CSV plugin filter and configure csv upload components
 function theme_add_csv_components($defined_csv_components){
 
     $defined_csv_components['pincodes'] = array('pincode',
                                                 'Taluk',
                                                 'statename');
+    
+    $defined_csv_components['seller_pincodes'] = array('Postal Code',
+                                                        'City Name',
+                                                        'State',
+                                                        'Domestic Service',
+                                                        'International Services',
+                                                        'ODA-OPA / Regular Classification (Dom +Intl)',
+                                                        'COD Serviceable (Domestic Only)');
     return $defined_csv_components;
 
 }
@@ -284,6 +281,7 @@ function import_csv_pincode_record($import_response,$record){
 }
 add_filter('ajci_import_record_pincodes','import_csv_pincode_record',10,2);
 
+//check if pincode exists in db
 function pincode_exists_db($pincode){
     global $wpdb;
 
@@ -293,6 +291,7 @@ function pincode_exists_db($pincode){
     return is_numeric( $record );
 }
 
+//add pincode to the custom pincodes table
 function add_pincode_db($record){
     global $wpdb;
     $pincode_data = array('pincode'=>$record[0],'city'=>$record[1],'state'=>$record[2]);
@@ -302,6 +301,7 @@ function add_pincode_db($record){
     return $wpdb->insert_id;
 }
 
+// update a seller id to a pincode
 function update_seller_to_pincode($user_id,$pincode){
     global $wpdb;
 
@@ -343,3 +343,58 @@ function unset_user_pincodes($user_id){
     }
     
 }
+
+
+// seller pincodes csv file upload function 
+function pincode_csv_upload(){
+    global $aj_csvimport;
+    $parse_valid_csv = $aj_csvimport->csv_validate();
+    if($parse_valid_csv['success']){
+        $preview_data = ajci_display_csv_preview($_POST['csv_component'],$parse_valid_csv);
+        wp_send_json($preview_data);
+    }else{
+       $response = $parse_valid_csv['msg'];
+       wp_send_json($response);
+    }
+}
+add_action("wp_ajax_pincode_csv_upload", "pincode_csv_upload");
+
+function pincode_csv_upload_confirm(){
+    global $aj_csvimport;
+    
+    $uniquefilename = $_POST['uniquename'];
+    $realfilename = $_POST['realname'];
+    $component = $_POST['csv_component'];       
+    $meta = array();
+    $meta['header'] = (isset($_POST['csv_header']))? true:false ;
+    $meta['user_id'] = (int) $_POST['user_id']; 
+    $id = $aj_csvimport->init_csv_data($uniquefilename,$realfilename,$component,$meta);
+    if(!is_wp_error($id)){
+        $response = array('csv_id'=>$id);
+        
+        wp_send_json($response);
+    }
+    else{
+        wp_send_json($id);
+    }
+    
+}
+add_action("wp_ajax_pincode_csv_upload_confirm", "pincode_csv_upload_confirm");
+
+// function to add a pincode to a seller by hooking into the CSV plugin filter ajci_import_record_seller_pincodes
+function import_csv_seller_pincode_record($import_response,$record,$csv_master_info){
+ 
+    if(count($record) != 7){
+       $import_response['imported'] = false;
+       $import_response['reason'] = 'Column count does not match';
+    }
+    else{
+        $metadata = maybe_unserialize($csv_master_info->meta);
+       //add a seller to a pincode $record[0]
+       update_seller_to_pincode($metadata['user_id'],$record[0]);
+       $import_response['imported'] = true;
+    }
+    
+    return $import_response;
+}
+add_filter('ajci_import_record_seller_pincodes','import_csv_seller_pincode_record',10,3);
