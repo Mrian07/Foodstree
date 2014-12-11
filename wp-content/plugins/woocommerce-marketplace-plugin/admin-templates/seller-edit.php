@@ -88,7 +88,14 @@ if ( current_user_can( 'edit_user' ) ) {
 <h3><?php _e('Name') ?></h3>
 
 <table class="form-table">
-    <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/form/jquery.form.js"></script>
+
+    <?php
+    	wp_enqueue_script(
+		'jquery_form_js',
+		plugins_url( '/js/form/jquery.form.js' , __FILE__ ),
+		array( 'jquery' )
+	);
+    ?>
 	<tr>
 		<th><label for="seller_name"><?php _e('Seller Name'); ?></label></th>
 		<td><input type="text" name="seller_name" id="seller_name" value="<?php echo get_user_meta( $user_id, 'seller_name', true ); ?>" class="regular-text" /> <span class="description"></span></td>

@@ -18,26 +18,6 @@
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script>
-
-
-
-jQuery.noConflict();
-(function( $ ) {
-  
-
-if ($.cookie('user_pincode') === 'undefined'){
-
-		$("#pincodepop").css('display', 'block');
-		$(".background_overlay").css('display', 'block');
-	}
-
-})(jQuery);
-
-</script>
-
-
-
 
 <?php wp_head(); ?>
 </head>
@@ -47,12 +27,12 @@ if ($.cookie('user_pincode') === 'undefined'){
 
 
 <!-- Pincode modal -->
-<!-- <div id="pincodepop">
+<div id="pincodepop">
 <span>Pincode: </span>
 <input type="text" name="pincode" id="pincode" />
 <button id="pincode-btn">Submit</button>
 </div>
-<div id="background" class="background_overlay"></div> -->
+<div id="background" class="background_overlay"></div>
 
 
 

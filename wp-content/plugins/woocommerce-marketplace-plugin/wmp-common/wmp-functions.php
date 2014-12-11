@@ -310,13 +310,13 @@ function update_seller_to_pincode($user_id,$pincode){
     $seller_ids = $wpdb->get_var( $query );
     if(is_null($seller_ids)){
         $update_seller_ids = array();
-        $update_seller_ids[] = $user_id;
+        $update_seller_ids[] = (string) $user_id;
     }
     else{
         //var_dump($seller_ids);
         $update_seller_ids = maybe_unserialize($seller_ids);
         if(!in_array($user_id, $update_seller_ids)){
-            $update_seller_ids[] = $user_id;
+            $update_seller_ids[] = (string) $user_id;
         }
     }
     

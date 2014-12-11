@@ -148,11 +148,6 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 		<td><textarea name="seller_address" id="seller_address"><?php echo esc_attr( $new_seller_address ); ?></textarea></td>
 	</tr>
 
-	<tr class="form-field">
-		<th scope="row"><label for="seller_pincode_list"><?php _e('Upload pincode list CSV') ?></label></th>
-		<td><input type="file" name="seller_pincode_list" id="seller_pincode_list" /></td>
-	</tr>
-
 	<tr>
 		<th scope="row"><label for="seller_activate"><?php _e('Activate Seller?') ?></label></th>
 		<td><input type="checkbox" name="seller_activate" id="seller_activate" value="1" <?php checked( $new_seller_activate ); ?> /> <?php _e('Activate the seller immediately.'); ?></td>
