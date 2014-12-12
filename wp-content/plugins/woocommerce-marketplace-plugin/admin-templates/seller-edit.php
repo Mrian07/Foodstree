@@ -69,12 +69,37 @@ if ( current_user_can( 'edit_user' ) ) {
 } ?>
 </h2>
 <?php
+wp_enqueue_script(
+        'jquery_form_js',
+        plugins_url( '/js/form/jquery.form.js' , __FILE__ ),
+        array( 'jquery' )
+);
+
+/*wp_enqueue_script(
+        'custom_js',
+        plugins_url( '/js/custom.js' , __FILE__ ),
+        array( 'jquery' )
+);*/
+?>
+<?php
 /**
  * Fires inside the your-profile form tag on the user editing screen.
  *
  * @since 3.0.0
  */
 ?>
+<h3><?php _e('Pincode Info') ?></h3>
+<table class="form-table">
+ 	<tr>
+            <th><?php _e('Pincode'); ?></th>
+            <td><input type="text" name="pincode_str" id="pincode_str"  maxlength="6"  size="6"/>
+	    <button type="button" class="btn" id="pin-search">Search</button><span class="description"><?php _e('Input a Pincode to find the seller info for the pincode.'); ?></span></td>
+	</tr>   
+        <tr>
+            <td id='pin-search-response' colspan="2">
+            </td> 
+        </tr>
+</table>
 <form id="your-profile" enctype="multipart/form-data" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
 <?php wp_nonce_field('update-user_' . $user_id) ?>
 <p>
@@ -84,18 +109,10 @@ if ( current_user_can( 'edit_user' ) ) {
 
 
 
-
 <h3><?php _e('Name') ?></h3>
 
 <table class="form-table">
 
-    <?php
-    	wp_enqueue_script(
-		'jquery_form_js',
-		plugins_url( '/js/form/jquery.form.js' , __FILE__ ),
-		array( 'jquery' )
-	);
-    ?>
 	<tr>
 		<th><label for="seller_name"><?php _e('Seller Name'); ?></label></th>
 		<td><input type="text" name="seller_name" id="seller_name" value="<?php echo get_user_meta( $user_id, 'seller_name', true ); ?>" class="regular-text" /> <span class="description"></span></td>
@@ -248,15 +265,20 @@ if ( $show_password_fields ) :
     
 <form action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" enctype="multipart/form-data" id="pincode_csv_upload" >  
  <table class="form-table">
-   
-    <tr class="form-field">
+     
+    <tr>
+       <th scope="row"><label for="seller_pincode_reset"><?php _e('Reset Seller pincodes') ?></label></th>
+       <td><button type="button" name="reset-seller-pincode" id="reset-seller-pincode">Reset</button><span id="rst-response"></span></td>
+   </tr>  
+    <tr class="form-field" id="pincode_upload_block">
                 <?php wp_nonce_field('seller_pincode_upload','pincode_upload_ajax_nonce'); ?>
                  <input type='hidden' name='action' value='pincode_csv_upload'/>
                  <input type='hidden' name='csv_component' value='seller_pincodes'/>
 		<th scope="row"><label for="seller_pincode_list"><?php _e('Update pincode list') ?></label></th>
-                <td><input type="file" name="csv_file" id="seller_pincode_list" /><button type="submit" class="btn" id="pin-upload-submit">Upload</button><span class="description"><?php _e('Update pincode list where the seller ships items. Only CSV supported.'); ?></span> <button type="button" name="reset-seller-pincode" id="reset-seller-pincode">Reset Pincodes</button></td>
+                <td><input type="file" name="csv_file" id="seller_pincode_list" /><button type="submit" class="btn" id="pin-upload-submit">Upload</button><span class="description"><?php _e('Update pincode list where the seller ships items. Only CSV supported.'); ?></span></td>
 
 	</tr>
+
  </table>
 </form>
  
@@ -276,9 +298,10 @@ break;
 <script type="text/javascript">
     jQuery(document).ready(function() {        
     
+        jQuery('#pincode_upload_block').css('display','none');
+        
         jQuery('#pincode_csv_upload').on('submit', function(e){
             
-            var user_id =  jQuery('#your-profile #user_id').val();
             var options = { 
                   target:         '#csv-import-response',
                   resetForm:      true        // reset the form after successful submit    
@@ -331,11 +354,12 @@ break;
                                   console.log(data);
                                   if(data.code ==='ERROR'){
                                       jQuery(_this).prop('disabled', false);
-                                      //jQuery("#log_view").html('Error CSV file already imported!!');                                      
+                                      jQuery("#log_view").html('Error CSV file already imported!!');                                      
                                       clearInterval(check_csv_import_progress);
                                   }else{
                                         if(data.totalparts == data.totalcompleted){ 
                                             jQuery(_this).prop('disabled', false);
+                                            jQuery('#pincode_upload_block').css('display','none');
                                             var logstable = '<table>';
                                             if(data.log_paths.success != ''){
                                                 logstable = logstable+'<tr><td>Successfull Import</td><td><a href="'+data.log_paths.success+'" target="_blank">View Log</a></td></tr>';
@@ -365,7 +389,7 @@ break;
             if(r == true){
                 jQuery(this).prop('disabled', true); 
                 var _this = jQuery(this);
-                jQuery("#csv-import-response").html('Please Wait Resetting in progress..'); 
+                jQuery("#rst-response").html('Please Wait Resetting in progress..'); 
 
                 var user_id =  jQuery('#your-profile #user_id').val();
                 jQuery.post( ajaxurl,
@@ -377,14 +401,50 @@ break;
                     console.log(data);
                     if(data.code ==='ERROR'){
                         jQuery(_this).prop('disabled', false);
-                        jQuery("#csv-import-response").html('Error reseting seller pincodes'); 
+                        jQuery("#rst-response").html('Error reseting seller pincodes'); 
                     }else{
+                        jQuery('#pincode_upload_block').css('display','');
                         jQuery(_this).prop('disabled', false);
-                        jQuery("#csv-import-response").html('Pincodes reseted for seller'); 
+                        jQuery("#rst-response").html('Pincodes reseted for seller'); 
                       }
                   },'json');  
            }
         }); 
+        
+        jQuery('#pin-search').on('click', function(e){
+            var pincode = jQuery('#pincode_str').val();
+            var user_id =  jQuery('#your-profile #user_id').val();
+            
+            var reg = /^[0-9]+$/;
+
+            if (pincode == ''){
+                alert('Pincode cannot be empty.');
+                return false;
+            }else if (!reg.test(pincode)){
+                alert('Pincode should be numbers only.');
+                return false;
+            }else if ((pincode.length)< 6 || (pincode.length)>6 ){
+                alert('Pincode should only be 6 digits');
+                return false;
+            }else{
+            
+            jQuery.post( ajaxurl,
+             {
+               action    : 'get_seller_pincode_info',
+               user_id    : user_id,
+               pincode : pincode
+             },
+             function(data) { 
+               console.log(data);
+               if(data.code ==='OK'){
+                   jQuery("#pin-search-response").html(data.msg); 
+               }
+             },'json');  
+             
+            }
+            
+        }); 
+        
         
         
 	if (window.location.hash == '#password') {

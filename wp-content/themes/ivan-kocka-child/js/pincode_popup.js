@@ -24,6 +24,9 @@ jQuery(document).ready(function(){
                 jQuery.cookie('user_pincode', pincode, { expires: 365, path: '/' });
                 jQuery("#pincodepop").css('display', 'none');
                 jQuery(".background_overlay").css('display', 'none');
+                
+                jQuery("#content").html('<h2 align="center">Loading....</h2>');
+                
                 location.reload();
             }
 

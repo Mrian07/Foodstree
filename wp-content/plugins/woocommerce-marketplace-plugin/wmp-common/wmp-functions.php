@@ -302,25 +302,35 @@ function add_pincode_db($record){
 }
 
 // update a seller id to a pincode
-function update_seller_to_pincode($user_id,$pincode){
+function update_seller_to_pincode($user_id,$record){
     global $wpdb;
 
+    $flag = 0;
     $update_seller_ids = array();
-    $query = $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode LIKE %s", $pincode );
+    $query = $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode LIKE %s", $record[0] );
     $seller_ids = $wpdb->get_var( $query );
     if(is_null($seller_ids)){
-        $update_seller_ids = array();
-        $update_seller_ids[] = (string) $user_id;
+        $sellers_data = array();
+        $temparray =  array('user_id' => (string) $user_id,'cod'=> (bool) $record[6]);
+        array_push($sellers_data, $temparray);
+        $flag = 1;
     }
     else{
-        $update_seller_ids = maybe_unserialize($seller_ids);
-        if(!in_array($user_id, $update_seller_ids)){
-            $update_seller_ids[] = (string) $user_id;
+        $sellers_data = maybe_unserialize($seller_ids);
+        foreach($sellers_data as $seller_data){
+            $update_seller_ids[] = $seller_data['user_id'];
+        }
+        
+        if(!in_array($record[0], $update_seller_ids)){
+            $temparray = array('user_id' => (string) $user_id,'cod'=> (bool) $record[6]);
+            $flag = 1;
+            array_push($sellers_data, $temparray);
         }
     }
     
-    if(!empty($update_seller_ids)){
-        $wpdb->update( $wpdb->prefix . "pincodes",array('seller_id' => maybe_serialize($update_seller_ids)),array('pincode'=>$pincode) );
+    // update only if seller was not associated to pincode
+    if($flag == 1){
+        $wpdb->update( $wpdb->prefix . "pincodes",array('seller_id' => maybe_serialize($sellers_data)),array('pincode'=>$record[0]) );
     }
 }
 
@@ -332,13 +342,16 @@ function unset_seller_pincodes($user_id){
     $seller_pincodes = $wpdb->get_results( $query );
     
     foreach($seller_pincodes as $pincode){
-        $seller_ids = maybe_unserialize($pincode->seller_id);
-        
+        $seller_ids = array();
+        $sellers_data = maybe_unserialize($pincode->seller_id);
+        foreach($sellers_data as $key => $seller_data){
+            $seller_ids[$key] = $seller_data['user_id'];
+        }
         if (($key = array_search($user_id, $seller_ids)) !== FALSE) {
-            unset($seller_ids[$key]);
+            unset($sellers_data[$key]);
         }
         
-        $wpdb->update( $wpdb->prefix . "pincodes",array('seller_id' => maybe_serialize($seller_ids)),array('id'=>$pincode->id) );
+        $wpdb->update( $wpdb->prefix . "pincodes",array('seller_id' => maybe_serialize($sellers_data)),array('id'=>$pincode->id) );
     }
     
 }
@@ -390,7 +403,7 @@ function import_csv_seller_pincode_record($import_response,$record,$csv_master_i
     else{
         $metadata = maybe_unserialize($csv_master_info->meta);
        //add a seller to a pincode $record[0]
-       update_seller_to_pincode($metadata['user_id'],$record[0]);
+       update_seller_to_pincode($metadata['user_id'],$record);
        $import_response['imported'] = true;
     }
     
@@ -410,3 +423,38 @@ function ajax_reset_seller_pincodes(){
     }
 }
 add_action("wp_ajax_reset_seller_pincodes", "ajax_reset_seller_pincodes");
+
+//ajax method to get a seller information for a pincode
+function ajax_get_seller_pincode_info(){
+    global $wpdb;
+    
+    $pincode = $_POST['pincode'];
+    $user_id = $_POST['user_id'];
+    $query = $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode LIKE %s", $pincode );
+    $sellers_info = $wpdb->get_var( $query );  
+    if(is_null($sellers_info)){
+        $response = array('code'=>'OK','msg'=>'Pincode not assigned to seller');
+    }else{
+        $sellers_info = maybe_unserialize($sellers_info);
+        $found = 0;
+        foreach ($sellers_info as  $seller_info){
+            if((int)$seller_info['user_id'] != $user_id){
+                continue;
+            }else{
+                $cod = ($seller_info['cod'])? 'on' : 'off';
+                $msg = 'Pincode is assigned to seller , COD: '.$cod;
+                $response = array('code'=>'OK','msg'=>$msg);
+                $found = 1;
+                break;
+            }
+        }
+        
+        if($found == 0)
+            $response = array('code'=>'OK','msg'=>'Pincode not assigned to seller');
+    }
+    
+    
+    wp_send_json($response);
+    
+}
+add_action("wp_ajax_get_seller_pincode_info", "ajax_get_seller_pincode_info");
