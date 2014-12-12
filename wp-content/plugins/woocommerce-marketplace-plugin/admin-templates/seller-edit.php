@@ -254,7 +254,7 @@ if ( $show_password_fields ) :
                  <input type='hidden' name='action' value='pincode_csv_upload'/>
                  <input type='hidden' name='csv_component' value='seller_pincodes'/>
 		<th scope="row"><label for="seller_pincode_list"><?php _e('Update pincode list') ?></label></th>
-		<td><input type="file" name="csv_file" id="seller_pincode_list" /><button type="submit" class="btn" id="pin-upload-submit">Upload</button><span class="description"><?php _e('Update pincode list where the seller ships items. Only CSV supported.'); ?></span></td>
+                <td><input type="file" name="csv_file" id="seller_pincode_list" /><button type="submit" class="btn" id="pin-upload-submit">Upload</button><span class="description"><?php _e('Update pincode list where the seller ships items. Only CSV supported.'); ?></span> <button type="button" name="reset-seller-pincode" id="reset-seller-pincode">Reset Pincodes</button></td>
 
 	</tr>
  </table>
@@ -359,7 +359,34 @@ break;
         
     
     }); 
-    
+ 
+        jQuery('#reset-seller-pincode').on('click', function(e){
+            var r = confirm("Confirm Reset Seller Pincodes.");
+            if(r == true){
+                jQuery(this).prop('disabled', true); 
+                var _this = jQuery(this);
+                jQuery("#csv-import-response").html('Please Wait Resetting in progress..'); 
+
+                var user_id =  jQuery('#your-profile #user_id').val();
+                jQuery.post( ajaxurl,
+                  {
+                    action    : 'reset_seller_pincodes',
+                    user_id    : user_id,
+                  },
+                  function(data) { 
+                    console.log(data);
+                    if(data.code ==='ERROR'){
+                        jQuery(_this).prop('disabled', false);
+                        jQuery("#csv-import-response").html('Error reseting seller pincodes'); 
+                    }else{
+                        jQuery(_this).prop('disabled', false);
+                        jQuery("#csv-import-response").html('Pincodes reseted for seller'); 
+                      }
+                  },'json');  
+           }
+        }); 
+        
+        
 	if (window.location.hash == '#password') {
 		document.getElementById('pass1').focus();
 	}    

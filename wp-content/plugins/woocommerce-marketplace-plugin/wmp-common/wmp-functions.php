@@ -313,7 +313,6 @@ function update_seller_to_pincode($user_id,$pincode){
         $update_seller_ids[] = (string) $user_id;
     }
     else{
-        //var_dump($seller_ids);
         $update_seller_ids = maybe_unserialize($seller_ids);
         if(!in_array($user_id, $update_seller_ids)){
             $update_seller_ids[] = (string) $user_id;
@@ -325,7 +324,7 @@ function update_seller_to_pincode($user_id,$pincode){
     }
 }
 
-function unset_user_pincodes($user_id){
+function unset_seller_pincodes($user_id){
     global $wpdb;
     
     $like_string = '%"'.$user_id.'";%';
@@ -398,3 +397,16 @@ function import_csv_seller_pincode_record($import_response,$record,$csv_master_i
     return $import_response;
 }
 add_filter('ajci_import_record_seller_pincodes','import_csv_seller_pincode_record',10,3);
+
+//ajax method to reset a seller pincodes
+function ajax_reset_seller_pincodes(){
+    if(isset($_POST['user_id']) && intval($_POST['user_id']) > 0){
+        unset_seller_pincodes($_POST['user_id']);
+        $response= array('code'=>'OK','msg'=>'Pincodes reseted for seller');
+        wp_send_json($response);
+    }else{
+        $response= array('code'=>'ERROR','msg'=>'Invalid user id');
+        wp_send_json($response);
+    }
+}
+add_action("wp_ajax_reset_seller_pincodes", "ajax_reset_seller_pincodes");
