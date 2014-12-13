@@ -25,7 +25,7 @@ jQuery(document).ready(function(){
                 jQuery("#pincodepop").css('display', 'none');
                 jQuery(".background_overlay").css('display', 'none');
                 
-                jQuery("#content").html('<h2 align="center">Loading....</h2>');
+                jQuery("#content").html("<div id='pre-loader'></div>");
                 
                 location.reload();
             }

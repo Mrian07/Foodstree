@@ -44,3 +44,9 @@ z-index:1002;
 overflow: auto;
 font-size: 14px;
 }
+
+#pre-loader{
+background: url(images/loader.gif) no-repeat center center;
+width: 100%;
+height: 100px;
+}

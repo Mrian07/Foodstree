@@ -26,16 +26,15 @@ function get_pincode_sellers(){
     
     $sellers = array();
     if(isset($_COOKIE['user_pincode'])){
-       $seller_ids = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
-       $seller_ids = maybe_unserialize($seller_ids);
+       $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
+       $sellers_data = maybe_unserialize($sellers_data);
        
-       if(empty($seller_ids)){
+       if(empty($sellers_data)){
            // NOT to fetch products if the pincode has no sellers
            $sellers[] = 0;
        }else{
-           
-           foreach ($seller_ids as $seller_id)
-               $sellers[] = (int)$seller_id;
+           foreach ($sellers_data as $seller)
+               $sellers[] = (int)$seller['user_id'];
        }
         
     }else{
@@ -70,3 +69,54 @@ function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
 	return $terms;
 }
 add_filter('get_terms', 'get_terms_posts_count_filter', 10, 3);
+
+//disable cod if sellers of cart products has no cod for the pincode
+function disable_cod_pincode_not_serviceable( $available_gateways ) {
+    global $woocommerce;
+    
+    $seller_ids = array();
+    foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
+           $data = $values['data'];
+           $post_data = $data->post;
+           $seller_ids[] = (int)$post_data->post_author;
+    }
+    
+    $seller_ids = array_unique($seller_ids);
+    
+    if(! is_cod_serviceable($seller_ids)){
+    
+        unset(  $available_gateways['cod'] );
+    }
+    
+    return $available_gateways;
+
+}
+add_filter('woocommerce_available_payment_gateways','disable_cod_pincode_not_serviceable',10,1); 
+
+//check if sellers have COD on for the pincode
+function is_cod_serviceable($seller_ids){
+    global $wpdb;
+    
+    if(isset($_COOKIE['user_pincode'])){
+       $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
+       $sellers_data = maybe_unserialize($sellers_data);
+       
+       if(empty($sellers_data))
+           return false;
+       
+       foreach($sellers_data as $seller_data){
+           
+           if(! in_array((int) $seller_data['user_id'],$seller_ids))
+                continue;
+           
+           if(!$seller_data['cod'])
+               return false;
+           
+       }
+       
+       return true;
+    }
+    else{
+        return false;
+    }
+} 
