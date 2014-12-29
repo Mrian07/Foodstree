@@ -69,12 +69,37 @@ if ( current_user_can( 'edit_user', get_current_user_id()) ) {
 } ?>
 </h2>
 <?php
+wp_enqueue_script(
+        'jquery_form_js',
+        plugins_url( '/js/form/jquery.form.js' , __FILE__ ),
+        array( 'jquery' )
+);
+
+wp_enqueue_script(
+        'custom_js',
+        plugins_url( '/js/custom.js' , __FILE__ ),
+        array( 'jquery' )
+);
+?>
+<?php
 /**
  * Fires inside the your-profile form tag on the user editing screen.
  *
  * @since 3.0.0
  */
 ?>
+<h3><?php _e('Pincode Info') ?></h3>
+<table class="form-table">
+ 	<tr>
+            <th><?php _e('Pincode'); ?></th>
+            <td><input type="text" name="pincode_str" id="pincode_str"  maxlength="6"  size="6"/>
+	    <button type="button" class="btn" id="pin-search">Search</button><span class="description"><?php _e('Input a Pincode to find the seller info for the pincode.'); ?></span></td>
+	</tr>   
+        <tr>
+            <td id='pin-search-response' colspan="2">
+            </td> 
+        </tr>
+</table>
 <form id="your-profile" enctype="multipart/form-data" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
 <?php wp_nonce_field('update-user_' . $user_id) ?>
 <p>
@@ -84,18 +109,10 @@ if ( current_user_can( 'edit_user', get_current_user_id()) ) {
 
 
 
-
 <h3><?php _e('Name') ?></h3>
 
 <table class="form-table">
 
-    <?php
-    	wp_enqueue_script(
-		'jquery_form_js',
-		plugins_url( '/js/form/jquery.form.js' , __FILE__ ),
-		array( 'jquery' )
-	);
-    ?>
 	<tr>
 		<th><label for="seller_name"><?php _e('Seller Name'); ?></label></th>
 		<td><input type="text" name="seller_name" id="seller_name" value="<?php echo get_user_meta( $user_id, 'seller_name', true ); ?>" class="regular-text" /> <span class="description"></span></td>
@@ -248,22 +265,33 @@ if ( $show_password_fields ) :
     
 <form action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" enctype="multipart/form-data" id="pincode_csv_upload" >  
  <table class="form-table">
-   
-    <tr class="form-field">
+     
+    <tr>
+       <th scope="row"><label for="seller_pincode_reset"><?php _e('Reset Seller pincodes') ?></label></th>
+       <td><button type="button" name="reset-seller-pincode" id="reset-seller-pincode">Reset</button><span id="rst-response"></span></td>
+   </tr>  
+    <tr class="form-field" id="pincode_upload_block">
                 <?php wp_nonce_field('seller_pincode_upload','pincode_upload_ajax_nonce'); ?>
                  <input type='hidden' name='action' value='pincode_csv_upload'/>
                  <input type='hidden' name='csv_component' value='seller_pincodes'/>
 		<th scope="row"><label for="seller_pincode_list"><?php _e('Update pincode list') ?></label></th>
-		<td><input type="file" name="csv_file" id="seller_pincode_list" /><button type="submit" class="btn" id="pin-upload-submit">Upload</button><span class="description"><?php _e('Update pincode list where the seller ships items. Only CSV supported.'); ?></span></td>
+                <td><input type="file" name="csv_file" id="seller_pincode_list" /><button type="submit" class="btn" id="pin-upload-submit">Upload</button><span class="description"><?php _e('Update pincode list where the seller ships items. Only CSV supported.'); ?></span></td>
 
 	</tr>
+
  </table>
 </form>
  
  <table class="form-table">
+
         <tr>
             <td id='csv-import-response' colspan="2">
                 
+            </td> 
+        </tr>
+        <tr id='pre-loader-response' style='display:none'>
+            <td colspan="2">
+                <img src="<?php echo get_template_directory_uri()?>/images/loading.gif" /> 
             </td> 
         </tr>
  </table>    
@@ -274,92 +302,7 @@ break;
 }
 ?>
 <script type="text/javascript">
-    jQuery(document).ready(function() {        
-    
-        jQuery('#pincode_csv_upload').on('submit', function(e){
-            
-            var user_id =  jQuery('#your-profile #user_id').val();
-            var options = { 
-                  target:         '#csv-import-response',
-                  resetForm:      true        // reset the form after successful submit    
-              }
-              
-              jQuery(this).ajaxSubmit(options);
-              
-            e.preventDefault();
-        });  
-        
-        jQuery('#confirm_csv_import').live('submit', function(e){
-            jQuery(this).attr('action', ajaxurl);
-            var user_id =  jQuery('#your-profile #user_id').val();
-            data ={};
-            data['user_id'] = user_id;
-            data['action'] = 'pincode_csv_upload_confirm';
-            //console.log(data);
-            var options = { // target element(s) to be updated with server response
-                  data : data,
-                  resetForm:      true,        // reset the form after successful submit    
-                  dataType: 'json',
-                  success: afterConfirmSuccess,
-              }
-              
-            jQuery(this).ajaxSubmit(options);
-              
-            e.preventDefault();
-         }); 
-         
-         function afterConfirmSuccess (response){
-             console.log(response.csv_id);
-             var html_markup = "<div><p>To Start import click on the 'Import Start' button</p><input type='hidden' name='csv-master-id' id='csv-master-id' value='"+response.csv_id+"' /><input type='button' name='import-csv-start' id='import-csv-start' value='Import Start' /><div id='log_view'></div></div>";
-        
-            jQuery('#csv-import-response').html(html_markup);
-         }
-         
-         jQuery("#import-csv-start").live('click',function(){
-                 jQuery(this).prop('disabled', true); 
-                 jQuery("#log_view").html('Please Wait Import in progress..'); 
-                 var csv_id = jQuery('#csv-master-id').val();
-                 var _this = jQuery(this);
-                 var check_csv_import_progress = setInterval(function()
-                              {
-                                jQuery.post( ajaxurl,
-                                {
-                                  action    : 'ajci_csv_check_progress',
-                                  csv_id    : csv_id,
-                                },
-                                function(data) { 
-                                  console.log(data);
-                                  if(data.code ==='ERROR'){
-                                      jQuery(_this).prop('disabled', false);
-                                      //jQuery("#log_view").html('Error CSV file already imported!!');                                      
-                                      clearInterval(check_csv_import_progress);
-                                  }else{
-                                        if(data.totalparts == data.totalcompleted){ 
-                                            jQuery(_this).prop('disabled', false);
-                                            var logstable = '<table>';
-                                            if(data.log_paths.success != ''){
-                                                logstable = logstable+'<tr><td>Successfull Import</td><td><a href="'+data.log_paths.success+'" target="_blank">View Log</a></td></tr>';
-                                            }
-                                            if(data.log_paths.error != ''){
-                                                logstable = logstable+'<tr><td>Failed Import</td><td><a href="'+data.log_paths.error+'" target="_blank">View Log</a></td></tr>';
-                                            }
-                                            logstable = logstable+'</table>';
-                                            jQuery("#log_view").html(data.totalcompleted+' parts out of '+data.totalparts+' completed'+logstable); 
-                                            clearInterval(check_csv_import_progress);
-                                        }else{
-                                            jQuery("#log_view").html(data.totalcompleted+' parts out of '+data.totalparts+' completed'); 
-                                        } 
-                                    }
-                                },'json');  
-
-                              }, 15000);                         
-
-           });
-        
-        
-    
-    }); 
-    
+      
 	if (window.location.hash == '#password') {
 		document.getElementById('pass1').focus();
 	}    
