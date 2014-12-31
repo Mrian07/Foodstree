@@ -116,7 +116,7 @@ function seller_meta_box() {
       'product_seller',
       __( 'Seller', '' ),
       'seller_meta_box_callback',
-      $screen
+      $screen,'side','high'
     );
   }
 }
