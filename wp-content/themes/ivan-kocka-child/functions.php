@@ -71,4 +71,3 @@ function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
 	return $terms;
 }
 //add_filter('get_terms', 'get_terms_posts_count_filter', 10, 3);
-

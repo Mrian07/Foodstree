@@ -85,15 +85,88 @@ add_action('pre_user_query','wmp_user_query');
 
 
 
-
-//Author dropdown to product page
-add_action('init', 'wpse_74054_add_author_woocommerce', 999 );
-
-function wpse_74054_add_author_woocommerce() {
-    add_post_type_support( 'product', 'author' );
+// Add seller coloumn in products page
+add_filter('manage_product_posts_columns', 'wmp_columns_head_only_sellers', 10);
+add_action('manage_product_posts_custom_column', 'wmp_columns_content_only_sellers', 10, 2);
+ 
+function wmp_columns_head_only_sellers($defaults) {
+    $defaults['seller_name'] = 'Seller';
+    return $defaults;
+}
+function wmp_columns_content_only_sellers($column_name, $post_ID) {
+    if ($column_name == 'seller_name') {
+        $post_tmp = get_post($post_ID);
+        $seller_id = $post_tmp->post_author;
+        echo get_seller_name($seller_id);
+    }
 }
 
 
+
+
+
+//Add seller box in product page
+function seller_meta_box() {
+
+  $screens = array( 'product' );
+
+  foreach ( $screens as $screen ) {
+
+    add_meta_box(
+      'product_seller',
+      __( 'Seller', '' ),
+      'seller_meta_box_callback',
+      $screen,'side','high'
+    );
+  }
+}
+
+
+if( current_user_can('administrator') ) {
+  add_action( 'add_meta_boxes', 'seller_meta_box' );
+}
+
+
+
+function seller_meta_box_callback( $post ) {
+
+    $default_seller_id = DEFAULT_SELLER_ID;
+      $users = get_users('who=seller');
+
+    $output = "<select id=\"post_author_override\" name=\"post_author_override\" class=\"\">";
+
+    //Leave the admin in the list
+    //$output .= '<option value="'.$default_seller_id.'">'.get_seller_name($default_seller_id).'</option>';  
+
+    $seller_list = get_all_seller();
+
+    foreach($seller_list as $key=>$value)
+    {
+        
+
+        global $current_screen;
+        if( $current_screen->post_type =='product' && $current_screen->action == 'add'){
+            $sel = ($default_seller_id == $value)?"selected='selected'":'';
+}else{
+    $sel = ($post->post_author == $value)?"selected='selected'":'';
+}
+
+
+ 
+
+         $output .= '<option value="'.$value.'"'.$sel.'>'.get_seller_name($value).'</option>';
+     }
+    $output .= "</select>";
+    echo $output;
+}
+
+
+//get all seller id
+function get_all_seller(){
+global $wpdb;
+$seller = $wpdb->get_col("SELECT user_id FROM $wpdb->usermeta WHERE $wpdb->usermeta.meta_key = 'seller_name' ORDER BY $wpdb->usermeta.meta_value ASC");
+return $seller;
+}
 
 
 
