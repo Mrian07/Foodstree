@@ -4,7 +4,7 @@ add_action( 'wp_enqueue_scripts', 'enqueue_parent_theme_style' );
 function enqueue_parent_theme_style() {
     wp_enqueue_style( 'parent-style', get_template_directory_uri().'/style.css' );
     if(is_woocommerce()){
-        wp_enqueue_script('pincode_popup', get_stylesheet_directory_uri() . '/js/pincode_popup.js', array('jquery'), '', true);
+        //wp_enqueue_script('pincode_popup', get_stylesheet_directory_uri() . '/js/pincode_popup.js', array('jquery'), '', true);
     }
 }
 
@@ -19,7 +19,7 @@ function get_authored_products($query) {
     
     return $query;
 }
-add_filter('pre_get_posts', 'get_authored_products');
+//add_filter('pre_get_posts', 'get_authored_products');
 
 // get seller ids based on pincode value saved in the cookie
 function get_pincode_sellers(){
@@ -70,5 +70,7 @@ function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
         
 	return $terms;
 }
-add_filter('get_terms', 'get_terms_posts_count_filter', 10, 3);
+//add_filter('get_terms', 'get_terms_posts_count_filter', 10, 3);
+
+
 
