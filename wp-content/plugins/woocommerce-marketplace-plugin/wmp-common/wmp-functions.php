@@ -9,10 +9,10 @@ return $count;
 
 
 
-//count all products of seller by id
+//count all products except deleted product of seller by id
 function count_seller_all_products( $seller_id ) {
 global $wpdb;
-$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $seller_id AND post_type IN ('product')" );
+$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $seller_id AND post_type IN ('product') and post_status != 'trash'" );
 return $count;
 }
 
