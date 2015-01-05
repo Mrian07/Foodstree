@@ -49,6 +49,31 @@ if ( !current_user_can('edit_user',get_current_user_id()) )
 ?>
 
 
+<?php
+if (isset($_POST)){
+$required = array('seller_name'=>'Please enter seller name','email'=>'Please enter email address');
+unset($edit_error);
+$edit_error = array();
+foreach($required as $key=>$value){
+if(empty($_POST[$key])){
+$edit_error[] = $value;
+}
+}
+
+//print_r($edit_error);
+}
+unset($edit_error);
+?>
+
+<?php if ( isset( $edit_error )) : ?>
+<div class="error"><p><?php echo implode( "</p>\n<p>", $edit_error ); ?></p></div>
+<?php endif; ?>
+
+
+
+
+
+
 <?php if ( isset($_GET['updated']) ) : ?>
 	<div id="message" class="updated">
 		<p><strong><?php _e('Seller updated.') ?></strong></p>
@@ -56,10 +81,14 @@ if ( !current_user_can('edit_user',get_current_user_id()) )
 <?php endif; ?>
 
 
-<?php if ( isset( $errors ) && is_wp_error( $errors ) ) : ?>
+<?php if ( isset( $errors ) && is_wp_error( $errors ) && count($errors)>1 ) : ?>
 <div class="error"><p><?php echo implode( "</p>\n<p>", $errors->get_error_messages() ); ?></p></div>
 <?php endif; ?>
 
+
+<?php
+//print_r($_POST);
+?>
 
 
 <div class="wrap">
@@ -114,7 +143,7 @@ wp_enqueue_script(
 <table class="form-table">
 
 	<tr>
-		<th><label for="seller_name"><?php _e('Seller Name'); ?></label></th>
+		<th><label for="seller_name"><?php _e('Seller Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input type="text" name="seller_name" id="seller_name" value="<?php echo get_user_meta( $user_id, 'seller_name', true ); ?>" class="regular-text" /> <span class="description"></span></td>
 	</tr>
 
