@@ -71,3 +71,7 @@ function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
 	return $terms;
 }
 //add_filter('get_terms', 'get_terms_posts_count_filter', 10, 3);
+function register_my_menu() {
+  register_nav_menu('secondry-menu',__( 'Secondry' ));
+}
+add_action( 'init', 'register_my_menu' );

@@ -32,7 +32,7 @@ if( ivan_get_option('title-wrapper-color-scheme') != null ) {
 				if( is_home() || is_singular('post') ) :
 					if( ivan_get_option('title-desc-blog') != '' ) : ?>
 						<div class="title-description">
-							<p><?php echo nl2br(ivan_get_option('title-desc-blog')); ?></p>
+							<p><?php echo nl2br(ivan_get_option('title-desc-blog')); ?>fggg</p>
 						</div>
 					<?php 
 					endif;
