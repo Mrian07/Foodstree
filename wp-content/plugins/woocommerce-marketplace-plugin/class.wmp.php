@@ -39,7 +39,8 @@ if ( ! class_exists( 'AJENCY_WMP' ) ) {
             add_filter( 'query_vars', array( $this, 'sellerpage_rewrite_add_var') );
             add_action('init', array( $this, 'sellerpage_rewrite_rule'));
             add_action( 'template_redirect', array( $this, 'sellerpage_rewrite_catch') );
-        }
+
+            }
 
 
         /**
@@ -120,6 +121,9 @@ function sellerpage_rewrite_catch() {
 
  }
 }
+
+
+
 
 
 

@@ -217,7 +217,7 @@ function wmp_seller_product_listing_scripts() {
             $('.post-type-product .dropdown_product_cat').css('display','none');
             $('.post-type-product #dropdown_product_type').css('display','none');
             $('.post-type-product #post-query-submit').css('display','none');
-            <?php if(count_seller_products( get_current_user_id() ) <=0 ){ ?>
+            <?php if(count_seller_all_products( get_current_user_id() ) <=0 ){ ?>
                 $('.post-type-product #the-list').empty();
                 $('.post-type-product #the-list').html("<tr class='no-items'><td class='colspanchange' colspan='12'>No Products found</td></tr>");
                 $('.post-type-product span.displaying-num').css('display','none');

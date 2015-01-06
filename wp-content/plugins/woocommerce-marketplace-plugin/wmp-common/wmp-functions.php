@@ -1,9 +1,52 @@
 <?php
 
+
+//Override woocommerce template in plugin
+function myplugin_plugin_path() {
+  // gets the absolute path to this plugin directory
+  return untrailingslashit( WMP_DIR );
+}
+add_filter( 'woocommerce_locate_template', 'myplugin_woocommerce_locate_template', 10, 3 );
+function myplugin_woocommerce_locate_template( $template, $template_name, $template_path) {
+  global$woocommerce;
+  $_template= $template;
+  if( ! $template_path) $template_path= $woocommerce->template_url;
+  $plugin_path= myplugin_plugin_path() . '/frontend-templates/';
+  // Look within passed path within the theme - this is priority
+  $template= locate_template(
+    array(
+      $template_path. $template_name,
+      $template_name
+    )
+  );
+  // Modification: Get the template from this plugin, if it exists
+  if( ! $template && file_exists( $plugin_path. $template_name) )
+   $template= $plugin_path. $template_name;
+   
+  // Use default template
+  if( ! $template)
+    $template= $_template;
+  // Return what we found
+  return $template;
+}
+
+
+
+
+
 //count product by seller_id
 function count_seller_products( $seller_id ) {
 global $wpdb;
 $count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $seller_id AND post_type IN ('product') and post_status = 'publish'" );
+return $count;
+}
+
+
+
+//count all products except deleted product of seller by id
+function count_seller_all_products( $seller_id ) {
+global $wpdb;
+$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $seller_id AND post_type IN ('product') and post_status != 'trash'" );
 return $count;
 }
 
@@ -105,7 +148,23 @@ function wmp_columns_content_only_sellers($column_name, $post_ID) {
 
 
 
-//Add seller box in product page
+function wmp_get_suborders($orderid){
+  $args = array(
+  'post_parent' => $orderid,
+  'post_type'   => 'shop_order', 
+  'posts_per_page' => -1,
+  'post_status' => 'any' );
+
+$suborders = get_children( $args, OBJECT );
+
+return $suborders;
+}
+
+
+
+
+
+//Add seller box in product add/edit page
 function seller_meta_box() {
 
   $screens = array( 'product' );
@@ -220,7 +279,7 @@ return $seller->ID;
 }
 
 
-//Get products in array
+//Get products list in array by seller id
 function get_seller_product_ids($seller_id){
 $args = array( 'author' => $seller_id, 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => -1 );
  $products = query_posts( $args );
@@ -233,7 +292,7 @@ $args = array( 'author' => $seller_id, 'post_type' => 'product', 'post_status' =
 
 
 
-//list seller products
+//output seller products by seller id
 function seller_listing($seller_id){
   if(count(get_seller_product_ids($seller_id))>0){
     $ids = implode(',', get_seller_product_ids($seller_id));
