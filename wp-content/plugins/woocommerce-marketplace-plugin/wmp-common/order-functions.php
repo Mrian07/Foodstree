@@ -486,14 +486,51 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
 
         // Order status
         wp_set_object_terms( $order_id, 'pending', 'shop_order_status' );
+
+        wmp_seller_order_email($order_id,$seller_id);
+
     } // if order
 }
 
 
 
 
+///Send order mail to seller
+function wmp_seller_order_email($order_id,$seller_id) {
+global $woocommerce;
 
+$order = new WC_Order( $order_id );
 
+$seller_info = get_userdata($seller_id);
+
+$author_email = $seller_info->user_email;
+
+$site_title = __('Foodstree');
+
+$email_subject = __('New order from: '.$site_title.'');
+
+$admin_email = get_option( 'admin_email' );
+
+$headers = 'From:'.$site_title.' <'.$admin_email.'>' . "";
+
+ob_start();
+
+woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order ) );
+
+$message = ob_get_contents();
+
+ob_end_clean();
+
+// wp_mail($author_email, $email_subject, $message);
+wp_mail($author_email, $email_subject, $message, $headers);
+
+}
+
+add_filter('wp_mail_content_type','set_content_type');
+
+function set_content_type($content_type){
+return 'text/html';
+}
 
 
 
