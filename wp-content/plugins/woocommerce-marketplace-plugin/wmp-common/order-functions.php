@@ -371,6 +371,7 @@ function wmp_create_sub_order( $parent_order_id ) {
         $temp = array_keys( $sellers );
         $seller_id = reset( $temp );
         wp_update_post( array( 'ID' => $parent_order_id, 'post_author' => $seller_id ) );
+        wmp_seller_order_email($parent_order_id,$seller_id);
         return;
     }
 
@@ -517,7 +518,9 @@ function wmp_seller_order_email($order_id,$seller_id) {
 
     ob_start();
 
-    woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order, 'email_heading' => $email_heading ) );
+    woocommerce_get_template( 'emails/email-header.php', array( 'email_heading' => $email_heading ) );
+    woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order ) );
+    woocommerce_get_template( 'emails/email-footer.php' );
 
     $message = ob_get_contents();
 
