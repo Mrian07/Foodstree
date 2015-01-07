@@ -292,6 +292,25 @@ $args = array( 'author' => $seller_id, 'post_type' => 'product', 'post_status' =
 
 
 
+
+
+
+/*function wmp_seller_new_order_email_recipient( $recipient, $order ) {
+    global $woocommerce;
+    if ( check_user_role( 'customer' ) ) {
+        $recipient = "accounts@yourdomain.com";
+    } else {
+        $recipient = "newbusiness@yourdomain.com";
+    }
+    return $recipient;
+}
+add_filter('woocommerce_email_recipient_new_order', 'wmp_seller_new_order_email_recipient', 1, 2);
+*/
+
+
+
+
+
 //output seller products by seller id
 function seller_listing($seller_id){
   if(count(get_seller_product_ids($seller_id))>0){
