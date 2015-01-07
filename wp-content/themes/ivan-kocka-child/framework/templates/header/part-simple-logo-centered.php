@@ -138,9 +138,11 @@
 						Ivan_Module_Responsive_Menu_Select::display('.header .menu');
 					endif;
 				?>
-            <div class="iv-module  cart hidden-xs">
+
+				<?php global $woocommerce; ?>
+            <div id="cart-price-widget" class="iv-module  cart hidden-xs">
                 <div class="centered">
-                    <span>Cart : Rs 0.00</span>
+                    <span>Cart : <?php echo $woocommerce->cart->get_cart_total(); ?></span>
                 </div>
             </div>
             
