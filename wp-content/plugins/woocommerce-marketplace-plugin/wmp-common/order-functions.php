@@ -497,32 +497,33 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
 
 ///Send order mail to seller
 function wmp_seller_order_email($order_id,$seller_id) {
-global $woocommerce;
+    global $woocommerce;
 
-$order = new WC_Order( $order_id );
+    $order = new WC_Order( $order_id );
 
-$seller_info = get_userdata($seller_id);
+    $seller_info = get_userdata($seller_id);
 
-$author_email = $seller_info->user_email;
+    $author_email = $seller_info->user_email;
 
-$site_title = __('Foodstree');
+    $site_title = __('Foodstree');
 
-$email_subject = __('New order from: '.$site_title.'');
+    $email_subject = __('New order from: '.$site_title.'');
 
-$admin_email = get_option( 'admin_email' );
+    $email_heading = __('New customer order');
 
-$headers = 'From:'.$site_title.' <'.$admin_email.'>' . "";
+    $admin_email = get_option( 'admin_email' );
 
-ob_start();
+    $headers = 'From:'.$site_title.' <'.$admin_email.'>' . "";
 
-woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order ) );
+    ob_start();
 
-$message = ob_get_contents();
+    woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order, 'email_heading' => $email_heading ) );
 
-ob_end_clean();
+    $message = ob_get_contents();
 
-// wp_mail($author_email, $email_subject, $message);
-wp_mail($author_email, $email_subject, $message, $headers);
+    ob_end_clean();
+
+    wp_mail($author_email, $email_subject, $message, $headers);
 
 }
 
