@@ -103,6 +103,9 @@ body .cart{ margin-left: 30px !important;}
     color: #fff;
     padding: 6px;
 }
+.cart .amount{
+	border: 0px;
+}
 .title-heading-header{
 	text-align: center;
 	border-top: 3px solid #7a7483;
