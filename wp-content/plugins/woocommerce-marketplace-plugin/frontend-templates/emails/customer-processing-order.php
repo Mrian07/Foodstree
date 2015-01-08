@@ -11,11 +11,34 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 
 <?php do_action('woocommerce_email_header', $email_heading); ?>
 
+
+
+<?php
+$combined_order = wp_get_post_parent_id( $order->id );
+    if($combined_order > 0){ ?>
+
+
+<p><?php _e( "Part of your order has been received and is now being processed. Your order details are shown below for your reference:", 'woocommerce' ); ?></p>
+
+<?php do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plain_text ); ?>
+
+<h3><?php echo __( 'Order:', 'woocommerce' ) . ' ' . $order->get_order_number() . '. Part of combined order #' . $combined_order; ?></h3>
+
+        
+   <?php }else{ ?>
+
+
 <p><?php _e( "Your order has been received and is now being processed. Your order details are shown below for your reference:", 'woocommerce' ); ?></p>
 
 <?php do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plain_text ); ?>
 
 <h2><?php echo __( 'Order:', 'woocommerce' ) . ' ' . $order->get_order_number(); ?></h2>
+
+   <?php } ?>
+
+
+
+
 
 <table cellspacing="0" cellpadding="6" style="width: 100%; border: 1px solid #eee;" border="1" bordercolor="#eee">
 	<thead>
