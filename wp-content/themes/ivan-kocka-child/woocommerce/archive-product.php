@@ -188,7 +188,7 @@ endif;
 		<div class="col-sm-1 hidden-xs"><BR><hr class="dark-hr"></div> 
 		<div class="col-sm-3  col-xs-4 text-center facility "><div class="sales center-block shake"></div>  <B>50% SALES OFF</B> <hr></div>
 		<div class="col-sm-4 col-xs-4 text-center facility"><div class="free center-block shake"></div> <B>BUY 1 GET 1 FREE</B><hr></div>
-		<div class="col-sm-3 col-xs-4 text-center facility"><div class="shipping center-block shake"></div><B>FREE SHIPPING</B><hr></div>
+		<div class="col-sm-3 col-xs-4 text-center facility"><div class="shipping-track center-block shake"></div><B>FREE SHIPPING</B><hr></div>
 		<div class="col-sm-1 hidden-xs"><BR><hr class="dark-hr"></div>
 </div>
 </div>
