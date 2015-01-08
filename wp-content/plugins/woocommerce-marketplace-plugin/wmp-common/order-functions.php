@@ -496,52 +496,6 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
 
 
 
-///Send order mail to seller
-function wmp_seller_order_email($order_id,$seller_id) {
-    global $woocommerce;
-
-    $order = new WC_Order( $order_id );
-
-    $seller_info = get_userdata($seller_id);
-
-    $author_email = $seller_info->user_email;
-
-    $site_title = __('Foodstree');
-
-    $email_subject = __('New order from: '.$site_title.'');
-
-    $email_heading = __('New customer order');
-
-    $admin_email = get_option( 'admin_email' );
-
-    $headers = 'From:'.$site_title.' <'.$admin_email.'>' . "";
-
-    ob_start();
-
-    woocommerce_get_template( 'emails/email-header.php', array( 'email_heading' => $email_heading ) );
-    woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order ) );
-    woocommerce_get_template( 'emails/email-footer.php' );
-
-    $message = ob_get_contents();
-
-    ob_end_clean();
-
-    wp_mail($author_email, $email_subject, $message, $headers);
-
-}
-
-add_filter('wp_mail_content_type','set_content_type');
-
-function set_content_type($content_type){
-return 'text/html';
-}
-
-
-
-
-
-
-
 /**
  * Get discount coupon total from a order
  *
@@ -680,4 +634,106 @@ function wmp_create_sub_order_shipping( $parent_order, $order_id, $seller_produc
     }
 
     return 0;
+}
+
+
+
+
+
+
+
+
+/**************************EMAILS************************
+*********************************************************/
+
+
+///Send order mail to seller
+function wmp_seller_order_email($order_id,$seller_id) {
+    global $woocommerce;
+    $order = new WC_Order( $order_id );
+    $seller_info = get_userdata($seller_id);
+    $author_email = $seller_info->user_email;
+    $site_title = __('Foodstree');
+    $email_subject = __('New order from: '.$site_title.'');
+    $email_heading = __('New customer order');
+    $admin_email = get_option( 'admin_email' );
+    $headers = 'From:'.$site_title.' <'.$admin_email.'>' . "";
+    ob_start();
+    woocommerce_get_template( 'emails/email-header.php', array( 'email_heading' => $email_heading ) );
+    woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order ) );
+    woocommerce_get_template( 'emails/email-footer.php' );
+    $message = ob_get_contents();
+    ob_end_clean();
+    wp_mail($author_email, $email_subject, $message, $headers);
+}
+
+add_filter('wp_mail_content_type','set_content_type');
+
+function set_content_type($content_type){
+    return 'text/html';
+}
+
+
+
+//Processing order subject
+add_filter('woocommerce_email_subject_customer_processing_order', 'change_processing_order_subject', 1, 2);
+function change_processing_order_subject( $subject, $order ) {
+    global $woocommerce;
+
+    $combined_order = wp_get_post_parent_id( $order->id );
+    if($combined_order > 0){
+     $subject = 'Part of your combined order #'.$combined_order.' being processed';
+ }
+ return $subject;
+}
+
+
+//Processing order heading
+add_filter('woocommerce_email_heading_customer_processing_order', 'change_processing_order_heading', 10, 2);
+function change_processing_order_heading( $heading, $order ) {
+    global $woocommerce;
+
+    $combined_order = wp_get_post_parent_id( $order->id );
+    if($combined_order > 0){
+        $heading = 'Part of your order being processed';
+    }
+    return $heading;
+}
+
+
+
+//Completed order subject
+add_filter('woocommerce_email_subject_customer_completed_order', 'change_completed_order_subject', 1, 2);
+function change_completed_order_subject( $subject, $order ) {
+    global $woocommerce;
+
+    $combined_order = wp_get_post_parent_id( $order->id );
+    if($combined_order > 0){
+     $subject = 'Part of your combined order #'.$combined_order.' is complete';
+ }
+ return $subject;
+}
+
+
+//Completed order heading
+add_filter('woocommerce_email_heading_customer_completed_order', 'change_completed_order_heading', 10, 2);
+function change_completed_order_heading( $heading, $order ) {
+    global $woocommerce;
+
+    $combined_order = wp_get_post_parent_id( $order->id );
+    if($combined_order > 0){
+        $heading = 'Part of your order is complete';
+    }
+    return $heading;
+}
+
+
+
+//Send cc to admin upon order status change
+add_filter( 'woocommerce_email_recipient_customer_completed_order', 'admin_cc_email_recipient_on_status_change', 10, 2);
+add_filter( 'woocommerce_email_recipient_customer_processing_order', 'admin_cc_email_recipient_on_status_change', 10, 2);
+function admin_cc_email_recipient_on_status_change($recipient, $object) {
+    $admin_email = get_option( 'admin_email' );
+    $recipient = $recipient . ', '.$admin_email;
+    return $recipient;
 }
