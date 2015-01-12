@@ -71,34 +71,127 @@ add_action('admin_head', 'wmp_admin_head');
 //Save additional data for seller
 add_action( 'user_register', 'wmp_seller_additionaldata_save', 10, 1 );
 
+//Update additional data for seller
+add_action( 'edit_user_profile_update', 'wmp_seller_additionaldata_save', 10, 2 );
+
 function wmp_seller_additionaldata_save( $user_id ) {
   global $aj_csvimport;
 
-  if ( isset( $_POST['seller_name'] ) ){
-    update_user_meta($user_id, 'seller_name', $_POST['seller_name']);
+  $additional_fields = array(
+    'company_info',
+    'seller_name',
+    'mobile_number',
+    'seller_address',
+    'seller_city',
+    'seller_pincode',
+    'seller_state',
+    'seller_country',
+    'seller_billing_address',
+    'seller_billing_city',
+    'seller_billing_pincode',
+    'seller_billing_state',
+    'seller_billing_country',
+    'seller_pan',
+    'seller_vat',
+    'seller_rtgs',
+    'seller_beneficiary',
+    'seller_account_number',
+    'seller_account_type',
+    'seller_bank_name',
+    'seller_branch_name',
+    'seller_registration',
+    'seller_tan',
+    'seller_company_description',
+    'seller_activate'
+    );
+
+
+  $uploads = array(
+    'seller_logo',
+    'seller_pan_copy',
+    'seller_cancelled_cheque',
+    'seller_tan_copy',
+    'seller_registration_copy'
+    );
+
+  foreach($additional_fields as $field){
+    if ( isset( $_POST[$field] ) ){
+      update_user_meta($user_id, $field, $_POST[$field]);
+    }
   }
 
-  if ( isset( $_POST['seller_address'] ) ){
-    update_user_meta($user_id, 'seller_address', $_POST['seller_address']);
-  }
+ 
+
+foreach($uploads as $upload){
 
 
-  //if ( isset($_POST['seller_activate'])){
-    update_user_meta($user_id, 'seller_activate', '1');
-  //}else{
-    //update_user_meta($user_id, 'seller_activate', '0');
-  //}
-
-
-    update_user_meta($user_id, 'activate', $_POST['activate']);
+if (!empty($_FILES[$upload]['name'])) {
     
 
 
+$file = $_FILES[$upload]['tmp_name'];
+$filename = $_FILES[$upload]['name'];
+
+$upload_file = wp_upload_bits($filename, null, file_get_contents($file));
+
+if (!$upload_file['error']) {
+
+  /*$seller_directory_uri = wp_upload_dir('url').'/seller/' . $user_id;
+
+  $seller_directory = WP_CONTENT_DIR . '/uploads/seller/' . $user_id;
+  if (!file_exists($seller_directory)){
+  wp_mkdir_p(WP_CONTENT_DIR . '/uploads/seller/' . $user_id);
+  }*/
+
+
+  $wp_upload_dir = wp_upload_dir();
+  $wp_filetype = wp_check_filetype($filename, null );
+  $attachment = array(
+    'guid'           => $wp_upload_dir['url'] . '/' . $filename,
+    //'guid'           => $seller_directory_uri . '/' . $filename,
+    'post_mime_type' => $wp_filetype['type'],
+    'post_title' => preg_replace('/\.[^.]+$/', '', $filename),
+    'post_content' => '',
+    'post_author' => get_current_user_id(),
+    'post_status' => 'inherit'
+  );
+  $attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+
+
+$imgExts = array("gif", "jpeg", "jpg", "png");
+ $temp = explode(".", $_FILES[$upload]['name']);
+ $extension = end($temp);
+ if(in_array($extension, $imgExts)){
+    
+if (!is_wp_error($attachment_id)) {
+    require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+    $attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
+    wp_update_attachment_metadata( $attachment_id,  $attachment_data );
   }
 
-//Update additional data for seller
-add_action( 'edit_user_profile_update', 'wmp_seller_additionaldata_save', 10, 1 );
 
+ }
+
+
+
+  update_user_meta($user_id, $upload, $attachment_id);
+  }
+
+ 
+
+}
+
+
+
+
+
+
+}
+
+
+  
+
+  }
 
 
 
