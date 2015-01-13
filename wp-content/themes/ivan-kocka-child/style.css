@@ -378,8 +378,9 @@ background:#fb9222;
 #pin_options{
 	width:100%;
 	padding-bottom: 05px;
-margin-bottom: 10px;
-border-bottom: 1px solid #dddddd;
+	margin-bottom: 40px;
+	border-bottom: 3px solid #000000;
+	color: #000;
 }
 
 #pin_options .mypin{
@@ -397,7 +398,16 @@ text-align:right;
 	cursor:pointer;
 	padding:03px;
 }
+#pin_options i{
+	font-size: 22px;
+	color: #ff8402;
+	margin-right: 6px;
 
-#set_all_seller:hover{
-	background:#dddddd;
+}
+
+.iv-layout.title-wrapper {
+	border:0px;
+}
+.content-wrapper {
+	padding:0px;
 }
