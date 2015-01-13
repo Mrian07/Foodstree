@@ -43,6 +43,7 @@ background-color: #FFFFFF;
 z-index:1002;
 overflow: auto;
 font-size: 14px;
+max-width: 425px;
 }
 
 #pre-loader{
@@ -323,4 +324,80 @@ height: 137px;
 }
 .content-wrapper.no-title-wrapper {
 	padding-top: 45px;
+}
+
+
+
+#pincode-city{
+	background-repeat:no-repeat;
+	background-position:right center;
+}
+
+
+#pincode_city_list{
+	padding-left:05px;
+	background: #ff8402;
+}
+
+#pincode_city_list li{
+	list-style:none;
+	color:#FFF;
+	cursor:pointer;
+}
+
+#pincode_city_list li:hover{
+	background:#fb9222;
+}
+
+
+#pincodelistwrap{
+	margin-top:10px;
+}
+
+#pinlist_loader{
+	text-align:center;
+	margin-top:20px;
+}
+
+#pincodelistwrap .pin_code{
+	display:inline-block;
+	margin:05px;
+	background: #ff8402;
+	color: #FFF;
+	padding: 03px;
+	cursor: pointer;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+
+#pincodelistwrap .pin_code:hover{
+background:#fb9222;
+}
+
+#pin_options{
+	width:100%;
+	padding-bottom: 05px;
+margin-bottom: 10px;
+border-bottom: 1px solid #dddddd;
+}
+
+#pin_options .mypin{
+	float:left;
+	width:50%;
+}
+
+#pin_options .allpin{
+float:right;
+width:50%;
+text-align:right;
+}
+
+#set_all_seller{
+	cursor:pointer;
+	padding:03px;
+}
+
+#set_all_seller:hover{
+	background:#dddddd;
 }

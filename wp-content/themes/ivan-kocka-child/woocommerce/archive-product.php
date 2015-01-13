@@ -99,6 +99,43 @@ endif;
 		<div class="<?php echo apply_filters( 'iv_content_wrapper_classes', 'iv-layout content-wrapper shop-wrapper ', 'shop' ); ?>">
 			<div class="container">
 
+
+
+
+
+				<?php if(isset($_COOKIE['user_pincode']) || isset($_SESSION['all_sellers'])){ ?>
+
+				<div id="pin_options">
+					<div class="mypin">
+						<?php
+						if(isset($_SESSION['all_sellers']) && $_SESSION['all_sellers']=='yes'){
+							echo "You currently viewing products from all seller";
+						}else{
+							echo "Your city is <strong>".$_COOKIE['user_city']."</strong> and pincode <strong>".$_COOKIE['user_pincode']."</strong>";
+						}
+						?>
+					</div>
+
+					<div class="allpin">
+						<?php
+						if(isset($_SESSION['all_sellers']) && $_SESSION['all_sellers']=='yes'){
+							echo '<a id="set_all_seller" data-seller="no">View products based on your pincode</a>';
+						}else{
+							echo '<a id="set_all_seller" data-seller="yes">View products from all seller</a>';
+						}
+						?>
+					</div>
+
+					<div style="clear:both"></div>
+				</div>
+
+				<?php } ?>
+
+
+
+
+
+
 				<?php
 				// Boxed Page Logic
 				if( true == ivan_get_option('shop-boxed-page') && false == ivan_get_option('header-negative-height') ) : ?>

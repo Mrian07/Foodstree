@@ -19,6 +19,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
+
+
 <?php wp_head(); ?>
 </head>
 
@@ -28,9 +30,25 @@
 
 <!-- Pincode modal -->
 <div id="pincodepop">
+
+<div id="pincode_city_cont">
+<span>City: </span>
+<input type="text" name="pincode-city" id="pincode-city" /><span id="cityloader"></span>
+<ul id="pincode_city_list" style="display:none;"></ul>
+</div>
+
+<div id="pinlist_loader" style="display:none"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/pinloader.gif" /></div>
+
+<div id="pincodelistwrap" style="display:none;"></div>
+
+
+<!-- <div id="pincode_ent">
 <span>Pincode: </span>
 <input type="text" name="pincode" id="pincode" />
-<button id="pincode-btn">Submit</button>
+</div>
+
+
+<button id="pincode-btn">Submit</button> -->
 </div>
 <div id="background" class="background_overlay"></div>
 
