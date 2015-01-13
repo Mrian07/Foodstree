@@ -77,7 +77,7 @@ jQuery("#pincode-city").on('keyup', function(){
         jQuery('#pincode_city_list').hide();
     }
 
-    }, 2000)
+    }, 1000)
 
  });
 
