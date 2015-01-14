@@ -660,7 +660,7 @@ function wmp_seller_order_email($order_id,$seller_id) {
     $headers = 'From:'.$site_title.' <'.$admin_email.'>' . "";
     ob_start();
     woocommerce_get_template( 'emails/email-header.php', array( 'email_heading' => $email_heading ) );
-    woocommerce_get_template( 'emails/admin-new-order.php', array( 'order' => $order ) );
+    woocommerce_get_template( 'emails/seller-new-order.php', array( 'order' => $order ) );
     woocommerce_get_template( 'emails/email-footer.php' );
     $message = ob_get_contents();
     ob_end_clean();
