@@ -61,6 +61,20 @@ wp_enqueue_script('user-profile');
 
 
 
+wp_enqueue_script(
+        'custom_validate_js',
+        plugins_url( '/js/form/jquery.validate.min.js' , __FILE__ ),
+        array( 'jquery' )
+);
+
+
+wp_enqueue_script(
+        'custom_js',
+        plugins_url( '/js/custom.js' , __FILE__ ),
+        array( 'jquery' )
+);
+
+
 //require_once( ABSPATH . 'wp-admin/admin-header.php' );
 
 
@@ -153,18 +167,18 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 <table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="company_info"><?php _e('Company Information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="company_info"><?php _e('Company information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="company_info" type="text" id="company_info" value="<?php echo esc_attr($new_company_info); ?>" aria-required="true" /></td>
 	</tr>
 	
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="first_name"><?php _e('First Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="first_name"><?php _e('First name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="first_name" type="text" id="first_name" value="<?php echo esc_attr($new_first_name); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="last_name"><?php _e('Last Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="last_name"><?php _e('Last name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="last_name" type="text" id="last_name" value="<?php echo esc_attr($new_last_name); ?>" aria-required="true" /></td>
 	</tr>
 
@@ -178,12 +192,12 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 	
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="email"><?php _e('Communication Email'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="email"><?php _e('Communication email'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="email" type="email" id="email" value="<?php echo esc_attr( $new_user_email ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="mobile_number"><?php _e('Mobile Number') ?><span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="mobile_number"><?php _e('Mobile number') ?><span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="mobile_number" type="text" id="mobile_number" value="<?php echo esc_attr( $new_mobile_number ); ?>" aria-required="true" /></td>
 	</tr>
 	
@@ -196,29 +210,29 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 	<table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_address"><?php _e('Company Registered Address') ?></label></th>
-		<td><textarea name="seller_address" id="seller_address"><?php echo esc_attr( $new_seller_address ); ?></textarea></td>
+		<th scope="row"><label for="seller_address"><?php _e('Company registered address') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<td><textarea name="seller_address" id="seller_address" aria-required="true" class="required"><?php echo esc_attr( $new_seller_address ); ?></textarea></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_city"><?php _e('City') ?></label></th>
+		<th scope="row"><label for="seller_city"><?php _e('City') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_city" type="text" id="seller_city" value="<?php echo esc_attr($new_seller_city); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pincode"><?php _e('Pincode') ?></label></th>
+		<th scope="row"><label for="seller_pincode"><?php _e('Pincode') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_pincode" type="text" id="seller_pincode" value="<?php echo esc_attr($new_seller_pincode); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_state"><?php _e('State') ?></label></th>
+		<th scope="row"><label for="seller_state"><?php _e('State') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_state" type="text" id="seller_state" value="<?php echo esc_attr($new_seller_state); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_country"><?php _e('Country') ?></label></th>
+		<th scope="row"><label for="seller_country"><?php _e('Country') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td>
-			<select name="seller_country" id="seller_country" aria-required="true">
+			<select name="seller_country" id="seller_country" aria-required="true" class="required">
 				<option value="">Select Country..</option>
 				<?php foreach(wmp_getCountries() as $key=>$value){ 
 					$selected = ($value == 'India' ? 'selected' : '');
@@ -250,27 +264,27 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 	<table class="form-table" id="billing_adddress_wrap" style="display:nonee;">
 	
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_address"><?php _e('Billing Address') ?></label></th>
+		<th scope="row"><label for="seller_billing_address"><?php _e('Billing address') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><textarea name="seller_billing_address" id="seller_billing_address"><?php echo esc_attr( $new_seller_billing_address ); ?></textarea></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_city"><?php _e('City') ?></label></th>
+		<th scope="row"><label for="seller_billing_city"><?php _e('City') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_billing_city" type="text" id="seller_billing_city" value="<?php echo esc_attr($new_seller_billing_city); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_pincode"><?php _e('Pincode') ?></label></th>
+		<th scope="row"><label for="seller_billing_pincode"><?php _e('Pincode') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_billing_pincode" type="text" id="seller_billing_pincode" value="<?php echo esc_attr($new_seller_billing_pincode); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_state"><?php _e('State') ?></label></th>
+		<th scope="row"><label for="seller_billing_state"><?php _e('State') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_billing_state" type="text" id="seller_billing_state" value="<?php echo esc_attr($new_seller_billing_state); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_country"><?php _e('Country') ?></label></th>
+		<th scope="row"><label for="seller_billing_country"><?php _e('Country') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td>
 			<select name="seller_billing_country" id="seller_billing_country" aria-required="true">
 				<option value="">Select Country..</option>
@@ -298,51 +312,51 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan"><?php _e('PAN') ?></label></th>
+		<th scope="row"><label for="seller_pan"><?php _e('PAN') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_pan" type="text" id="seller_pan" value="<?php echo esc_attr( $new_seller_pan ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_vat"><?php _e('VAT/TIN/CST no.') ?></label></th>
+		<th scope="row"><label for="seller_vat"><?php _e('VAT/TIN/CST no.') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_vat" type="text" id="seller_vat" value="<?php echo esc_attr( $new_seller_vat ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_rtgs"><?php _e('RTGS/NEFT/IFSC Code') ?></label></th>
+		<th scope="row"><label for="seller_rtgs"><?php _e('RTGS/NEFT/IFSC code') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_rtgs" type="text" id="seller_rtgs" value="<?php echo esc_attr( $new_seller_rtgs ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_beneficiary"><?php _e('Beneficiary name') ?></label></th>
+		<th scope="row"><label for="seller_beneficiary"><?php _e('Beneficiary name') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_beneficiary" type="text" id="seller_beneficiary" value="<?php echo esc_attr( $new_seller_beneficiary ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_account_number"><?php _e('Account number') ?></label></th>
+		<th scope="row"><label for="seller_account_number"><?php _e('Account number') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_account_number" type="text" id="seller_account_number" value="<?php echo esc_attr( $new_seller_account_number ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_account_type"><?php _e('Account type') ?></label></th>
+		<th scope="row"><label for="seller_account_type"><?php _e('Account type') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_account_type" type="text" id="seller_account_type" value="<?php echo esc_attr( $new_seller_account_type ); ?>" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_bank_name"><?php _e('Bank Name') ?></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_bank_name"><?php _e('Bank name') ?></label></th>
 		<td><input name="seller_bank_name" type="text" id="seller_bank_name" value="<?php echo esc_attr( $new_seller_bank_name ); ?>" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_branch_name"><?php _e('Branch Name') ?></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_branch_name"><?php _e('Branch name') ?></label></th>
 		<td><input name="seller_branch_name" type="text" id="seller_branch_name" value="<?php echo esc_attr( $new_seller_branch_name ); ?>" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
+	<tr class="form-field">
 		<th scope="row"><label for="seller_registration"><?php _e('Company registration no.') ?></label></th>
 		<td><input name="seller_registration" type="text" id="seller_registration" value="<?php echo esc_attr( $new_seller_registration ); ?>" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
+	<tr class="form-field">
 		<th scope="row"><label for="seller_tan"><?php _e('TAN') ?></label></th>
 		<td><input name="seller_tan" type="text" id="seller_tan" value="<?php echo esc_attr( $new_seller_tan ); ?>" /></td>
 	</tr>
@@ -359,7 +373,7 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_company_description"><?php _e('Company Description') ?></label></th>
+		<th scope="row"><label for="seller_company_description"><?php _e('Company description') ?></label></th>
 		<td><textarea name="seller_company_description" id="seller_company_description"><?php echo esc_attr( $new_seller_company_description ); ?></textarea></td>
 	</tr>
 
@@ -372,27 +386,27 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 <table class="form-table">
 
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_logo"><?php _e('Company Logo') ?></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_logo"><?php _e('Company logo') ?></label></th>
 		<td><input name="seller_logo" type="file" id="seller_logo" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?></label></th>
+		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_pan_copy" type="file" id="seller_pan_copy" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?></label></th>
+		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_cancelled_cheque" type="file" id="seller_cancelled_cheque" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
+	<tr class="form-field">
 		<th scope="row"><label for="seller_tan_copy"><?php _e('TAN registration copy') ?></label></th>
 		<td><input name="seller_tan_copy" type="file" id="seller_tan_copy" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
+	<tr class="form-field">
 		<th scope="row"><label for="seller_registration_copy"><?php _e('Company registration copy') ?></label></th>
 		<td><input name="seller_registration_copy" type="file" id="seller_registration_copy" /></td>
 	</tr>
@@ -423,7 +437,7 @@ if ( apply_filters( 'show_password_fields', true ) ) : ?>
 		</td>
 	</tr>
 	<tr class="form-field form-required">
-		<th scope="row"><label for="pass2"><?php _e('Repeat Password'); ?> <span class="description"><?php /* translators: password input field */_e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="pass2"><?php _e('Repeat password'); ?> <span class="description"><?php /* translators: password input field */_e('(required)'); ?></span></label></th>
 		<td>
 		<input name="pass2" type="password" id="pass2" autocomplete="off" />
 		<br />
@@ -433,13 +447,13 @@ if ( apply_filters( 'show_password_fields', true ) ) : ?>
 	</tr>
 
 	<tr>
-		<th scope="row"><label for="seller_activate"><?php _e('Activate Seller?') ?></label></th>
+		<th scope="row"><label for="seller_activate"><?php _e('Activate seller?') ?></label></th>
 		<td><input type="checkbox" name="seller_activate" id="seller_activate" value="1" <?php checked( $new_seller_activate ); ?> /> <?php _e('Activate the seller immediately.'); ?></td>
 	</tr>
 
 
 	<tr>
-		<th scope="row"><label for="send_password"><?php _e('Send Password?') ?></label></th>
+		<th scope="row"><label for="send_password"><?php _e('Send password?') ?></label></th>
 		<td><label for="send_password"><input type="checkbox" name="send_password" id="send_password" value="1" <?php checked( $new_user_send_password ); ?> /> <?php _e('Send this password to the new seller by email.'); ?></label></td>
 	</tr>
 <?php endif; ?>
@@ -462,33 +476,3 @@ do_action( 'user_new_form', 'add-new-user' );
 <?php } // current_user_can('create_users') ?>
 </div>
 
-
-
-
-
-<script type="text/javascript">
-jQuery(document).ready(function(){
-
-	jQuery('#seller_billing_yes').change(function() {
-		jQuery('#billing_adddress_wrap').toggle(!this.checked);
-
-		if (jQuery(this).prop('checked')==true){ 
-			jQuery('#seller_billing_address').val(jQuery('#seller_address').val());
-			jQuery('#seller_billing_city').val(jQuery('#seller_city').val());
-			jQuery('#seller_billing_pincode').val(jQuery('#seller_pincode').val());
-			jQuery('#seller_billing_state').val(jQuery('#seller_state').val());
-			var country = jQuery('#seller_country option:selected').val();
-			jQuery('#seller_billing_country option[value=' + country + ']').attr('selected','selected');
-		}else{
-			jQuery('#seller_billing_address').val("");
-			jQuery('#seller_billing_city').val("");
-			jQuery('#seller_billing_pincode').val("");
-			jQuery('#seller_billing_state').val("");
-			jQuery('#seller_billing_country option[value=India]').attr('selected','selected');
-		}
-
-
-	});
-
-});
-</script>

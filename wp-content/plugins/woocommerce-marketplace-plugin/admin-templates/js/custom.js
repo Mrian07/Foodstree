@@ -146,6 +146,161 @@
              
             }
             
-        });        
+        });
+
+
+
+
+
+
+jQuery('#seller_billing_yes').change(function() {
+    jQuery('#billing_adddress_wrap').toggle(!this.checked);
+
+    if (jQuery(this).prop('checked')==true){ 
+      jQuery('#seller_billing_address').val(jQuery('#seller_address').val());
+      jQuery('#seller_billing_city').val(jQuery('#seller_city').val());
+      jQuery('#seller_billing_pincode').val(jQuery('#seller_pincode').val());
+      jQuery('#seller_billing_state').val(jQuery('#seller_state').val());
+      var country = jQuery('#seller_country option:selected').val();
+      jQuery('#seller_billing_country option[value=' + country + ']').attr('selected','selected');
+    }else{
+      jQuery('#seller_billing_address').val("");
+      jQuery('#seller_billing_city').val("");
+      jQuery('#seller_billing_pincode').val("");
+      jQuery('#seller_billing_state').val("");
+      jQuery('#seller_billing_country option[value=India]').attr('selected','selected');
+    }
+
+
+  });
+
+
+
+
+
+
+jQuery("#your-profile").validate({
+  
+rules: {
+            company_info: "required",
+            first_name: "required",
+            last_name: "required",
+            seller_name: "required",
+            email: {
+                required: true,
+                email: true
+            },
+            mobile_number: {
+                required: true,
+                number: true,
+                minlength: 10,
+                maxlength: 10
+            },
+            seller_address: "required",
+            seller_city: "required",
+            seller_pincode: {
+                required: true,
+                number: true,
+                minlength: 6,
+                maxlength: 6
+            },
+            seller_state: "required",
+            seller_country: "required",
+            seller_billing_address: "required",
+            seller_billing_city: "required",
+            seller_billing_pincode: "required",
+            seller_billing_state: "required",
+            seller_billing_country: "required",
+            seller_pan: "required",
+            seller_vat: "required",
+            seller_rtgs: "required",
+            seller_beneficiary: "required",
+            seller_account_number: {
+                required: true,
+                number: true
+             },
+            seller_account_type: "required",
+            seller_company_description: {
+                  required: false,
+                  minlength: 50
+            }
+
+            },
+
+             
+        submitHandler: function(form) {
+            form.submit();
+        }
+
+});
+
+
+
+
+
+
+
+  jQuery("#createuser").validate({
+  
+rules: {
+            company_info: "required",
+            first_name: "required",
+            last_name: "required",
+            seller_name: "required",
+            email: {
+                required: true,
+                email: true
+            },
+            mobile_number: {
+                required: true,
+                number: true,
+                minlength: 10,
+                maxlength: 10
+            },
+            seller_address: "required",
+            seller_city: "required",
+            seller_pincode: {
+                required: true,
+                number: true,
+                minlength: 6,
+                maxlength: 6
+            },
+            seller_state: "required",
+            seller_country: "required",
+            seller_billing_address: "required",
+            seller_billing_city: "required",
+            seller_billing_pincode: "required",
+            seller_billing_state: "required",
+            seller_billing_country: "required",
+            seller_pan: "required",
+            seller_vat: "required",
+            seller_rtgs: "required",
+            seller_beneficiary: "required",
+            seller_account_number: {
+                required: true,
+                number: true
+             },
+            seller_account_type: "required",
+            seller_company_description: {
+                  required: false,
+                  minlength: 50
+            },
+            seller_pan_copy: "required",
+            seller_cancelled_cheque: "required",
+            user_login: "required",
+            pass1: "required",
+            pass2: "required"
+            },
+
+               
+        submitHandler: function(form) {
+            form.submit();
+        }
+
+});
+
+
+
+
     
     }); 

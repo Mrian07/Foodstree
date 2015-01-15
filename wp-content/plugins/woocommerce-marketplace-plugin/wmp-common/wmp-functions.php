@@ -59,6 +59,7 @@ function wmp_admin_head(){
 #adminmenu #toplevel_page_sellers div.wp-menu-image:before { content: "\f307"; }
 #adminmenu #menu-posts-shop_order div.wp-menu-image:before { content: "\f157"; }
 #adminmenu #toplevel_page_seller-profile div.wp-menu-image:before { content: "\f110"; }
+.form-table .error{ display:block; margin-top:2px; color:red; }
 </style>
 <?php
 }   

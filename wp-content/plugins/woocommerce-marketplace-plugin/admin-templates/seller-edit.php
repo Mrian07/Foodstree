@@ -77,9 +77,16 @@ if ( current_user_can( 'edit_user', get_current_user_id()) ) {
 } ?>
 </h2>
 <?php
+
 wp_enqueue_script(
         'jquery_form_js',
         plugins_url( '/js/form/jquery.form.js' , __FILE__ ),
+        array( 'jquery' )
+);
+
+wp_enqueue_script(
+        'custom_validate_js',
+        plugins_url( '/js/form/jquery.validate.min.js' , __FILE__ ),
         array( 'jquery' )
 );
 
@@ -96,6 +103,13 @@ wp_enqueue_script(
  * @since 3.0.0
  */
 ?>
+
+<form id="your-profile" enctype="multipart/form-data" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
+
+<?php submit_button( __('Update Seller') ); ?>
+
+
+
 <h3><?php _e('Pincode Info') ?></h3>
 <table class="form-table">
  	<tr>
@@ -108,7 +122,10 @@ wp_enqueue_script(
             </td> 
         </tr>
 </table>
-<form id="your-profile" enctype="multipart/form-data" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
+
+
+
+
 <?php wp_nonce_field('update-user_' . $user_id) ?>
 <p>
 <input type="hidden" name="from" value="profile" />
@@ -118,6 +135,9 @@ wp_enqueue_script(
 
 
 
+<hr />
+
+<h3><?php _e('Personal Info') ?></h3>
 
 
 
@@ -125,18 +145,18 @@ wp_enqueue_script(
 <table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="company_info"><?php _e('Company Information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="company_info"><?php _e('Company information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="company_info" type="text" id="company_info" value="<?php echo get_user_meta( $user_id, 'company_info', true ); ?>" aria-required="true" /></td>
 	</tr>
 	
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="first_name"><?php _e('First Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="first_name"><?php _e('First name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="first_name" type="text" id="first_name" value="<?php echo esc_attr($profileuser->first_name) ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="last_name"><?php _e('Last Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="last_name"><?php _e('Last name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="last_name" type="text" id="last_name" value="<?php echo esc_attr($profileuser->last_name) ?>" aria-required="true" /></td>
 	</tr>
 
@@ -150,7 +170,7 @@ wp_enqueue_script(
 	
 
 	<tr>
-	<th><label for="email"><?php _e('Communication Email'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+	<th><label for="email"><?php _e('Communication email'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 	<td><input type="email" name="email" id="email" value="<?php echo esc_attr( $profileuser->user_email ) ?>" class="regular-text ltr" />
 	<?php
 	$new_email = get_option( $current_user->ID . '_new_email' );
@@ -163,7 +183,7 @@ wp_enqueue_script(
 </tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="mobile_number"><?php _e('Mobile Number') ?><span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="mobile_number"><?php _e('Mobile number') ?><span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="mobile_number" type="text" id="mobile_number" value="<?php echo get_user_meta( $user_id, 'mobile_number', true ); ?>" aria-required="true" /></td>
 	</tr>
 	
@@ -179,32 +199,35 @@ wp_enqueue_script(
 	<table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_address"><?php _e('Company Registered Address') ?></label></th>
+		<th scope="row"><label for="seller_address"><?php _e('Company registered address') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><textarea name="seller_address" id="seller_address"><?php echo get_user_meta( $user_id, 'seller_address', true ); ?></textarea></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_city"><?php _e('City') ?></label></th>
+		<th scope="row"><label for="seller_city"><?php _e('City') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_city" type="text" id="seller_city" value="<?php echo get_user_meta( $user_id, 'seller_city', true ); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pincode"><?php _e('Pincode') ?></label></th>
+		<th scope="row"><label for="seller_pincode"><?php _e('Pincode') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_pincode" type="text" id="seller_pincode" value="<?php echo get_user_meta( $user_id, 'seller_pincode', true ); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_state"><?php _e('State') ?></label></th>
+		<th scope="row"><label for="seller_state"><?php _e('State') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_state" type="text" id="seller_state" value="<?php echo get_user_meta( $user_id, 'seller_state', true ); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_country"><?php _e('Country') ?></label></th>
+		<th scope="row"><label for="seller_country"><?php _e('Country') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td>
 			<select name="seller_country" id="seller_country" aria-required="true">
 				<option value="">Select Country..</option>
 				<?php foreach(wmp_getCountries() as $key=>$value){ 
 					$country = get_user_meta( $user_id, 'seller_country', true );
+					if($country == ''){
+						$country = 'India';
+					}
 					$selected = ($value == $country ? 'selected' : '');
 					?>
 				<option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
@@ -233,32 +256,35 @@ wp_enqueue_script(
 	<table class="form-table" id="billing_adddress_wrap" style="display:nonee;">
 	
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_address"><?php _e('Billing Address') ?></label></th>
+		<th scope="row"><label for="seller_billing_address"><?php _e('Billing address') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><textarea name="seller_billing_address" id="seller_billing_address"><?php echo get_user_meta( $user_id, 'seller_billing_address', true ); ?></textarea></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_city"><?php _e('City') ?></label></th>
+		<th scope="row"><label for="seller_billing_city"><?php _e('City') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_billing_city" type="text" id="seller_billing_city" value="<?php echo get_user_meta( $user_id, 'seller_billing_city', true ); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_pincode"><?php _e('Pincode') ?></label></th>
+		<th scope="row"><label for="seller_billing_pincode"><?php _e('Pincode') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_billing_pincode" type="text" id="seller_billing_pincode" value="<?php echo get_user_meta( $user_id, 'seller_billing_pincode', true ); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_state"><?php _e('State') ?></label></th>
+		<th scope="row"><label for="seller_billing_state"><?php _e('State') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_billing_state" type="text" id="seller_billing_state" value="<?php echo get_user_meta( $user_id, 'seller_billing_state', true ); ?>" aria-required="true" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_billing_country"><?php _e('Country') ?></label></th>
+		<th scope="row"><label for="seller_billing_country"><?php _e('Country') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td>
 			<select name="seller_billing_country" id="seller_billing_country" aria-required="true">
 				<option value="">Select Country..</option>
 				<?php foreach(wmp_getCountries() as $key=>$value){ 
 					$country = get_user_meta( $user_id, 'seller_billing_country', true );
+					if($country == ''){
+						$country = 'India';
+					}
 					$selected = ($value == $country ? 'selected' : '');
 					?>
 				<option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
@@ -281,42 +307,42 @@ wp_enqueue_script(
 
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan"><?php _e('PAN') ?></label></th>
+		<th scope="row"><label for="seller_pan"><?php _e('PAN') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_pan" type="text" id="seller_pan" value="<?php echo get_user_meta( $user_id, 'seller_pan', true ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_vat"><?php _e('VAT/TIN/CST no.') ?></label></th>
+		<th scope="row"><label for="seller_vat"><?php _e('VAT/TIN/CST no.') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_vat" type="text" id="seller_vat" value="<?php echo get_user_meta( $user_id, 'seller_vat', true ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_rtgs"><?php _e('RTGS/NEFT/IFSC Code') ?></label></th>
+		<th scope="row"><label for="seller_rtgs"><?php _e('RTGS/NEFT/IFSC code') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_rtgs" type="text" id="seller_rtgs" value="<?php echo get_user_meta( $user_id, 'seller_rtgs', true ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_beneficiary"><?php _e('Beneficiary name') ?></label></th>
+		<th scope="row"><label for="seller_beneficiary"><?php _e('Beneficiary name') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_beneficiary" type="text" id="seller_beneficiary" value="<?php echo get_user_meta( $user_id, 'seller_beneficiary', true ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_account_number"><?php _e('Account number') ?></label></th>
+		<th scope="row"><label for="seller_account_number"><?php _e('Account number') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_account_number" type="text" id="seller_account_number" value="<?php echo get_user_meta( $user_id, 'seller_account_number', true ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_account_type"><?php _e('Account type') ?></label></th>
+		<th scope="row"><label for="seller_account_type"><?php _e('Account type') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_account_type" type="text" id="seller_account_type" value="<?php echo get_user_meta( $user_id, 'seller_account_type', true ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_bank_name"><?php _e('Bank Name') ?></label></th>
+		<th scope="row"><label for="seller_bank_name"><?php _e('Bank name') ?></label></th>
 		<td><input name="seller_bank_name" type="text" id="seller_bank_name" value="<?php echo get_user_meta( $user_id, 'seller_bank_name', true ); ?>" /></td>
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_branch_name"><?php _e('Branch Name') ?></label></th>
+		<th scope="row"><label for="seller_branch_name"><?php _e('Branch name') ?></label></th>
 		<td><input name="seller_branch_name" type="text" id="seller_branch_name" value="<?php echo get_user_meta( $user_id, 'seller_branch_name', true ); ?>" /></td>
 	</tr>
 
@@ -343,7 +369,7 @@ wp_enqueue_script(
 </tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_company_description"><?php _e('Company Description') ?></label></th>
+		<th scope="row"><label for="seller_company_description"><?php _e('Company description') ?></label></th>
 		<td><textarea name="seller_company_description" id="seller_company_description"><?php echo get_user_meta( $user_id, 'seller_company_description', true ); ?></textarea></td>
 	</tr>
 
@@ -357,7 +383,7 @@ wp_enqueue_script(
 
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_logo"><?php _e('Company Logo') ?></label></th>
+		<th scope="row"><label for="seller_logo"><?php _e('Company logo') ?></label></th>
 		<td><input name="seller_logo" type="file" id="seller_logo" /></td>
 		<?php if(get_user_meta( $user_id, 'seller_logo', true ) !=''){
 			$image_url = wp_get_attachment_image_src(get_user_meta( $user_id, 'seller_logo', true ), 'thumbnail' );
@@ -368,7 +394,7 @@ wp_enqueue_script(
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?></label></th>
+		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_pan_copy" type="file" id="seller_pan_copy" /></td>
 		<?php if(get_user_meta( $user_id, 'seller_pan_copy', true ) !=''){
 			$pan_copy = get_user_meta( $user_id, 'seller_pan_copy', true );
@@ -379,7 +405,7 @@ wp_enqueue_script(
 	</tr>
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?></label></th>
+		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?> <span class="description"><?php _e('(required)'); ?></label></th>
 		<td><input name="seller_cancelled_cheque" type="file" id="seller_cancelled_cheque" /></td>
 		<?php if(get_user_meta( $user_id, 'seller_cancelled_cheque', true ) !=''){
 			$cheque_copy = get_user_meta( $user_id, 'seller_cancelled_cheque', true );
@@ -425,7 +451,7 @@ wp_enqueue_script(
 
 
 	<tr>
-		<th scope="row"><label for="seller_activate"><?php _e('Activate Seller?') ?></label></th>
+		<th scope="row"><label for="seller_activate"><?php _e('Activate seller?') ?></label></th>
 		<td><input type="checkbox" name="seller_activate" id="seller_activate" <?php checked( get_user_meta( $user_id, 'seller_activate', true ) ); ?>  value="1" /><span class="description"><?php _e('Activate/deactivate the seller.'); ?></span></td>
 
 	</tr>
@@ -457,7 +483,7 @@ $show_password_fields = apply_filters( 'show_password_fields', true, $profileuse
 if ( $show_password_fields ) :
 ?>
 <tr id="password">
-	<th><label for="pass1"><?php _e( 'New Password' ); ?></label></th>
+	<th><label for="pass1"><?php _e( 'New password' ); ?></label></th>
 	<td>
 		<input class="hidden" value=" " /><!-- #24364 workaround -->
 		<input type="password" name="pass1" id="pass1" class="regular-text" size="16" value="" autocomplete="off" /><br />
@@ -465,7 +491,7 @@ if ( $show_password_fields ) :
 	</td>
 </tr>
 <tr>
-	<th scope="row"><label for="pass2"><?php _e( 'Repeat New Password' ); ?></label></th>
+	<th scope="row"><label for="pass2"><?php _e( 'Repeat new password' ); ?></label></th>
 	<td>
 	<input name="pass2" type="password" id="pass2" class="regular-text" size="16" value="" autocomplete="off" /><br />
 	<span class="description" for="pass2"><?php _e( 'Type your new password again.' ); ?></span>
@@ -488,7 +514,7 @@ if ( $show_password_fields ) :
 		 *
 		 * @param WP_User $profileuser The current WP_User object.
 		 */
-		do_action( 'show_user_profile', $profileuser );
+		//do_action( 'show_user_profile', $profileuser );
 	} else {
 		/**
 		 * Fires after the 'About the User' settings table on the 'Edit User' screen.
@@ -518,7 +544,7 @@ if ( $show_password_fields ) :
  <table class="form-table">
      
     <tr>
-       <th scope="row"><label for="seller_pincode_reset"><?php _e('Reset Seller pincodes') ?></label></th>
+       <th scope="row"><label for="seller_pincode_reset"><?php _e('Reset seller pincodes') ?></label></th>
        <td><button type="button" name="reset-seller-pincode" id="reset-seller-pincode">Reset</button><span id="rst-response"></span></td>
    </tr>  
     <tr class="form-field" id="pincode_upload_block">
@@ -559,31 +585,3 @@ break;
 	}    
 </script>
 
-
-
-<script type="text/javascript">
-jQuery(document).ready(function(){
-
-	jQuery('#seller_billing_yes').change(function() {
-		jQuery('#billing_adddress_wrap').toggle(!this.checked);
-
-		if (jQuery(this).prop('checked')==true){ 
-			jQuery('#seller_billing_address').val(jQuery('#seller_address').val());
-			jQuery('#seller_billing_city').val(jQuery('#seller_city').val());
-			jQuery('#seller_billing_pincode').val(jQuery('#seller_pincode').val());
-			jQuery('#seller_billing_state').val(jQuery('#seller_state').val());
-			var country = jQuery('#seller_country option:selected').val();
-			jQuery('#seller_billing_country option[value=' + country + ']').attr('selected','selected');
-		}else{
-			jQuery('#seller_billing_address').val("");
-			jQuery('#seller_billing_city').val("");
-			jQuery('#seller_billing_pincode').val("");
-			jQuery('#seller_billing_state').val("");
-			jQuery('#seller_billing_country option[value=India]').attr('selected','selected');
-		}
-
-
-	});
-
-});
-</script>
