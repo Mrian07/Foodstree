@@ -32,7 +32,9 @@
 <div id="pincodepop">
 
 <div id="pincode_city_cont">
-<span>City: </span>
+<h2 class="title-heading-header">
+				ENTER CITY
+		</h2><br>
 <input type="text" name="pincode-city" id="pincode-city" /><span id="cityloader"></span>
 <ul id="pincode_city_list" style="display:none;"></ul>
 </div>
