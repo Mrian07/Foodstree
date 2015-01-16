@@ -104,7 +104,7 @@ wp_enqueue_script(
  */
 ?>
 
-<form id="your-profilee" enctype="multipart/form-data" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
+<form id="your-profile" enctype="multipart/form-data" action="<?php echo '?page=edit-seller&action=update&updated=1&seller=' . $user_id; ?>" method="post" novalidate="novalidate"<?php do_action( 'user_edit_form_tag' ); ?>>
 
 <?php submit_button( __('Update Seller') ); ?>
 
