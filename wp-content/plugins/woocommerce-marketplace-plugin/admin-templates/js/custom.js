@@ -204,11 +204,16 @@ rules: {
                 minlength: 6,
                 maxlength: 6
             },
+            seller_billing_pincode: {
+                required: true,
+                number: true,
+                minlength: 6,
+                maxlength: 6
+            },
             seller_state: "required",
             seller_country: "required",
             seller_billing_address: "required",
             seller_billing_city: "required",
-            seller_billing_pincode: "required",
             seller_billing_state: "required",
             seller_billing_country: "required",
             seller_pan: "required",
@@ -265,11 +270,16 @@ rules: {
                 minlength: 6,
                 maxlength: 6
             },
+            seller_billing_pincode: {
+                required: true,
+                number: true,
+                minlength: 6,
+                maxlength: 6
+            },
             seller_state: "required",
             seller_country: "required",
             seller_billing_address: "required",
             seller_billing_city: "required",
-            seller_billing_pincode: "required",
             seller_billing_state: "required",
             seller_billing_country: "required",
             seller_pan: "required",
