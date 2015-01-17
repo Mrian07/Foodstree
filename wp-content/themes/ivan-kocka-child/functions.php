@@ -33,21 +33,27 @@ function get_pincode_sellers(){
     if(isset($_COOKIE['user_pincode'])){
        $seller_ids = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
        $seller_ids = maybe_unserialize($seller_ids);
-       
+
+             
        if(empty($seller_ids)){
            // NOT to fetch products if the pincode has no sellers
            $sellers[] = 0;
        }else{
-           
-           foreach ($seller_ids as $seller_id)
-               $sellers[] = (int)$seller_id;
+                        
+           foreach ($seller_ids as $seller){
+               //$sellers[] = (int)$seller;
+
+                $sellers[] = $seller['user_id'];
+
+           }
+
        }
         
     }else{
         // NOT to fetch products if the user_pincode is not set
         $sellers[] = 0;
     }
-    return $sellers;
+    return array_unique($sellers);
 }
 
 // terms filter to display the count of products in a category based on pincode selection
@@ -151,9 +157,6 @@ $_SESSION['all_sellers'] = $key;
 echo $_SESSION['all_sellers'];
 die();
 }
-
-
-
 
 
 
