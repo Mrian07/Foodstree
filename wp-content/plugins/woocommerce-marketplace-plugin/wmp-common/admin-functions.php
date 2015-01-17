@@ -361,7 +361,7 @@ function wmp_create_seller_profile() {
 }
 
 function seller_login_redirect($redirect_to, $request, $user) {
-$redirect_url = admin_url( 'index.php' );
+$redirect_url = admin_url( 'edit.php?post_type=product' );
  if(get_user_role($user->ID) == 'seller'){
 return $redirect_url;
 }else{
@@ -372,16 +372,19 @@ return $redirect_url;
 
 
 
-//remove profile menu
-function remove_profile_menu(){
-  remove_menu_page( 'profile.php' ); 
+//Remove additional menu items for seller
+function remove_additional_menu(){
+  remove_menu_page( 'profile.php' );
+  remove_menu_page( 'upload.php' );
+  remove_menu_page( 'index.php' );
+  remove_menu_page( 'plugins.php' );      
 }
 
 
 
 if(wmp_is_seller()){
 add_action('admin_menu', 'wmp_seller_profile_menu' );
-add_action( 'admin_menu', 'remove_profile_menu' );
+add_action( 'admin_menu', 'remove_additional_menu' );
 }
 
 add_filter("login_redirect", "seller_login_redirect", 10, 3);
