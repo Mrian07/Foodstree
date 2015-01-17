@@ -5,6 +5,7 @@ jQuery(document).ready(function(){
 
         jQuery("#pincodepop").css('display', 'block');
         jQuery(".background_overlay").css('display', 'block');
+
     }
 
 
@@ -39,7 +40,19 @@ jQuery(document).ready(function(){
     });*/
 
 
+jQuery("#change-pincode").on('click', function(){
+    jQuery("#pincodepop").css('display', 'block');
+    jQuery(".background_overlay").css('display', 'block');
 
+    jQuery( "#pincodepop" ).prepend( "<a id='pinpopclose'>X</a>" );
+});
+
+
+
+jQuery(document).on("click", '#pinpopclose', function(event) { 
+    jQuery("#pincodepop").css('display', 'none');
+    jQuery(".background_overlay").css('display', 'none');
+});
 
 
 
@@ -124,7 +137,7 @@ jQuery(document).on("click", '.pin_code', function(event) {
     var pincode = jQuery(this).attr("data-pincode");
     var city = jQuery('#pincode-city').val();
 
-   if (jQuery.cookie('user_pincode') == null ){
+  // if (jQuery.cookie('user_pincode') == null ){
                 jQuery.cookie('user_pincode', pincode, { expires: 365, path: '/' });
                 jQuery.cookie('user_city', city, { expires: 365, path: '/' });
                 jQuery("#pincodepop").css('display', 'none');
@@ -133,7 +146,7 @@ jQuery(document).on("click", '.pin_code', function(event) {
                 jQuery("#content").html("<div id='pre-loader'></div>");
                 
                 location.reload();
-            }
+           // }
 });
 
 

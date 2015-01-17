@@ -429,3 +429,14 @@ text-align:right;
 .content-wrapper {
 	padding:0px;
 }
+
+#change-pincode{
+	cursor:pointer;
+}
+#pinpopclose{
+	cursor:pointer;
+	position: absolute;
+	right: 5px;
+	top: 0px;
+	font-weight:bold;
+}
