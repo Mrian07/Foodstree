@@ -119,9 +119,14 @@ add_action( 'manage_shop_order_posts_custom_column', 'wmp_shop_order_custom_colu
 function wmp_admin_shop_order_row_classes( $classes, $post_id ) {
     global $post;
 
+
+if(isset($_GET['all_posts']) && $_GET['all_posts']=='1'){
+    
     if ( $post->post_type == 'shop_order' && $post->post_parent != 0 ) {
         $classes[] = 'sub-order parent-' . $post->post_parent;
     }
+
+}
 
     return $classes;
 }
@@ -157,21 +162,27 @@ function wmp_admin_shop_order_scripts() {
         });
 
 
+       <?php if(!(isset($_GET['all_posts'])) && $_GET['all_posts']!='1'){ ?>
+        $('.post-type-shop_order tr.author-self').hide();
+        <?php } ?>
+
+
+
 <?php if($current_role == 'seller'){ ?>
-$('.post-type-shop_order ul.subsubsub').css('display','none');
-$('.post-type-shop_order #filter-by-date').css('display','none');
-$('.post-type-shop_order #dropdown_customers_chosen').css('display','none');
-$('.post-type-shop_order #post-query-submit').css('display','none');
-$('.post-type-shop_order tr.sub-order').toggle();
+
+    $('.post-type-shop_order ul.subsubsub').html('<?php echo wmp_generate_order_status_count(); ?>');
+
+    $('.post-type-shop_order tr.sub-order').toggle();
 
 <?php if(!wmp_is_seller_has_orders( get_current_user_id() )){ ?>
-$('.post-type-shop_order #the-list').empty();
-$('.post-type-shop_order #the-list').html("<tr class='no-items'><td class='colspanchange' colspan='8'>No Orders found</td></tr>");
-$('.post-type-shop_order span.displaying-num').css('display','none');
+
 <?php } ?>
 
 
 <?php }else{ ?>
+
+$('.post-type-shop_order ul.subsubsub').html('<?php echo wmp_generate_order_status_admin_count(); ?>');
+
 $('button.toggle-sub-orders').on('click', function(e) {
             e.preventDefault();
 
@@ -212,15 +223,11 @@ function wmp_seller_product_listing_scripts() {
     <script type="text/javascript">
     jQuery(function($) {
         <?php if($current_role == 'seller'){ ?>
-            $('.post-type-product ul.subsubsub').css('display','none');
-            $('.post-type-product #filter-by-date').css('display','none');
-            $('.post-type-product .dropdown_product_cat').css('display','none');
-            $('.post-type-product #dropdown_product_type').css('display','none');
-            $('.post-type-product #post-query-submit').css('display','none');
+                 
+          $('.post-type-product ul.subsubsub').html('<?php echo wmp_generate_product_status_count(); ?>');
+           
             <?php if(count_seller_all_products( get_current_user_id() ) <=0 ){ ?>
-                $('.post-type-product #the-list').empty();
-                $('.post-type-product #the-list').html("<tr class='no-items'><td class='colspanchange' colspan='12'>No Products found</td></tr>");
-                $('.post-type-product span.displaying-num').css('display','none');
+                
                 <?php } ?>
 
 
@@ -372,12 +379,13 @@ return $redirect_url;
 
 
 
-//Remove additional menu items for seller
+//Remove additional menu items for seller dashboard
 function remove_additional_menu(){
   remove_menu_page( 'profile.php' );
   remove_menu_page( 'upload.php' );
   remove_menu_page( 'index.php' );
-  remove_menu_page( 'plugins.php' );      
+  remove_menu_page( 'plugins.php' );
+  //remove_menu_page( 'post-new.php?post_type=shop_order' );      
 }
 
 
@@ -392,3 +400,101 @@ add_filter("login_redirect", "seller_login_redirect", 10, 3);
 
 
 
+
+function wmp_seller_order_query($query){
+
+ global $pagenow;
+ 
+ global $current_user;
+
+ if($query->query_vars['post_type'] == 'shop_order' && wmp_is_seller()){
+       
+    $query->set('author', $current_user->ID); 
+}
+
+return $query;
+}
+
+add_action( 'pre_get_posts', 'wmp_seller_order_query' );
+
+
+
+
+function wmp_seller_product_query($query){
+
+ global $pagenow;
+ 
+ global $current_user;
+
+ if($query->query_vars['post_type'] == 'product' && wmp_is_seller()){
+       
+    $query->set('author', $current_user->ID); 
+}
+
+return $query;
+}
+
+add_action( 'pre_get_posts', 'wmp_seller_product_query' );
+
+
+
+function wmp_generate_product_status_count(){
+     global $current_user;
+     global $wpdb;
+
+    $post_author = $current_user->ID;
+    $count_all = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('product')" );
+    $count_published = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('product') and post_status = 'publish'" );
+    $count_pending = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('product') and post_status = 'pending'" );
+    $count_trash = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('product') and post_status = 'trash'" );
+
+    $list = '<li class="all"><a href="edit.php?post_type=product&amp;all_posts=1">All <span class="count">('.$count_all.')</span></a> |</li>';
+    $list .= '<li class="publish"><a href="edit.php?post_status=publish&amp;post_type=product">Published <span class="count">('.$count_published.')</span></a> |</li>';
+    $list .= '<li class="pending"><a href="edit.php?post_status=pending&amp;post_type=product">Pending <span class="count">('.$count_pending.')</span></a> |</li>';
+    $list .= '<li class="trash"><a href="edit.php?post_status=trash&amp;post_type=product">Trash <span class="count">('.$count_trash.')</span></a></li>';
+    echo $list;
+}
+
+function wmp_generate_order_status_count(){
+     global $current_user;
+     global $wpdb;
+
+    $post_author = $current_user->ID;
+    $count_all = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('shop_order') and post_status != 'auto-draft'" );
+    $count_processing = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('shop_order') and post_status = 'wc-processing'" );
+    $count_on_hold = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('shop_order') and post_status = 'wc-on-hold'" );
+    $count_completed = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_author = $post_author AND post_type IN ('shop_order') and post_status = 'wc-completed'" );
+    
+    $list = '<li class="all"><a href="edit.php?post_type=shop_order&amp;all_posts=1">All <span class="count">('.$count_all.')</span></a> |</li>';
+    $list .= '<li class="wc-processing"><a href="edit.php?post_status=wc-processing&amp;post_type=shop_order">Processing <span class="count">('.$count_processing.')</span></a> |</li>';
+    $list .= '<li class="wc-on-hold"><a href="edit.php?post_status=wc-on-hold&amp;post_type=shop_order">On hold <span class="count">('.$count_on_hold.')</span></a> |</li>';
+    $list .= '<li class="wc-completed"><a href="edit.php?post_status=wc-completed&amp;post_type=shop_order">Completed <span class="count">('.$count_completed.')</span></a></li>';
+
+    echo $list;
+}
+
+
+
+function wmp_generate_order_status_admin_count(){
+    global $current_user;
+    global $wpdb;
+
+
+    $count_all = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type IN ('shop_order') and post_status != 'auto-draft' and post_parent <= 0" );
+    $count_processing = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wmp_orders WHERE order_status = 'processing' and seller_id > 0" );
+    $count_on_hold = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wmp_orders WHERE order_status = 'on-hold' and seller_id > 0" );
+    $count_completed = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wmp_orders WHERE order_status = 'completed' and seller_id > 0" );
+    
+    $list = '<li class="all"><a href="edit.php?post_type=shop_order&amp;all_posts=1">All <span class="count">('.$count_all.')</span></a> |</li>';
+    $list .= '<li class="wc-processing"><a href="edit.php?post_status=wc-processing&amp;post_type=shop_order">Processing <span class="count">('.$count_processing.')</span></a> |</li>';
+    $list .= '<li class="wc-on-hold"><a href="edit.php?post_status=wc-on-hold&amp;post_type=shop_order">On hold <span class="count">('.$count_on_hold.')</span></a> |</li>';
+    $list .= '<li class="wc-completed"><a href="edit.php?post_status=wc-completed&amp;post_type=shop_order">Completed <span class="count">('.$count_completed.')</span></a></li>';
+
+    echo $list;
+}
+
+
+
+
+/*global $woocommerce;
+remove_action( 'init', array( $woocommerce, 'wc_processing_order_count' ) );*/
