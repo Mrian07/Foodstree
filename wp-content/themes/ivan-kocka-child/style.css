@@ -457,6 +457,7 @@ text-align:right;
 	top: 0px;
 	font-weight:bold;
 }
+
 .yith-wrapper{
 	display:none !important;
 }
@@ -468,4 +469,15 @@ background: #E0E0E0;
 border-radius: 3px;
 padding: 2px 6px;
 font-size: .8em;
+
+}
+.woocommerce-page .error.woocommerce-message, .woocommerce .error.woocommerce-message{
+	background: #ff3e47 !important;
+}
+.woocommerce-page .success.woocommerce-message, .woocommerce .success.woocommerce-message{
+	background: #00bfb3 !important;
+}
+.woocommerce-page .info.woocommerce-message, .woocommerce .info.woocommerce-message{
+	background: #008cdc !important;
+
 }

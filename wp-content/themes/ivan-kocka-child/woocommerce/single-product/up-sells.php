@@ -21,7 +21,7 @@ $args = array(
 	'post_type'           => 'product',
 	'ignore_sticky_posts' => 1,
 	'no_found_rows'       => 1,
-	'posts_per_page'      => -1, // Add all Up Sells :)
+	'posts_per_page'      => $posts_per_page,
 	'orderby'             => $orderby,
 	'post__in'            => $upsells,
 	'post__not_in'        => array( $product->id ),
@@ -30,7 +30,7 @@ $args = array(
 
 $products = new WP_Query( $args );
 
-$woocommerce_loop['columns'] = apply_filters( 'loop_shop_columns', 1 );
+$woocommerce_loop['columns'] = $columns;
 
 if ( $products->have_posts() ) : ?>
 
@@ -38,24 +38,15 @@ if ( $products->have_posts() ) : ?>
 
 		<h2><?php _e( 'You may also like&hellip;', 'woocommerce' ) ?></h2>
 
-		<div class="row">
-			<div>
-				<div class="upsells-carousel">
+		<?php woocommerce_product_loop_start(); ?>
 
-					<?php woocommerce_product_loop_start(); ?>
+			<?php while ( $products->have_posts() ) : $products->the_post(); ?>
 
-						<?php while ( $products->have_posts() ) : $products->the_post(); ?>
+				<?php wc_get_template_part( 'content', 'product' ); ?>
 
-							<?php wc_get_template_part( 'content', 'product' ); ?>
+			<?php endwhile; // end of the loop. ?>
 
-						<?php endwhile; // end of the loop. ?>
-
-					<?php woocommerce_product_loop_end(); ?>
-
-				</div><!--.related-carousel-->
-
-			</div>
-		</div><!--.row-->
+		<?php woocommerce_product_loop_end(); ?>
 
 	</div>
 

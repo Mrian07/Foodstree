@@ -15,21 +15,10 @@ $attachment_ids = $product->get_gallery_attachment_ids();
 
 if ( $attachment_ids ) {
 	?>
-	<div class="thumbnails">
-		<div class="single-product-thumb-images owl-carousel">
-		<?php
+	<div class="thumbnails"><?php
 
 		$loop = 0;
-		$columns = apply_filters( 'woocommerce_product_thumbnails_columns', 4 );
-
-		// Display thumbnail as well...
-		$image_title 		= esc_attr( get_the_title( get_post_thumbnail_id() ) );
-		$image_link  		= wp_get_attachment_url( get_post_thumbnail_id() );
-		$image       		= get_the_post_thumbnail( $post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' ), array(
-			'title' => $image_title
-			) );
-
-		echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', sprintf( '<a href="%s" title="%s">%s</a>', $image_link, $image_title, $image ), get_post_thumbnail_id(), $post->ID );
+		$columns = apply_filters( 'woocommerce_product_thumbnails_columns', 3 );
 
 		foreach ( $attachment_ids as $attachment_id ) {
 
@@ -50,13 +39,11 @@ if ( $attachment_ids ) {
 			$image_class = esc_attr( implode( ' ', $classes ) );
 			$image_title = esc_attr( get_the_title( $attachment_id ) );
 
-			echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', sprintf( '<a href="%s" class="%s" title="%s">%s</a>', $image_link, $image_class, $image_title, $image ), $attachment_id, $post->ID, $image_class );
+			echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', sprintf( '<a href="%s" class="%s" title="%s" data-rel="prettyPhoto[product-gallery]">%s</a>', $image_link, $image_class, $image_title, $image ), $attachment_id, $post->ID, $image_class );
 
 			$loop++;
 		}
 
-		?>
-		</div>
-	</div>
+	?></div>
 	<?php
 }
