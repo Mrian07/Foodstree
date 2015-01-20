@@ -129,13 +129,13 @@ if(is_admin())
 			?>
 
 			<?php //do_action( 'woocommerce_after_shop_loop_item' ); ?>
-
+<!--
 			<?php
 			// Adds Wishlist Button
 			if( class_exists( 'YITH_WCWL' ) ) : ?>
 				<?php echo '<div class="yith-wrapper">' . do_shortcode('[yith_wcwl_add_to_wishlist]') . '</div>'; ?>
-			<?php endif; ?>
-
+			<?php endif; ?>-->
+</a>
 		<div id="overlay" class="quick-info"><br>
 				<div class="cart-icon"></div>
 				<div> Add to cart</div>
@@ -143,7 +143,7 @@ if(is_admin())
 			</div>
 		</div><!--.product-info-->
 
-	</a>
+	
 
 	<?php woocommerce_get_template( 'loop/sale-flash.php' ); ?>
 

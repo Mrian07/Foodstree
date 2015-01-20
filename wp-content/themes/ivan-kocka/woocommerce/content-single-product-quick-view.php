@@ -62,16 +62,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 				<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 
 				<?php
-					/**
-					 * woocommerce_single_product_quick_view_summary hook
-					 *
-					 * @hooked woocommerce_template_single_rating - 10
-					 * @hooked woocommerce_template_single_price - 10
-					 * @hooked woocommerce_template_single_excerpt - 20
-					 * @hooked woocommerce_template_single_add_to_cart - 30
-					 * @hooked woocommerce_template_single_meta - 40
-					 * @hooked woocommerce_template_single_sharing - 50
-					 */
+				
 					do_action( 'woocommerce_single_product_quick_view_summary' );
 				?>
 
