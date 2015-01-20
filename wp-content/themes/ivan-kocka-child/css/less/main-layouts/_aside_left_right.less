@@ -1,0 +1,133 @@
+/* Class Ivan_Main_Layout_Aside_Left */
+
+.ivan-m-l-aside {
+
+	// Left -> Right
+	&.ivan-m-l-aside-left .ivan-main-layout-aside-right {
+		width: 80%;
+		float: right;
+	}
+
+	&.ivan-m-l-aside-left .ivan-main-layout-aside-left {
+		width: 20%;
+		float: left;
+
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		height: 100%;
+		
+		background: @header-bg;
+		border-right: 1px solid rgba(0,0,0,0.1);
+	}
+
+	// Right -> Left
+	&.ivan-m-l-aside-right .ivan-main-layout-aside-right {
+		width: 20%;
+		float: right;
+
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		height: 100%;
+
+		background: @header-bg;
+		border-left: 1px solid rgba(0,0,0,0.1);
+		
+		//-webkit-box-shadow: -1px 0 5px 1px rgba(0,0,0,0.1);
+		//box-shadow: -1px 0 5px 1px rgba(0,0,0,0.1);
+	}
+
+	&.ivan-m-l-aside-right .ivan-main-layout-aside-left {
+		width: 80%;
+		float: left;		
+	}
+
+	// Small Logo Change
+	.logo img {
+		display: inline-block;
+	}
+}
+
+	// Boxed Sizes
+	.boxed-laterals, .boxed {
+
+		&.ivan-m-l-aside-left .ivan-main-layout-aside-right {
+			width: 78%;
+		}
+		&.ivan-m-l-aside-left .ivan-main-layout-aside-left {
+			width: 22%;
+		}
+
+		&.ivan-m-l-aside-right .ivan-main-layout-aside-right {
+			width: 22%;
+		}
+		&.ivan-m-l-aside-right .ivan-main-layout-aside-left {
+			width: 78%;
+		}
+
+	}
+
+// MD and LG Screen
+@media (min-width: @screen-md-min) {
+	
+	.ivan-m-l-aside  {
+
+		.aside-stuck {
+			position: fixed !important;
+			width: 20%;
+			top: 0px;
+		}
+
+		.ivan-main-layout-aside-right,
+		.ivan-main-layout-aside-left {
+			.container {
+				width: 100%;
+				max-width: 100%;
+				padding: 0 40px;
+			}
+		}
+	}
+
+	// Admin bar fix
+	.admin-bar {
+		&.ivan-m-l-aside  {
+			.aside-stuck {
+				top: 32px;
+			}
+		}
+	}
+}
+
+// XS and SM Screen
+@media (max-width: @screen-sm-max) {
+
+	.ivan-m-l-aside {
+		.ivan-main-layout-aside-right {
+			float: none !important;
+			width: auto !important;
+
+			position: static !important;
+			height: auto !important;
+
+			box-shadow: none !important;
+			-webkit-box-shadow: none !important;
+		}
+
+		.ivan-main-layout-aside-left {
+			float: none !important;
+			width: auto !important;
+			position: static !important;
+			height: auto !important;
+
+			box-shadow: none !important;
+			-webkit-box-shadow: none !important;
+		}
+
+		.fixed-height {
+			position: static !important;
+			width: auto;
+		}
+	}
+}

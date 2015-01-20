@@ -1,0 +1,92 @@
+//
+// Class Ivan_Module_WPML_Lang and Ivan_Module_WPML_Currency
+// --------------------------------------------------
+
+/* Flags from WPML general style */
+
+.wpml-lang {
+
+	img {
+		display: inline-block;
+	}
+
+	a {
+		display: inline-block;
+		margin-left: 3px;
+		margin-right: 3px;
+
+		&:first-child {
+			margin-left: 0;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+
+/* Currency Switcher Styles */
+
+.wpml-currency {
+	.wcml_currency_switcher {
+		padding: 0;
+		margin: 0;
+		display: inline-block;
+		list-style-type: none;
+		position: relative;
+
+		li {
+			float: left;
+			position: relative;
+			padding: 2px 8px;
+			margin-left: 1px;
+			text-align: center;
+			display: block;
+			font-size: 11px;
+
+			border-right: 1px solid #eee;
+			
+			cursor: pointer;
+
+			&:last-child {
+				padding-right: 0;
+				border: none;
+			}
+
+			&:first-child {
+				padding-left: 0;
+			}
+		}
+
+		&[disabled="disabled"] {
+
+			li {
+				.opacity( 0.1 );
+			}
+
+			&:before {
+				display: block;
+				text-align: center;
+				font: normal normal normal 14px/1 FontAwesome;
+				font-size: inherit;
+				text-rendering: auto;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				content: "\f110";
+
+				position: absolute;
+				left: 50%;
+				top: 50%;
+
+				font-size: 14px;
+
+				margin-left: -7px;
+				margin-top: -7px;
+			}
+		}
+	}
+
+	img {
+		display: none;
+	}
+}

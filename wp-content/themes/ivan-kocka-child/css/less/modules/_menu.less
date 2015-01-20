@@ -1,0 +1,65 @@
+//
+// Class Ivan_Module_Menu
+// --------------------------------------------------
+
+//--- Style: Logo
+	.mega_main_menu > ul > li.logo_style > .item_link {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+
+		span {
+			display: block;
+		}
+
+		img {
+			width: 100%;
+			height: auto;
+			max-height: 100%;
+		}
+	}
+
+/* Fallback Basic Styles */
+/*
+.no-mega-menu {
+	
+	.menu {
+
+		ul {
+			list-style-type: none;
+			margin: 0;
+		}
+
+		li {
+			display: inline-block;
+			position: relative;
+			text-align: center;
+			list-style-type: none;
+		}
+
+		li a {
+			padding: 10px 20px;
+		}
+
+		.sub-menu {
+			display: none;
+		}
+	}
+
+	&.ivan-m-l-aside .header {
+
+		li {
+			display: block;
+			position: relative;
+		}
+
+		.menu li, .menu a {
+			display: block;
+		}
+	}
+}
+*/
+
+/* IE Hack to hide Triangle */
+html[data-useragent*='MSIE 10.0'] .header #mega_main_menu > .menu_holder > .menu_inner > ul > li > .item_link:after {
+	opacity: 0 !important;
+}

@@ -1,0 +1,161 @@
+//
+// Class Ivan_Layout_Header_Simple_Right_Menu
+// --------------------------------------------------
+
+.top-header.two-columns {
+
+	/* General Styles */
+
+	.row {
+		position: relative;
+	}
+
+	/* Modules */
+
+	.iv-module {
+		float: right;
+		display: table !important;
+
+		min-height: 40px;
+		height: 40px;
+
+		margin-left: 30px;
+		position: relative;
+
+		.centered {
+			display: table-cell !important;
+			vertical-align: middle !important;
+		}
+
+		&:last-child {
+		
+		}
+	}
+
+	.top-header-left-area .iv-module {
+		float: left;
+
+		&:last-child {
+			
+		}
+
+		&:first-child {
+			margin-left: 0;
+		}
+		
+	}
+
+	/* Menu Module */
+	.iv-module-menu {
+		float: right;
+
+		height: 40px;
+
+		margin-left: 30px;
+		position: relative;
+
+		&:last-child {
+			margin-left: 0;
+		}
+	}
+
+	.mega_main_menu .mega_main_menu_ul {
+
+		height: 100%;
+
+		> li {
+			float: left;
+			position: relative;
+			height: 100%;
+
+			> .item_link {
+				display: inline-block;
+				height: 100%;
+
+				.item_link_content {
+					display: block;
+					.iv-center-rules();
+				}
+				
+			}
+		}
+	}
+
+}
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {
+	.top-header.two-columns {
+
+		.iv-module {
+			margin-left: 20px;
+
+			&:first-child {
+				.inner-wrapper {
+					right: 0 !important;
+				}
+			}
+
+			&.hidden-xs {
+				display: none !important;
+			}
+		}
+	}
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+
+	.top-header.two-columns {
+		.iv-module {
+			&.hidden-sm {
+				display: none !important;
+			}
+		}
+	}
+	
+}
+
+@media (max-width: @screen-sm-max) {
+
+	.top-header.two-columns .top-header-left-area .iv-module:nth-child(2) {
+		margin-left: 0px;
+	}
+
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+
+	.top-header.two-columns {
+
+		.iv-module {
+			margin-left: 20px;
+
+			&.hidden-md {
+				display: none !important;
+			}
+		}
+	}
+	
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+
+	.top-header.two-columns {
+
+		.iv-module {
+
+			&.hidden-lg {
+				display: none !important;
+			}
+		}
+	}
+	
+}

@@ -1,0 +1,242 @@
+//
+// Class Ivan_Module_Responsive_Menu
+// --------------------------------------------------
+
+.iv-mobile-menu-wrapper {
+	display: none;
+	background: #252525;
+	width: 300px;
+	position: fixed;
+	z-index: 30000;
+	top: 0px;
+	left: 0;
+	height: 100%;
+	overflow: auto;
+
+	-webkit-box-shadow: 3px 0 15px 0 rgba(0,0,0,0.35);
+	box-shadow: 3px 0 15px 0 rgba(0,0,0,0.35);
+
+	.iv-mobile-menu-holder {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 300px;
+		height: 100%;
+	}
+
+	.iv-mobile-menu-inner {
+		position: relative;
+		overflow: auto;
+		padding-bottom: 30px;
+	}
+
+	.iv-mobile-menu-close {
+		text-align: right;
+		padding: 15px 15px;
+
+		a {
+			display: inline-block;
+			padding: 10px 15px;
+			background: #111;
+			color: #fff;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+	}
+
+	ul {
+		padding: 0px;
+		margin: 0;
+		list-style-type: none;
+		background-image: none !important;
+		display: block;
+		position: static !important;
+		left: auto !important;
+		width: auto !important;
+		float: auto !important;
+
+		li {
+			display: block;
+			margin: 0;
+			padding: 0px;
+			width: auto !important;
+			float: auto !important;
+
+			&.logo_style {
+				display: none;
+			}
+
+			.item_link {
+				padding: 10px 15px;
+				border-left: none;
+				background-color: rgba(0, 0, 0, 0.3);
+			}
+
+			// Second Level
+			ul > li, ul > li {
+
+				> .item_link {
+					margin-left: 5px;
+					//border-left: 1px solid #444;
+					background-color: transparent;
+				}
+
+				// Third Level
+				ul > li, ul > li {
+
+					> .item_link {
+						margin-left: 40px;
+						border-left: 1px dashed #444;
+						background-color: transparent;
+					}
+
+					// Fourth Level
+					ul > li, ul > li {
+
+						> .item_link {
+							margin-left: 55px;
+							border-left: 1px dashed #444;
+							background-color: transparent;
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+	.menu > li > .item_link {
+		border-bottom: 1px solid #222;
+	}
+
+	a, .item_link {
+		color: #fff;
+		display: block;
+
+		&.item_link.with_icon i {
+			margin-right: 7px;
+		}
+
+		&:hover {
+			color: #fff;
+			text-decoration: none;
+		}
+	}
+
+	.current-menu-item > a {
+		background: @brand-primary;
+		color: #fff;
+	}
+
+	.description_text {
+		display: block;
+		font-size: 11px;
+	}
+
+	// Has Children Logic
+	.menu > .menu-item-has-children > ul {
+		display: none;
+	}
+
+	// Social Icons and Text Module
+
+	.social-icons {
+
+		text-align: center;
+
+		a {
+
+			color: #fff;
+			
+			text-align: center;
+
+			background: transparent;
+
+			font-size: 16px;
+
+			display: inline-block;
+
+			padding: 0 5px;
+
+			&:hover {
+				color: #fff;
+			}
+
+		}
+	}
+
+	/* Module > Custom Text */
+
+	.custom-text {
+
+		text-align: center;
+		color: #eee;
+
+		.iv-separator {
+			display: inline-block;
+			border-left: 1px dotted #444;
+			margin: 0 10px;
+		}
+
+		a {
+
+			display: inline;
+			color: #fff;
+			padding: 0;
+			border: none;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+
+	}
+
+	.modules {
+
+		.iv-module {
+			padding: 0px 15px 15px;
+
+			&:last-child {
+				padding-bottom: 20px;
+			}
+		}
+	}
+
+}
+
+/* Select Menu Alternative */
+.responsive-menu-select {
+
+	.receptor {
+		overflow: hidden;
+		position: relative;
+		width: 13px;
+	}
+	
+	select {
+		border: none;
+		background: transparent;
+		width: 13px;
+		height: 20px;
+		padding-right: 20px;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {	
+	.iv-module.responsive-menu {
+		padding-left: 0 !important;
+		margin-left: 0 !important;
+
+		&:after {
+			border-left: none !important;
+		}
+	}
+}

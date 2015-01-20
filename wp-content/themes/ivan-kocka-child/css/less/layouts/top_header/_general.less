@@ -1,0 +1,637 @@
+/*****************************
+ *****************************
+ *
+ * GENERAL STYLES TO TOP HEADER
+ *
+ *****************************
+*****************************/
+
+	// Styles the main block
+	.iv-layout.top-header {
+
+		// Basic and shared styles
+		background: @top-header-block-bg;
+		font-family: @top-header-font-family;
+		font-size: 12px;
+		line-height: 1.25;
+		color: @top-header-color;
+
+		border-bottom: 1px solid @top-header-divider;
+		z-index: 15000;
+		position: relative;
+
+		// General Links
+		a {
+			color: @top-header-color;
+			font-weight: @weight-light;
+
+			// Apply Default Transitions to Links
+			.iv-transition-all();
+			
+			&:hover {
+				color: @top-header-color-active;
+				text-decoration: none;
+			}
+		}
+	}
+
+	// Button Styles
+	.iv-button-top-header( @padding ) {
+		color: @top-header-sec-color;
+		border: @top-header-sec-border-width solid @top-header-sec-border;
+		background: @top-header-sec-bg;
+
+		font-weight: @weight-light;
+
+		text-transform: uppercase;
+
+		padding: @padding;
+
+		// Don't forget this must be the same than the header main font-size...
+		font-size: 11px;
+
+		&:hover {
+			color: @top-header-sec-bg-constrast-color;
+			border-color: @top-header-sec-border-active; // Border same as border active...
+			background: @top-header-sec-bg-active;
+		}
+
+		&:active, &:focus {
+			outline: none;
+		}
+	}
+
+/*****************************
+ *****************************
+ *
+ * MODULES RULES
+ *
+ *****************************
+*****************************/
+
+	.iv-layout.top-header {
+
+		// Input styles are built thinking in the second level
+		input[type="text"],
+		input[type="email"],
+		input[type="password"],
+		input[type="search"],
+		textarea {
+
+			border: @top-header-sec-border-width solid @top-header-sec-border;
+			color: @top-header-sec-color;
+			background: transparent;
+
+			&:focus {
+				border-color: @top-header-sec-border-active;
+				color: @top-header-sec-color-active;
+				background: transparent;
+				outline: none;
+			}
+		}
+
+		input[type="submit"] {
+			.iv-button-top-header( 10px 10px );
+		}
+
+		//
+		// Inner Boxes / Module Boxes
+		//
+		.inner-form {
+			background: @top-header-sec-block-bg;
+			border: @top-header-sec-border-width solid @top-header-sec-block-border;
+
+			padding: 20px 20px;
+
+			border-radius: 0px;
+			-webkit-border-radius: 0px;
+
+			// Optional Top Border
+			//.arrow(8px, @top-header-sec-block-bg, top, 90%, @top-header-sec-border-width, @top-header-sec-block-border);
+
+			// Apply a few default styles to overwrite main header...
+			color: @top-header-sec-color;
+
+			// General Links
+			a {
+				color: @top-header-sec-color;
+				
+				&:hover {
+					color: @top-header-sec-color-active;
+				}
+			}
+		}
+
+		//
+		// Module > WPML Specific
+		//
+		.wpml-currency {
+			.wcml_currency_switcher {
+				li {
+					border-color: @top-header-divider;
+				}
+			}
+		}
+
+		//
+		// Module > Mobile Menu
+		//
+		.responsive-menu {
+			.mobile-menu-trigger {
+				font-size: 14px; // Not all sizes work properly to this icon, so stay tuned
+			}
+		}
+
+		//
+		// Module > Live Search
+		//
+		.live-search {
+
+			input[type="search"] {
+
+				// Fix: Ensure the focus border keeps the same with this input...
+				&:focus {
+					border: @top-header-sec-border-width solid @top-header-sec-border;
+				}
+
+				height: 50px;
+				padding-right: 50px;
+			}
+
+			// The search button
+			.submit-form {
+				color: @top-header-sec-color-active;
+				background: transparent; // This bg is the same as border to create the effect...
+				border-left: @top-header-sec-border-width solid @top-header-sec-border;
+				border-right: 0px solid @top-header-sec-border; // used by RTL styles
+
+				width: 40px;
+				height: 50px;
+				line-height: 50px;
+				top: 20px;
+				right: 20px;
+			}
+
+		}
+
+		//
+		// Module > Social Icons
+		//
+		.social-icons {
+
+			a {
+				margin-right: 5px;
+				text-align: center;
+				font-size: 12px;
+
+				&:last-child {
+					margin: 0;
+				}
+			}
+		}
+
+		//
+		// Module > Custom Text
+		//
+		.custom-text {
+
+			.iv-separator {
+				display: inline-block;
+				border-left: 1px dotted @top-header-border;
+				margin: 0 10px;
+			}
+		}
+
+		//
+		// Module > Woo Cart
+		//
+		.woo-cart {
+
+			.cart-total {
+				display: none;
+			}
+
+			.cart-total .amount {
+				font-weight: @weight-light;
+			}
+
+			.basket-wrapper {
+
+				.top {
+					border: 2px solid @top-header-color;
+					border-bottom: none;
+
+					top: -4px;
+					width: 15px;
+					height: 4px;
+					border-radius: 12px 12px 0 0;
+					-webkit-border-radius: 12px 12px 0 0;
+
+					margin-left: -7px;
+				}
+
+				.basket {
+					background: transparent;
+					border: 2px solid @top-header-color;
+					
+					// Uses default font to better alignment...
+					font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+					font-weight: bold;
+
+					height: 20px;
+					line-height: 17px;
+					font-size: 11px;
+
+					min-width: 25px;
+				}
+			}
+
+			// Adds transition to basket too...
+			.top, .basket, .cart-total .amount {
+				.iv-transition-all();
+			}
+
+			&:hover {
+
+				.top, .basket, .cart-total .amount {
+					border-color: @top-header-color-active;
+					color: @top-header-color-active;
+				}
+
+				.top {
+					background-color: transparent;
+				}
+
+			}
+
+			/* Woo Cart Content */
+
+			.cart_list {
+
+				//text-transform: uppercase;
+
+				img {
+					border: 1px solid @top-header-sec-border;
+				}
+
+				a {
+					font-weight: @weight-bolder;
+
+					&:hover {
+						
+					}
+				}
+
+				span {
+					color: @top-header-sec-color;
+				}
+
+				dl dt {
+					color: @top-header-sec-color;
+				}
+			}
+
+			.total {
+				border-top: 1px dotted @top-header-sec-border;
+				font-size: 11px;
+			}
+
+			.cart_list li {
+				text-transform: uppercase;
+				font-size: 11px;
+
+				a {
+					margin-bottom: 3px;
+				}
+			}
+
+			.buttons {
+
+				a {
+					.iv-button-top-header( 10px 10px );
+				}
+
+			} //.buttons
+
+		} //.woo-cart
+
+		//
+		// Module > Login AJAX
+		//
+		.login-ajax {
+
+			.lwa {
+
+				//text-transform: uppercase;
+
+				// Title
+				.lwa-title {
+					margin-bottom: 15px;
+					font-weight: @weight-bolder;
+					text-transform: uppercase;
+					font-size: 11px;
+				}
+
+				.lwa-field {
+					margin-bottom: 15px;
+
+					.fa {
+						color: @top-header-sec-color-active;
+						border-right: 1px solid @top-header-sec-border; // This bg is the same as border to create the effect...
+						
+						width: 40px;
+						height: 44px;
+						line-height: 44px;
+					}
+
+				}
+
+				input {
+					height: 44px;
+					padding-left: 50px;
+
+					&:focus {
+						border: @top-header-sec-border-width solid @top-header-sec-border;
+					}
+				}
+
+				// Submit Field
+				input[type="submit"] {
+					
+					.iv-button-top-header( 10px 10px );
+
+					height: auto;
+					text-align: center;
+					margin-bottom: 10px;
+
+					&:hover {
+
+					}
+				}
+
+				.lwa-register input[type="submit"] {
+					margin-top: 10px;
+				}
+
+				.lwa-info {
+
+					li {
+						padding-bottom: 8px;
+						margin-bottom: 8px;
+						border-bottom: 1px dotted @top-header-sec-border;
+
+						&:last-child {
+							margin-bottom: 0;
+							padding-bottom: 0;
+							border-bottom: none;
+						}
+					}
+
+				}
+			}
+
+		}//.login-ajax
+
+	} // !ends .iv-layout.top-header
+
+/*****************************
+ *****************************
+ *
+ * MEGA MENU RULES
+ *
+ *****************************
+*****************************/
+
+	.top-header .mega_main_menu {
+
+		// 1st Level
+		.mega_main_menu_ul > li {
+
+			position: relative;
+
+			// Links
+			> .item_link {
+				padding: 0px 12px;
+				font-weight: @weight-light;
+				//text-transform: uppercase;
+
+				//background: #ddd;
+
+				&:hover {
+					//background: #f5f5f5;
+				}
+
+				// Description
+				span.description_text {
+					font-size: 11px;
+					font-weight: @weight-light;
+					text-transform: initial;
+				}
+
+				// Custom Icons
+				&.with_icon i:before {
+					min-width: 14px;
+				}
+			}
+
+			&.current-menu-ancestor,
+			&.current-menu-item {
+				> .item_link {
+					color: @top-header-color-active;
+					//background: #f5f5f5;
+				}
+			}
+
+			// Highlight Style
+			&.highlight_style > .item_link {
+				color: @top-header-color-active;
+
+				&:hover {
+					color: @top-header-color-active;
+				}
+			}
+
+		}
+
+		// Button Style
+
+		&.direction-horizontal .mega_main_menu_ul > li {
+			// Button Style
+			&.button_style > .item_link {
+
+				> .item_link_content {
+
+					.iv-transition-all();
+
+					padding: 5px 12px;
+					border: 1px solid @top-header-color;
+
+					display: block;
+
+					font-size: 12px;
+					line-height: 1;
+					font-weight: @weight-light;
+					text-transform: uppercase;
+
+					cursor: pointer;
+					
+					//border-radius: 5px;
+					//-webkit-border-radius: 5px;
+
+					i {
+						font-size: 100%;
+					}
+				}
+
+				&:hover {
+
+					// Avoid bg of hovers being applied in buttons
+					background: transparent;
+
+					> .item_link_content {
+						color: @top-header-color-active;
+						border-color: @top-header-border-active;
+					}
+				}
+			}
+
+			// Don't remove, avoid colors being applied
+			&.button_style {
+				&.current-menu-ancestor,
+				&.current-menu-item {
+					> .item_link {
+						background: transparent;
+
+						> .item_link_content {
+							color: @top-header-color;
+						}
+					}
+				}
+			}
+
+		} // .button_style
+
+		// 2nd Level
+
+		.default_dropdown > ul,
+		.default_dropdown li > ul,
+		.multicolumn_dropdown > ul,
+		.widgets_dropdown > ul {
+			background: @top-header-sec-block-bg;
+			border: @top-header-sec-border-width solid @top-header-sec-block-border;
+
+			//padding: 20px 20px;
+
+			border-radius: 0px;
+			-webkit-border-radius: 0px;
+
+			// Apply a few default styles to overwrite main header...
+			color: @top-header-sec-color;
+
+			a {
+				color: @top-header-sec-color;
+
+				&:hover {
+					color: @top-header-sec-color-active;
+				}
+			}
+
+			// Links
+			.item_link {
+
+				color: @top-header-sec-color;
+				//text-transform: uppercase;
+				font-weight: @weight-light;
+
+				&:hover {
+					color: @top-header-sec-color-active;
+				}
+
+				// Description
+				span.description_text {
+					font-size: 11px;
+					font-weight: @weight-light;
+					text-transform: initial;
+				}
+			}
+			li.current-menu-item {
+				> .item_link {
+					color: @top-header-sec-color-active;
+				}
+			}
+
+			.widgettitle,
+			li.section_header_style > .item_link {
+				font-weight: 400;
+				color: @top-header-sec-color-active;
+				text-transform: uppercase;
+			}
+
+			.widgettitle {
+				padding: 11px 0;
+			}
+		}
+
+		// Widget Specific
+		.widget {
+			li {
+				margin-bottom: 5px;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+	} // .top-header .mega_main_menu
+
+/*****************************
+ *****************************
+ *
+ * RESPONSIVE RULES
+ *
+ *****************************
+*****************************/
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {	
+	
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+	
+}
+
+/**
+* IE Specific Styles
+*/
+
+/*
+html[data-useragent*='MSIE 10.0'] .top-header.iv-layout .live-search .submit-form {
+	height: 45px;	
+	line-height: 47px;	
+}
+*/
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	.top-header.iv-layout .live-search .submit-form {
+		height: 45px;	
+		line-height: 47px;	
+	}
+}

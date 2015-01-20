@@ -1,0 +1,420 @@
+/*****************************
+ *****************************
+ *
+ * GENERAL STYLES TO TITLE
+ *
+ *****************************
+*****************************/
+
+.iv-layout.title-wrapper {
+
+	background: @title-wrapper-bg;
+	padding: @title-wrapper-padding;
+	border-top: 1px solid @title-wrapper-divider;
+	border-bottom: 1px solid @title-wrapper-divider;
+
+	position: relative;
+
+	color: @title-wrapper-color;
+
+	a {
+		color: @title-wrapper-color;
+		
+		&:hover {
+			color: @title-wrapper-color;
+		}
+	}
+
+	// Heading - the h2 tag that contains the title text
+	h2 {
+		margin: 0;
+		
+		font-family: @title-wrapper-font;
+		font-size: @title-wrapper-font-size;
+		line-height: @title-wrapper-line-height;
+
+		color: @title-wrapper-color;
+
+		//<specific theme style>
+
+		//text-transform: uppercase;
+		font-weight: @weight-light;
+
+		//</specific theme style>
+
+		&.breadcrumb {
+			
+		}
+	}
+
+	// Description
+	p {
+		color: @title-wrapper-desc-color;
+		font-family: @title-wrapper-desc-font;
+		font-size: @title-wrapper-desc-font-size;
+		line-height: @title-wrapper-desc-line-height;
+
+		font-weight: @weight-light;
+	}
+
+	.title-description {
+		margin-top: 7px;
+		margin-bottom: 0px;
+
+		p {
+			margin: 0;
+		}
+	}
+
+	// Breadcrumbs
+
+	.ivan-title-inner {
+		position: relative;
+	}
+
+	.breadcrumbs {
+		list-style-type: none;
+		padding: 0px;
+		margin: 0px;
+
+		li {
+			margin: 0px;
+			padding: 0 3px;
+			display: block;
+			color: @title-wrapper-desc-color;
+			font-size: 13px;
+			line-height: 1.25;
+			float: left;
+
+			&:last-child {
+				padding-right: 0px;
+			}
+		}
+
+		a {
+			color: @title-wrapper-desc-color;
+
+			&:hover {
+				color: @title-wrapper-desc-color;
+			}
+		}
+
+		.intro {
+			padding-left: 0px;
+		}
+	}
+
+}
+
+// Divider used in pages that do not support title wrapper
+.title-wrapper-divider {
+	width: auto;
+	height: 1px;
+	background: @title-wrapper-divider;
+	display: block;
+}
+
+// Used to check when classic menu is being used...
+.classic-menu-activated {
+
+	.title-wrapper-divider {
+		display: none;
+	}
+
+	.iv-layout.title-wrapper {
+		border-top: none;
+	}
+
+}
+
+// Specific Style to when Negative Height is Activated [default style]
+.negative-header-active {
+	
+	.iv-layout.title-wrapper {
+		border-top: none;
+		padding-top: 15px;
+		padding-bottom: 50px;
+	}
+
+	&.header-boxed {
+		.iv-layout.title-wrapper {
+			padding-top: 45px;
+		}
+	}
+}
+
+.semi-negative-header-active {
+
+}
+
+// Boxed Page Style Specific
+.boxed-page-wrapper {
+
+	.iv-layout.title-wrapper {
+		border-top: none;
+		border-bottom: none;
+	}
+
+}
+
+/*****************************
+ *****************************
+ *
+ * LIGHT/DARK SCHEMES
+ *
+ *****************************
+*****************************/
+
+.iv-layout.title-wrapper.light {
+	
+	color: #fff;
+
+	h2, p, a, a:hover, .breadcrumbs li, .breadcrumbs li a, .breadcrumbs li a:hover {
+		color: #fff;
+	}
+
+}
+
+.iv-layout.title-wrapper.dark {
+	
+	color: #222;
+
+	h2, p, a, a:hover, .breadcrumbs li, .breadcrumbs li a, .breadcrumbs li a:hover {
+		color: #222;
+	}
+
+}
+
+/*****************************
+ *****************************
+ *
+ * LARGE STYLE
+ *
+ *****************************
+*****************************/
+
+.iv-layout.title-wrapper.title-wrapper-large {
+
+	text-align: center;
+
+	padding: 40px 0;
+
+	h2 {
+		font-size: 55px;
+		font-weight: @weight-light;
+	}
+
+	p {
+		font-size: 18px;
+		line-height: 24px;
+	}
+
+	&.title-wrapper-shop, &.align-left {
+		text-align: left;
+	}
+}
+
+.negative-header-active {
+	
+	.iv-layout.title-wrapper.title-wrapper-large {
+		padding-top: 30px;
+		padding-bottom: 70px;
+
+		&.title-wrapper-shop {
+			text-align: center;
+		}
+
+		&.title-wrapper-shop.align-left {
+			text-align: left;
+		}
+	}
+
+	&.header-boxed {
+		.iv-layout.title-wrapper.title-wrapper-large {
+			padding-top: 50px;
+		}
+	}
+}
+
+.semi-negative-header-active {
+	.iv-layout.title-wrapper.title-wrapper-large {
+
+		padding-bottom: 70px;
+		padding-top: 60px;
+
+		&.title-wrapper-shop {
+			text-align: center;
+		}
+
+		&.title-wrapper-shop.align-left {
+			text-align: left;
+		}
+	}
+}
+
+
+/*****************************
+ *****************************
+ *
+ * RESPONSIVE RULES AND ASIDE LAYOUT
+ *
+ *****************************
+*****************************/
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {	
+
+	.iv-layout.title-wrapper {
+		border-top: none;
+	}
+
+	.iv-layout.title-wrapper h2 {
+		font-size: @title-wrapper-font-size !important;
+		line-height: @title-wrapper-line-height !important;
+	}
+
+	.iv-layout.title-wrapper p {
+		font-size: @title-wrapper-desc-font-size !important;
+		line-height: @title-wrapper-desc-line-height !important;
+	}
+
+	.ivan-breadcrumb {
+		margin-top: 10px;
+	}
+
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+}
+
+// SM Screen Tablet and Beyond
+@media (min-width: @screen-sm-min) {
+	.ivan-breadcrumb {
+		position: absolute;
+		top: 50%;
+		right: 15px;
+
+		.lh-transform( translateY(-50%) );
+	}
+
+	// Description Fix to Larger Screens...
+	.iv-layout.title-wrapper.title-wrapper-normal .title-description {
+		width: 55%;
+	}
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+	
+}
+
+// MD and LG Screen
+@media (min-width: @screen-md-min) {
+	
+	// Aside Layout 
+	.ivan-m-l-aside  {
+
+		.iv-layout.title-wrapper {
+
+			padding: 40px 0 40px;
+
+			h2 {
+				position: relative;
+
+				font-weight: @weight-light;
+
+				font-size: 26px;
+			}
+
+			// Color Schemes
+			&.light { 
+
+				color: #fff;
+				
+				h2, p, a, a:hover {
+					color: #fff;
+				}
+			}
+
+			&.dark {
+
+				color: #fff;
+				
+				h2, p, a, a:hover {
+					color: #fff;
+				}
+			}
+
+		}
+
+		.title-wrapper-divider {
+			display: none;
+		}
+
+		// Boxed Page Style Specific
+		.boxed-page-wrapper {
+
+			#iv-layout-title-wrapper {
+
+				.container {
+					padding-left: 15px;
+					padding-right: 15px;
+				}
+
+			}
+		}
+
+		// Large Style
+
+		.iv-layout.title-wrapper.title-wrapper-large {
+
+			text-align: center;
+
+			padding: 40px 0;
+
+			h2 {
+				font-size: 55px;
+				font-weight: @weight-light;
+				padding: 0;
+
+				&:after {
+					display: none;
+				}
+			}
+
+			p {
+				font-size: 18px;
+				line-height: 24px;
+			}
+
+			&.align-left {
+				text-align: left;
+			}
+		}
+
+		// Aside Shop specific styles
+		.iv-layout.title-wrapper-shop {
+			//padding: 30px 0 30px; // 10px less at top and bottom than normal
+		}
+	}
+
+}
+
+// Fix to weird bgs at mobile
+@media (max-width: 991px) {
+	#iv-layout-title-wrapper {
+		background-attachment: scroll !important;
+	}
+}

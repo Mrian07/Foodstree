@@ -1,0 +1,186 @@
+/*****************************
+ *****************************
+ *
+ * GENERAL STYLES TO TOP HEADER
+ *
+ *****************************
+*****************************/
+
+	// Styles the main block
+	.iv-layout.bottom-footer {
+
+		// Basic and shared styles
+		background: @bottom-footer-block-bg;
+		font-family: @bottom-footer-font-family;
+		font-size: 13px;
+		line-height: 1.25;
+		color: @bottom-footer-color;
+
+		z-index: 12000;
+		position: relative;
+
+		// General Links
+		a {
+			color: @bottom-footer-color;
+			font-weight: normal;
+
+			// Apply Default Transitions to Links
+			.iv-transition-all();
+			
+			&:hover {
+				color: @bottom-footer-color-active;
+				text-decoration: none;
+			}
+		}
+
+		// Social Icons
+		.iv-social-icon {
+			display: inline-block;
+			font-size: 18px;
+			margin-right: 8px;
+			margin-bottom: 3px;
+
+			&.circle, &.square {
+				background: darken(@bottom-footer-block-bg, 3%);
+				color: @bottom-footer-color;
+
+				&:hover {
+					background: @brand-primary;
+					color: @brand-color;
+				}
+			}
+		} // Social Icon
+	}
+
+/*****************************
+ *****************************
+ *
+ * MODULES RULES
+ *
+ *****************************
+*****************************/
+
+	.iv-layout.bottom-footer {
+
+		//
+		// Module > Social Icons
+		//
+		.social-icons {
+
+			a {
+				margin-right: 5px;
+				text-align: center;
+				font-size: 14px;
+
+				&:last-child {
+					margin: 0;
+				}
+			}
+		}
+
+		//
+		// Module > Custom Text
+		//
+		.custom-text {
+
+			.iv-separator {
+				display: inline-block;
+				border-left: 1px dotted @bottom-footer-border;
+				margin: 0 15px;
+			}
+		}
+
+	} // !ends .iv-layout.bottom-footer
+
+/*****************************
+ *****************************
+ *
+ * MEGA MENU RULES
+ *
+ *****************************
+*****************************/
+
+	.bottom-footer .mega_main_menu {
+
+		// 1st Level
+		.mega_main_menu_ul > li {
+
+			position: relative;
+
+			// Links
+			> .item_link {
+				padding: 0px 10px;
+				font-weight: @weight-light;
+				//text-transform: uppercase;
+
+				//background: #ddd;
+
+				&:hover {
+					//background: #f5f5f5;
+				}
+
+				// Description
+				span.description_text {
+					font-size: 11px;
+					font-weight: normal;
+					text-transform: initial;
+				}
+
+				// Custom Icons
+				&.with_icon i:before {
+					min-width: 14px;
+				}
+			}
+
+			&.current-menu-ancestor,
+			&.current-menu-item {
+				> .item_link {
+					color: @bottom-footer-color-active;
+					//background: #f5f5f5;
+				}
+			}
+
+			// Highlight Style
+			&.highlight_style > .item_link {
+				color: @bottom-footer-color-active;
+
+				&:hover {
+					color: @bottom-footer-color-active;
+				}
+			}
+		}
+
+	} // .bottom-footer .mega_main_menu
+
+/*****************************
+ *****************************
+ *
+ * RESPONSIVE RULES
+ *
+ *****************************
+*****************************/
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {
+	
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+	
+}
