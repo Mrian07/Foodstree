@@ -119,14 +119,20 @@ add_action( 'manage_shop_order_posts_custom_column', 'wmp_shop_order_custom_colu
 function wmp_admin_shop_order_row_classes( $classes, $post_id ) {
     global $post;
 
-
-if(isset($_GET['all_posts']) && $_GET['all_posts']=='1'){
+if(wmp_is_seller()){ 
+    if ( $post->post_type == 'shop_order' && $post->post_parent != 0 ) {
+        $classes[] = 'sub-order parent-' . $post->post_parent;
+    }
+}else{
+    if( $_GET['post_status'] != 'wc-processing' && $_GET['post_status'] != 'wc-on-hold' && $_GET['post_status'] != 'wc-completed' ){
     
     if ( $post->post_type == 'shop_order' && $post->post_parent != 0 ) {
         $classes[] = 'sub-order parent-' . $post->post_parent;
     }
 
 }
+}
+
 
     return $classes;
 }
@@ -162,8 +168,16 @@ function wmp_admin_shop_order_scripts() {
         });
 
 
-       <?php if(!(isset($_GET['all_posts'])) && $_GET['all_posts']!='1'){ ?>
+        <?php if(!wmp_is_seller()){ ?>
+
+       <?php if( $_GET['post_status'] == 'wc-processing' || $_GET['post_status'] == 'wc-on-hold' || $_GET['post_status'] == 'wc-completed'){ ?>
+
+        //$('tr.sub-order').toggle();
+
         $('.post-type-shop_order tr.author-self').hide();
+
+        <?php } ?>
+
         <?php } ?>
 
 
