@@ -1,0 +1,574 @@
+/*****************************
+ *****************************
+ *
+ * Post Listing Styles
+ *
+ *****************************
+*****************************/
+
+/*****
+ * General Post Display
+******/
+
+	.read-more {
+		.read-more-btn {
+			font-size: 12px;
+			padding: 6px 15px;
+			text-transform: uppercase;
+		}
+	}
+
+	.entry-title {
+		position: relative;
+	}
+
+	.sticky-post-holder {
+		background: @brand-primary;
+		display: inline-block;
+		padding: 0px 10px;
+
+		text-align: center;
+
+		color: @brand-color;
+
+		line-height: 27px; // same height as title
+		height: 27px;
+		width: 30px;
+
+		max-width: 30px;
+
+		overflow: hidden;
+
+		font-size: 12px;
+		font-weight: bold;
+		text-transform: uppercase;
+
+		vertical-align: top;
+
+		position: absolute;
+		top: 0px;
+		right: 0px;
+
+		.lh-transition( max-width 350ms ease );
+
+		.inner-sticky-txt {
+			margin-right: 10px;
+			display: none;
+			white-space: nowrap;
+		}
+	}
+
+	.sticky {
+		.entry-title {
+			padding-right: 35px;
+		}
+
+		&:hover {
+
+			.sticky-post-holder {
+
+				padding-left: 15px;
+				padding-right: 15px;
+
+				.inner-sticky-txt {
+					display: inline-block;
+				}
+
+				width: auto;
+				max-width: 300px;
+			}
+		}
+	}
+
+	// Masonry Sizes
+	.ivan-mansory-blog {
+		.sticky-post-holder {
+			padding: 0;
+			line-height: 22px; // same height as title
+			height: 22px;
+			width: 22px;
+
+			max-width: 22px;
+
+			overflow: hidden;
+
+			font-size: 10px;
+		}
+
+		.sticky {
+			.entry-title {
+				padding-right: 35px;
+			}
+		}
+	} // masonry-style
+
+	// Full Style
+	.blog-full {
+		.sticky-post-holder {
+			position: static;
+			margin-right: 10px;
+		}
+
+		.sticky-post-holder {
+			line-height: 32px; // same height as title
+			height: 32px;
+			width: 30px;
+
+			max-width: 30px;
+
+			overflow: hidden;
+
+			font-size: 13px;
+		}
+
+		.sticky {
+			.entry-title {
+				padding-right: 0px;
+			}
+		}
+	}
+
+/*****
+ * Archives Specific Styles
+******/
+
+	.archives {
+		.entry-author-meta {
+			margin-bottom: 60px;
+		}
+	}
+
+/*****
+ * Search Specific Styles
+******/
+
+	.search-results {
+
+		.search-panel {
+			margin-bottom: 40px;
+			padding-bottom: 40px;
+			border-bottom: 1px solid @entry-divider;
+
+			h4 {
+				margin-bottom: 25px;
+			}
+
+			input[type="search"] {
+				width: 350px;
+				margin-bottom: 5px;
+				max-width: 100%;
+			}
+
+			.search-submit {
+				margin-bottom: 5px;
+			}
+		}
+
+		.post {
+
+			.result-num {
+
+				span {
+					display: block;
+					width: 35px;
+					height: 35px;
+					line-height: 35px;
+					background-color: @gray-lighter-less;
+					color: @gray-contrast;
+					text-align: center;
+					font-weight: 600;
+					font-size: 14px;
+
+					.lh-border-radius-simple( 100% );
+				}
+				
+				float: left;
+			}
+
+			.result-content {
+				padding-left: 50px;
+			}
+
+			margin-bottom: 30px;
+
+			.entry-title {
+				text-transform: initial;
+				font-size: 18px;
+				line-height: 24px;
+				padding-top: 5px;
+				margin-bottom: 5px;
+
+				a:visited {
+					color: @gray;
+				}
+			}
+
+			.entry-meta {
+				margin-bottom: 3px;
+				font-size: 11px;
+				text-transform: uppercase;
+
+				a {
+
+					&:hover {
+						
+					}
+				}
+
+				.separator {
+					padding: 0 5px 0 5px;
+				}
+
+				.comment-icon {
+					color: @entry-meta;
+					margin-right: 3px;
+				}
+			}
+
+			.entry-summary, .entry-summary p {
+				
+			}
+
+			.entry-summary p:last-child {
+				margin: 0;
+			}
+		}
+
+		.navigation {
+			margin-top: 60px;
+		}
+	}
+
+/*****
+ * Aside Layout Adjusts
+******/
+
+	.ivan-m-l-aside {
+
+		.content-wrapper.no-title-wrapper {
+			padding-top: 45px;
+		}
+
+		/*
+		.blog-no-margin-aside.content-wrapper {
+			.container {
+				padding-left: 0 !important;
+				padding-right: 0 !important;
+			}
+		}
+
+		.blog-no-margin-top.content-wrapper {
+			padding-top: 0;
+		}
+		*/
+	}
+
+/*****
+ * Like Post System
+******/
+
+	a.jm-post-like {
+		font-weight: normal;
+		display: inline-block;
+		width: auto;
+		-moz-transition: all 0.3s ease-out 0.2s;
+		-webkit-transition: all 0.3s ease-out 0.2s;
+		-o-transition: all 0.3s ease-out 0.2s;
+	}
+
+	a.jm-post-like.liked {
+		color: #da1b1b;
+	}
+
+	a.jm-post-like:hover,
+	a.jm-post-like:active,
+	a.jm-post-like:focus,
+	a.liked:hover,
+	a.liked:active,
+	a.liked:focus { /* default on hover */
+		color: @link-color;
+	}
+
+/*****
+ * Effects
+******/
+
+	// Thumb Effect
+	.thumbnail-hover {
+		position: relative;
+
+		.overlay {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: @brand-primary;
+			opacity: 0;
+
+			-webkit-transition: opacity 500ms ease-in-out;
+			-moz-transition: opacity 500ms ease-in-out;
+			-ms-transition: opacity 500ms ease-in-out;
+			-o-transition: opacity 500ms ease-in-out;
+			transition: opacity 500ms ease-in-out;
+		}
+
+		.thumb-cross {
+			display: block;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			opacity: 0;
+
+			width: 40px;
+			height: 40px;
+
+			margin-left: -20px;
+			margin-top: -20px;
+
+			-webkit-transition: opacity 500ms ease-in-out;
+			-moz-transition: opacity 500ms ease-in-out;
+			-ms-transition: opacity 500ms ease-in-out;
+			-o-transition: opacity 500ms ease-in-out;
+			transition: opacity 500ms ease-in-out;
+
+			&:after {
+				display: block;
+				content: ' ';
+				position: absolute;
+				left: 50%;
+				top: 0;
+				margin-left: -1px;
+
+				height: 100%;
+				width: 1px;
+
+				background-color: @brand-color;
+			}
+
+			&:before {
+				display: block;
+				content: ' ';
+				position: absolute;
+				left: 0;
+				top: 50%;
+				margin-top: -1px;
+
+				height: 1px;
+				width: 100%;
+
+				background-color: @brand-color;
+			}
+		}
+
+		&:hover {
+			.overlay {
+				opacity: 0.4;
+			}
+
+			.thumb-cross {
+				opacity: 1;
+			}
+		}
+	}
+
+	// Grayscale Effect
+	.gray-hover {
+		img {
+			filter: grayscale(1);
+			-webkit-filter: grayscale(1);
+			-moz-filter: grayscale(1);
+			-o-filter: grayscale(1);
+			-ms-filter: grayscale(1);
+
+			-webkit-transition: all 500ms ease-in-out;
+			-moz-transition: all 500ms ease-in-out;
+			-ms-transition: all 500ms ease-in-out;
+			-o-transition: all 500ms ease-in-out;
+			transition: all 500ms ease-in-out;
+		}
+
+		&:hover {
+			img {
+				filter: grayscale(0);
+				-webkit-filter: grayscale(0);
+				-moz-filter: grayscale(0);
+				-o-filter: grayscale(0);
+				-ms-filter: grayscale(0);
+			}
+		}
+	}
+
+/*****
+ * Layouts > General Rules
+******/
+
+	.post .entry-title {
+
+		//font-weight: normal;
+
+		a {
+			color: @entry-title;
+
+			&:hover {
+				color: @entry-title-hover;
+			}
+		}
+	}
+
+/*****
+ * Layouts > Large
+******/
+
+	@import '_layout-large.less';
+
+/*****
+ * Layouts > Medium
+******/
+
+	@import '_layout-medium.less';
+
+/*****
+ * Layouts > Masonry
+******/
+
+	@import '_layout-masonry.less';
+
+/*****
+ * Layouts > Full
+******/
+
+	@import '_layout-full.less';
+
+/*****
+ * Layouts > Boxed Style applied to posts
+******/
+
+	.boxed-style {
+		background-color: @blog-boxed-bg;
+	}
+
+	.boxed-style .post .thumbnail {
+		margin-bottom: 0;
+	}
+
+	.boxed-style .post .entry-inner {
+		padding: 25px 25px 35px 25px;
+		background-color: @blog-boxed-contrast;	
+	}
+
+	// Both Inline-Date Styles
+	.blog-large.style-simple.boxed-style,
+	.blog-large.style-bottom-meta.boxed-style,
+	.blog-large.style-aside-date.boxed-style {
+		.post {
+			padding: 0;
+			border: none;
+			margin-bottom: 60px;
+		}
+	}
+
+	// Blog Medium Inline Date
+	.blog-medium.style-simple.boxed-style,
+	.blog-full.style-polaroid.boxed-style {
+
+		.post {
+			background-color: @blog-boxed-contrast;
+
+			.entry-inner {
+				background-color: transparent;
+			}
+		}
+	} // blog medium inline-date
+
+	.blog-full.style-polaroid.boxed-style { 
+		.post.format-quote, .post.format-status, .post.format-link {
+			.entry-inner {
+				padding: 55px 25px 35px 25px;
+			}
+		}
+	}
+
+/*****************************
+ *****************************
+ *
+ * Responsive Styles
+ *
+ *****************************
+*****************************/
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {
+	
+	// Blog Full Polaroid Style
+	.blog-full.style-polaroid {
+		.entry-inner {
+			padding-top: 30px;
+			padding-bottom: 35px;
+		}
+
+		&.blog-full {
+			.post {
+				width: 100%;
+			}
+		}
+	}
+
+	.search-panel {
+		input[type="search"] {
+			width: 200px;
+		}
+	}
+
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+	// Blog Full Polaroid Style
+	.blog-full.style-polaroid {
+		.entry-inner {
+			width: 85%;
+			margin: 0 auto;
+		}
+	}
+
+}
+
+// MD Screen Desktop and Large
+@media (min-width: @screen-md-min) {
+	
+	// Blog Medium Inline Date
+	.blog-medium.style-simple.boxed-style {
+		.post {
+			.post-right-area .entry-inner {
+				padding: 25px 25px 35px 0;
+			}
+		}
+	} // blog medium inline-date
+
+	// Blog Full Polaroid Style
+	.blog-full.style-polaroid {
+		.entry-inner {
+			width: 79%;
+			margin: 0 auto;
+		}
+	}
+
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+	
+}

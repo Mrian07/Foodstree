@@ -1,0 +1,95 @@
+/*****************************
+ *****************************
+ *
+ * Post Formats Specific Styles
+ *
+ *****************************
+*****************************/
+
+/*****
+ * Video Styles
+******/
+
+	.video-container { position: relative !important; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+	.video-container iframe, .video-container object, .video-container embed, .video-container video,
+	.video-container .wp-playlist { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+	.video-container-thumb {
+
+		.mejs-container, .wp-video {
+			height: auto !important;
+		}
+
+		.mejs-mediaelement {
+			position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+		}
+
+		.mejs-mediaelement video {
+			position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+		}
+	}
+
+	// Remove default from Visual Composer
+	.wpb_video_widget .wpb_wrapper .wpb_video_wrapper {
+		padding-top: 0;
+		position: static;
+	}
+
+/*****
+ * Audio/Video Styles
+******/
+
+	#all-site-wrapper {
+		
+		// Main Background
+		.mejs-container .mejs-controls {
+			background: @gray-dark;
+		}
+
+		// Bar Background
+		.mejs-controls .mejs-time-rail .mejs-time-total {	
+			background: @gray-inter;
+		}
+
+		// Buffering and loaded bar
+		.mejs-controls .mejs-time-rail .mejs-time-buffering,
+		.mejs-controls .mejs-time-rail .mejs-time-loaded,
+		.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
+			background: @gray-contrast;
+		}
+
+		// Current Location
+		.mejs-controls .mejs-time-rail .mejs-time-current,
+		.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current {
+			background: @brand-primary;
+		}
+
+		/* Playlist Style */
+		.wp-playlist {
+			border: none;
+			background: @gray-lighter;
+			margin: 0;
+			border-radius: 0;
+			-webkit-border-radius: 0;
+
+			.wp-playlist-item {
+				padding: 5px 0;
+			}
+
+			.wp-playlist-playing {
+				background: transparent;
+			}
+		}
+
+		.boxed-style {
+			.wp-playlist {
+				background: #fff;
+				padding-bottom: 0px;
+
+				.wp-playlist-item:last-child {
+					padding-bottom: 0px;
+				}
+			}
+		}
+
+	} // all-site-wrapper

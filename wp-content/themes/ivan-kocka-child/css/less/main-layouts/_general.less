@@ -1,0 +1,92 @@
+//
+// Main Layouts General Rules and Vars
+// --------------------------------------------------
+
+body {
+	background: @body-bg;
+}
+
+#all-site-wrapper {
+	position: relative;
+	background: @boxed-wrapper-bg;
+}
+
+/* Boxed Styles */
+
+body.boxed {
+	#all-site-wrapper {
+		margin: 30px 50px;
+
+		-webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.10);
+		box-shadow: 0 0 5px 1px rgba(0,0,0,0.10);
+	}
+}
+
+body.boxed-laterals {
+	#all-site-wrapper {
+		margin: 0px 50px;
+
+		-webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,0.10);
+		box-shadow: 0 0 5px 1px rgba(0,0,0,0.10);
+
+	}
+}
+
+
+//
+// General Responsive Rules
+// --------------------------------------------------
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {	
+	
+	body.boxed {
+		#all-site-wrapper {
+			margin: 0px 0px;
+		}
+	}
+
+	body.boxed-laterals {
+		#all-site-wrapper {
+			margin: 0px 0px;
+		}
+	}
+
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+	body.boxed {
+		#all-site-wrapper {
+			margin: 15px 25px;
+		}
+	}
+
+	body.boxed-laterals {
+		#all-site-wrapper {
+			margin: 0px 25px;
+		}
+	}
+
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+	body.boxed {
+		#all-site-wrapper {
+			margin: 15px 25px;
+		}
+	}
+
+	body.boxed-laterals {
+		#all-site-wrapper {
+			margin: 0px 25px;
+		}
+	}
+}

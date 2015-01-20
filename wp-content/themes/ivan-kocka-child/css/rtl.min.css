@@ -1,0 +1,40 @@
+body{direction:rtl;unicode-bidi:embed}
+.inside-box,.ivan-button,.ivan-call-action,.ivan-dual-button,.owl-carousel{direction:initial;unicode-bidi:initial}
+.woo-cart .cart_list li img{margin-left:10px}
+.iv-layout.header .live-search .submit-form,.iv-layout.top-header .live-search .submit-form{left:20px;border-left:none;border-right-width:1px;right:auto}
+.iv-layout.top-header .live-search .submit-form{left:20px}
+.iv-layout.header .live-search input[type=search],.iv-layout.top-header .live-search input[type=search]{padding-right:22px;padding-left:50px}
+.login-ajax .lwa .lwa-avatar{margin-left:10px;margin-right:0}
+.mega_main_menu_ul.menu.with-arrow>li.menu-item-has-children>.item_link .link_text:after,.mega_main_menu_ul.menu.with-arrow>li.widgets_dropdown>.item_link .link_text:after{margin-left:0;margin-right:7px}
+.mega_main_menu .default_dropdown li,.mega_main_menu>ul>li.multicolumn_dropdown>.mega_dropdown>li,.mega_main_menu>ul>li.multicolumn_dropdown>.mega_dropdown>li ul li{text-align:right}
+.mega_main_menu .default_dropdown .mega_dropdown>li>.item_link i,.mega_main_menu .multicolumn_dropdown .mega_dropdown li>.item_link>i{float:right}
+.mega_main_menu.icons-disable_globally>ul>li .mega_dropdown>li>.item_link.with_icon>span,.mega_main_menu.icons-disable_globally>ul>li .mega_dropdown>li>.item_link>span,.mega_main_menu>ul>li.multicolumn_dropdown .mega_dropdown>li>.item_link.disable_icon>span{margin-right:0}
+.mega_main_menu .default_dropdown .mega_dropdown>li>.item_link.with_icon>span,.mega_main_menu .multicolumn_dropdown .mega_dropdown li>.item_link>span{margin-right:20px;margin-left:0}
+.iv-layout.title-wrapper .breadcrumbs li{float:right}
+@media (min-width:768px){.ivan-breadcrumb{left:15px;right:auto}}
+.comments.pull-right{float:left!important}
+.entry-meta .comment-icon{margin-right:0!important;margin-left:3px}
+select{background-position:16px center;padding-right:22px;padding-left:23px}
+.woocommerce .woocommerce-ordering select,.woocommerce-page .woocommerce-ordering select{padding-left:23px;padding-right:10px}
+.woocommerce ul.cart_list li img,.woocommerce ul.product_list_widget li img,.woocommerce-page ul.cart_list li img,.woocommerce-page ul.product_list_widget li img{margin-left:10px}
+.ivan-product-popup .summary{text-align:right;padding-right:30px}
+.woocommerce .woocommerce-error .button,.woocommerce .woocommerce-info .button,.woocommerce .woocommerce-message .button,.woocommerce-page .woocommerce-error .button,.woocommerce-page .woocommerce-info .button,.woocommerce-page .woocommerce-message .button{float:left}
+.woocommerce .woocommerce-error .button.wc-forward:after,.woocommerce .woocommerce-info .button.wc-forward:after,.woocommerce .woocommerce-message .button.wc-forward:after,.woocommerce-page .woocommerce-error .button.wc-forward:after,.woocommerce-page .woocommerce-info .button.wc-forward:after,.woocommerce-page .woocommerce-message .button.wc-forward:after{margin-left:0;margin-right:8px}
+.woocommerce div.product form.cart div.quantity,.woocommerce-page div.product form.cart div.quantity{float:right;margin-right:0;margin-left:10px}
+.woocommerce div.product form.cart .button,.woocommerce-page div.product form.cart .button{float:right}
+.product-quantity .quantity{float:left}
+.woocommerce .shipping-calculator-button:before,.woocommerce-page .shipping-calculator-button:before{margin-left:10px;margin-right:0}
+.cart-collaterals th{text-align:right}
+.woocommerce table.my_account_orders .order-actions,.woocommerce-page table.my_account_orders .order-actions{text-align:left}
+.woocommerce ul.cart_list li dl dt,.woocommerce ul.product_list_widget li dl dt,.woocommerce-page ul.cart_list li dl dt,.woocommerce-page ul.product_list_widget li dl dt{margin-left:2px;margin-right:0;float:right;clear:right}
+.woocommerce ul.cart_list li dl dd,.woocommerce ul.product_list_widget li dl dd,.woocommerce-page ul.cart_list li dl dd,.woocommerce-page ul.product_list_widget li dl dd{float:right}
+.ivan-pricing-table.description-support li,.ivan-projects .ivan-project.hide-entry .entry-inner .centered,.ivan-projects .ivan-project.lateral-cover .entry-inner .centered,.ivan-projects .ivan-project.light-caption .entry-inner,.ivan-projects .ivan-project.outer-square .entry-inner .centered,.ivan-projects .ivan-project.smooth-cover .entry-inner .centered{text-align:right}
+.ivan-dropcap{float:right;margin-right:0;margin-left:20px}
+.ivan-testimonial .testimonial-meta img{margin-left:10px;margin-right:0}
+.ivan-list.number.circle-in ul>li{padding-right:42px;padding-left:0}
+.ivan-list.number ul>li{padding-right:30px;padding-left:0}
+.ivan-icon-list p{padding-right:37px;padding-left:0}
+.ivan-list ul>li{padding-right:20px;padding-left:0}
+.ivan-list.circle ul>li:before,.ivan-list.number ul>li:before{left:auto;right:0}
+.ivan-icon-list i{float:right!important}
+.ivan-progress .progress-title-counter{left:0;right:auto}

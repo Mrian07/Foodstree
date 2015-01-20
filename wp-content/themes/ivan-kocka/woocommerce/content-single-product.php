@@ -32,7 +32,7 @@ global $post;
 <div itemscope itemtype="<?php echo woocommerce_get_product_schema(); ?>" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 	<div class="row">
-		<div class="<?php echo apply_filters('ivan_woo_single_product_thumb_area', 'col-xs-12 col-sm-5 col-md-5'); ?>">
+
 			<div class="col-wrapper">
 
 			<?php

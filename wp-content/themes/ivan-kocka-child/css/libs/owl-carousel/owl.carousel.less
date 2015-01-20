@@ -1,0 +1,968 @@
+@import '../../less/bootstrap/_lesshat-prefixed.less';
+
+.opacity (@opacity) {
+    @opacityPercentage: @opacity * 100;
+    opacity: @opacity;
+    //-ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=(@{opacityPercentage}))"; 
+    filter: ~"alpha(opacity = (@{opacityPercentage}))";
+}
+
+/* 
+ * 	Core Owl Carousel CSS File
+ *	v1.3.2
+ */
+
+/* clearfix */
+.owl-carousel .owl-wrapper:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+/* display none until init */
+.owl-carousel{
+	display: none;
+	position: relative;
+	width: 100%;
+	-ms-touch-action: pan-y;
+}
+
+.owl-carousel .owl-wrapper{
+	display: none;
+	position: relative;
+	-webkit-transform: translate3d(0px, 0px, 0px);
+}
+
+.owl-carousel .owl-wrapper-outer{
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+}
+
+.owl-carousel .owl-wrapper-outer.autoHeight{
+	.lh-transition( height 500ms ease-in-out );
+}
+	
+.owl-carousel .owl-item{
+	float: left;
+}
+
+.owl-controls .owl-page,
+.owl-controls .owl-buttons div{
+	cursor: pointer;
+}
+
+.owl-controls {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* mouse grab icon */
+
+.owl-wrapper {
+	cursor:url(grab.png) 8 8, move;
+}
+
+.owl-wrapper.grabbing { 
+    cursor:url(grabbing.png) 8 8, move;
+}
+
+/* fix */
+.owl-carousel  .owl-wrapper,
+.owl-carousel  .owl-item{
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility:    hidden;
+	-ms-backface-visibility:     hidden;
+  -webkit-transform: translate3d(0,0,0);
+  -moz-transform: translate3d(0,0,0);
+  -ms-transform: translate3d(0,0,0);
+}
+
+/* Clickable class fix problem with hover on touch devices */
+/* Use it for non-touch hover action */
+.owl-theme .owl-controls.clickable .owl-buttons div:hover{
+	filter: Alpha(Opacity=100);/*IE7 fix*/
+	opacity: 1;
+	text-decoration: none;
+}
+
+/* fix VC Compatibility */
+.owl-item .ivan-custom-wrapper {
+	margin-bottom: 0px;
+}
+
+.vc-ivan-carousel .vc-vc_row_inner {
+	padding-top: 0px;
+}
+
+.vc-ivan-carousel .wpb_row {
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+/* preloading images */
+.owl-item.loading{
+	min-height: 150px;
+	background: url(AjaxLoader.gif) no-repeat center center
+}
+
+.owl-item .wpb_row {
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+/***
+ *
+ * Bullets Position
+ *
+***/
+
+.owl-carousel.h-center .owl-pagination {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	bottom: initial;
+}
+
+.owl-carousel.h-left .owl-pagination {
+	position: absolute;
+	left: 20px;
+	bottom: initial;
+	width: auto;
+}
+
+.owl-carousel.h-right .owl-pagination {
+	position: absolute;
+	right: 20px;
+	bottom: initial;
+	width: auto;
+}
+
+.owl-carousel.v-bottom .owl-pagination {
+	position: absolute;
+	bottom: 5px;
+}
+
+.owl-carousel.v-top .owl-pagination {
+	position: absolute;
+	top: 20px;
+	bottom: initial;
+
+	.owl-page {
+		margin-top: 0;
+
+		span {
+		}
+	}
+}
+
+.owl-carousel.v-bottom, .owl-carousel.v-top {
+	.owl-controls {
+		margin: 0;
+	}
+}
+
+/***
+ *
+ * Display Arrows only at Hover
+ *
+***/
+
+.arrows-at-hover .owl-controls .owl-buttons div {
+	opacity: 0;
+}
+
+.arrows-at-hover:hover .owl-controls .owl-buttons div {
+	opacity: 1;
+}
+
+/***
+ *
+ * Slider Controls / Default Style
+ *
+***/
+
+.owl-buttons div, .owl-page span {
+	.lh-box-sizing( content-box );
+}
+
+.ivan-carousel {
+	overflow: hidden;
+
+	&.with-bullets {
+		padding-bottom: 37px;
+	}
+}
+
+.ivan-projects-main-wrapper, .ivan-posts-main-wrapper, .ivan-posts.small-margin, .ivan-projects.small-margin {
+	&.with-bullets {
+		padding-bottom: 37px;
+	}
+}
+
+/***
+ *
+ * Arrow Style > Outline Circle
+ *
+***/
+
+.style-outline-circle {
+	// Controls Wrapper
+	.owl-controls {
+		margin-top: 0px;
+		text-align: center; // Defines
+	}
+
+	// Navigation Next/Prev
+	.owl-buttons div {
+		position: absolute;
+		display: block;
+
+		width: 30px;
+		height: 30px;
+
+		top: 50%;
+
+		margin: 0;
+
+		.lh-transform( translateY(-50%) );
+		
+		background-color: transparent;
+
+		border: 3px solid #fff;
+
+		.lh-border-radius-simple( 100% );
+
+		opacity: 1;
+
+		font-size: 14px;
+		line-height: 1;
+		color: #fff;
+
+		text-align: center;
+		.lh-transition( all 500ms ease-in-out );
+
+		// Icon
+		i {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			.lh-transform( translateY(-50%), translateX(-60%) );
+		}
+
+		&.owl-next i {
+			.lh-transform( translateY(-50%), translateX(-30%) );
+		}
+
+		&:hover {
+			background-color: #fff;
+			color: #222;
+		}
+
+		&.owl-prev {
+			left: 20px;
+
+			i:before {
+				content: "\f053";
+			}
+		}
+
+		&.owl-next {
+			right: 20px;
+
+			i:before {
+				content: "\f054";
+			}
+		}
+	}
+
+	// Bullets
+
+	.owl-pagination {
+		position: absolute;
+		left: 0;
+		bottom: -37px;
+		width: 100%;
+	}
+
+	.owl-page {
+		margin-top: 5px;
+		display: inline-block;
+		zoom: 1;
+		*display: inline; /*IE7 life-saver */
+
+		span {
+			display: block;
+			width: 8px;
+			height: 8px;
+			margin: 5px 4px;
+			background: transparent;
+
+			.lh-transition( all 500ms ease-in-out );
+
+			border: 2px solid #fff;
+
+			.lh-border-radius-simple( 100% );
+		}
+
+		&.active span,
+		&:hover span {
+			background: #fff;
+		}
+	}
+
+	// Outer Gray
+	&.outer-gray {
+		.owl-page {
+
+			span {
+				border-color: #bbb;
+			}
+
+			&.active span,
+			&:hover span {
+				background: #bbb;
+			}
+		}
+	}
+
+	// Revolution Slider
+	.tp-leftarrow.default {
+		position: absolute;
+		display: block;
+
+		width: 30px;
+		height: 30px;
+
+		margin: 0;
+
+		background: none;		
+		background-color: transparent;
+
+		border: 3px solid #fff;
+
+		.lh-border-radius-simple( 100% );
+
+		opacity: 1;
+
+		font-size: 14px;
+		line-height: 1;
+		color: #fff;
+
+		text-align: center;
+		.lh-transition( all 500ms ease-in-out );
+
+		.lh-box-sizing( content-box );
+
+		// Icon
+		&:before {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			.lh-transform( translateY(-50%), translateX(-60%) );
+
+			content: "\f053";
+			display: inline-block;
+			font: normal normal normal 14px/1 FontAwesome;
+			font-size: inherit;
+			text-rendering: auto;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		&:hover {
+			background-color: #fff;
+			color: #222;
+		}
+	}
+
+	.tp-rightarrow.default {
+		position: absolute;
+		display: block;
+
+		width: 30px;
+		height: 30px;
+
+		margin: 0;
+
+		background: none;		
+		background-color: transparent;
+
+		border: 3px solid #fff;
+
+		.lh-border-radius-simple( 100% );
+
+		opacity: 1;
+
+		font-size: 14px;
+		line-height: 1;
+		color: #fff;
+
+		text-align: center;
+		.lh-transition( all 500ms ease-in-out );
+
+		.lh-box-sizing( content-box );
+
+		// Icon
+		&:before {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			.lh-transform( translateY(-50%), translateX(-30%) );
+
+			content: "\f054";
+			display: inline-block;
+			font: normal normal normal 14px/1 FontAwesome;
+			font-size: inherit;
+			text-rendering: auto;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		&:hover {
+			background-color: #fff;
+			color: #222;
+		}
+	}
+
+	.tp-bullets.simplebullets.round .bullet {
+		display: block;
+		width: 8px;
+		height: 8px;
+		margin: 5px 4px;
+		background: transparent;
+
+		.lh-box-sizing( content-box );
+
+		.lh-transition( all 500ms ease-in-out );
+
+		border: 2px solid #fff;
+
+		.lh-border-radius-simple( 100% );
+
+		&.selected {
+			background: #fff;
+		}
+	}
+
+	//
+	// Dark Style
+	//
+	&.dark {
+
+		// Navigation Next/Prev
+		.owl-buttons div {
+			&.owl-prev {
+				border-color: #222;
+				color: #222;
+
+				&:hover {
+					border-color: #222;
+					background-color: #222;
+					color: #fff;
+				}
+			}
+
+			&.owl-next {
+				border-color: #222;
+				color: #222;
+
+				&:hover {
+					border-color: #222;
+					background-color: #222;
+					color: #fff;
+				}
+			}
+		}
+
+		.owl-page {
+			span {
+				border-color: #222;
+			}
+
+			&.active span,
+			&:hover span {
+				background: #222;
+			}
+		}
+
+		// FlexSlider
+		.wpb_flexslider .flex-direction-nav a {
+			&.flex-prev {
+				border-color: #222;
+				color: #222;
+
+				&:hover {
+					border-color: #222;
+					background-color: #222;
+					color: #fff;
+				}
+			}
+
+			&.flex-next {
+				border-color: #222;
+				color: #222;
+
+				&:hover {
+					border-color: #222;
+					background-color: #222;
+					color: #fff;
+				}
+			}
+		}
+
+		// Revolution Slider
+
+		.tp-leftarrow.default {
+			border-color: #222;
+			color: #222;
+
+			&:hover {
+				border-color: #222;
+				background-color: #222;
+				color: #fff;
+			}
+		}
+
+		.tp-rightarrow.default {
+			border-color: #222;
+			color: #222;
+
+			&:hover {
+				border-color: #222;
+				background-color: #222;
+				color: #fff;
+			}
+		}
+
+		.tp-bullets.simplebullets.round .bullet {
+			border-color: #222;
+
+			&.selected {
+				background: #222;
+			}
+		}
+
+	}
+
+
+} // outline-circle
+
+/***
+ *
+ * Arrow Style > Opaque Box
+ *
+***/
+
+.style-opaque-box {
+
+	// Controls Wrapper
+	.owl-controls {
+		margin-top: 0px;
+		text-align: center; // Defines
+	}
+
+	// Navigation Next/Prev
+	.owl-buttons div {
+		position: absolute;
+		display: block;
+
+		width: 40px;
+		height: 100%;
+
+		top: 0px;
+
+		margin: 0;
+
+		.lh-transform( translateY(0) );
+		
+		background-color: rgba(255, 255, 255, 0.85);
+
+		border: none;
+
+		.lh-border-radius-simple( 0);
+
+		font-size: 14px;
+		line-height: 1;
+		color: #222;
+
+		text-align: center;
+		.lh-transition( all 500ms ease-in-out );
+		
+		.lh-box-shadow( 0px -120px 30px 0px rgba(0,0,0,0.31) );
+
+		// Icon
+		i {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			.lh-transform( translateY(-50%), translateX(-60%) );
+		}
+
+		&.owl-next i {
+			.lh-transform( translateY(-50%), translateX(-30%) );
+		}
+
+		&:hover {
+			background-color: #fff;
+			color: #222;
+			.opacity(1);
+		}
+
+		&.owl-prev {
+			left: 0px;
+
+			i:before {
+				content: "\f053";
+			}
+		}
+
+		&.owl-next {
+			right: 0px;
+
+			i:before {
+				content: "\f054";
+			}
+		}
+	}
+
+	// Bullets
+
+	.owl-pagination {
+		position: absolute;
+		left: 0;
+		bottom: -37px;
+		width: 100%;
+	}
+
+	.owl-page {
+		margin-top: 5px;
+		display: inline-block;
+		zoom: 1;
+		*display: inline; /*IE7 life-saver */
+
+		span {
+			display: block;
+			width: 8px;
+			height: 8px;
+			margin: 5px 4px;
+			background: transparent;
+
+			.lh-transition( all 500ms ease-in-out );
+
+			border: 2px solid #fff;
+
+			.lh-border-radius-simple( 100% );
+		}
+
+		&.active span,
+		&:hover span {
+			background: #fff;
+		}
+	}
+
+	// Outer Gray
+	&.outer-gray {
+		.owl-page {
+
+			span {
+				border-color: #bbb;
+			}
+
+			&.active span,
+			&:hover span {
+				background: #bbb;
+			}
+		}
+	}
+
+	//
+	// Dark Style
+	//
+	&.dark {
+
+		// Navigation Next/Prev
+		.owl-buttons div {
+			&.owl-prev {
+				color: #fff;
+				background-color: rgba(0, 0, 0, 0.85);
+
+				&:hover {
+					background-color: #111;
+					color: #fff;
+				}
+			}
+
+			&.owl-next {
+				color: #fff;
+				background-color: rgba(0, 0, 0, 0.85);
+
+				&:hover {
+					background-color: #111;
+					color: #fff;
+				}
+			}
+		}
+
+		.owl-page {
+			span {
+				border-color: #222;
+			}
+
+			&.active span,
+			&:hover span {
+				background: #222;
+			}
+		}
+
+	}
+
+
+} // opaque-box
+
+/***
+ *
+ * Arrow Style > Thin Outline
+ *
+***/
+
+.style-thin-outline {
+	// Controls Wrapper
+	.owl-controls {
+		margin-top: 0px;
+		text-align: center; // Defines
+	}
+
+	// Navigation Next/Prev
+	.owl-buttons div {
+		position: absolute;
+		display: block;
+
+		width: 22px;
+		height: 42px;
+
+		top: 50%;
+
+		margin: 0;
+
+		.lh-transform( translateY(-50%) );
+
+		.lh-transition(all 500ms ease);
+		
+		background: url(sprite.png);
+
+		opacity: 1;
+
+		text-align: center;
+
+		// Icon
+		i {
+			display: none;
+		}
+
+		&:hover {
+		}
+
+		&.owl-prev {
+			left: 20px;
+			background-position: -0px -0px;
+		}
+
+		&.owl-next {
+			right: 20px;
+			background-position: -0px -52px;
+		}
+	}
+
+	// Bullets
+
+	.owl-pagination {
+		position: absolute;
+		left: 0;
+		bottom: -37px;
+		width: 100%;
+	}
+
+	.owl-page {
+		margin-top: 5px;
+		display: inline-block;
+		zoom: 1;
+		*display: inline; /*IE7 life-saver */
+
+		span {
+			display: block;
+			width: 7px;
+			height: 7px;
+			margin: 5px 4px;
+			background: transparent;
+
+			.lh-transition( all 500ms ease-in-out );
+
+			border: 2px solid #fff;
+
+			.lh-border-radius-simple( 100% );
+		}
+
+		&.active span,
+		&:hover span {
+			background: rgba(0, 0, 0, 0.5);
+		}
+	}
+
+	// Outer Gray
+	&.outer-gray {
+
+		.owl-page {
+
+			span {
+				border-color: #bbb;
+			}
+
+			&.active span,
+			&:hover span {
+				background: #bbb;
+			}
+		}
+	}
+
+	// FlexSlider
+	.wpb_flexslider .flex-direction-nav a {
+		position: absolute;
+		display: block;
+
+		width: 22px;
+		height: 42px;
+
+		top: 50%;
+
+		margin: 0;
+
+		.lh-transform( translateY(-50%) );
+		
+		background: url(sprite.png);
+
+		text-align: center;
+		text-indent: -999px;
+		overflow: hidden;
+
+		// Icon
+		&:before {
+			display: none;
+		}
+
+		&:hover {
+		}
+
+		&.flex-prev {
+			left: 20px;
+			background-position: -0px -0px;
+		}
+
+		&.flex-next {
+			right: 20px;
+			background-position: -0px -52px;
+		}
+	}
+
+	// Revolution Slider
+
+	.tp-leftarrow.default {
+		width: 22px;
+		height: 42px;
+		background: url(sprite.png);
+	}
+
+	.tp-rightarrow.default {
+		width: 22px;
+		height: 42px;
+		background: url(sprite.png);
+		background-position: -0px -52px;
+	}
+
+	.tp-bullets.simplebullets.round .bullet {
+		width: 7px;
+		height: 7px;
+		margin: 5px 4px;
+		background: transparent;
+
+		.lh-transition( all 500ms ease-in-out );
+
+		.lh-box-sizing( content-box );
+
+		border: 2px solid #fff;
+
+		.lh-border-radius-simple( 100% );
+
+		&.selected {
+			background: rgba(0, 0, 0, 0.5);
+		}
+	}
+
+	//
+	// Dark Style
+	//
+	&.dark {
+
+		// Navigation Next/Prev
+		.owl-buttons div {
+			&.owl-prev {
+				background-position: -0px -176px;
+			}
+
+			&.owl-next {
+				background-position: -0px -228px;
+			}
+		}
+
+		.owl-page {
+			span {
+				border-color: #111;
+			}
+
+			&.active span,
+			&:hover span {
+				background: rgba(255, 255, 255, 0.5);
+			}
+		}
+
+		// FlexSlider
+		.wpb_flexslider .flex-direction-nav a {
+			&.flex-prev {
+				background-position: -0px -176px;
+			}
+
+			&.flex-next {
+				background-position: -0px -228px;
+			}
+		}
+
+		// Revolution Slider
+
+		.tp-leftarrow.default {
+			background-position: -0px -176px;
+		}
+
+		.tp-rightarrow.default {
+			background-position: -0px -228px;
+		}
+
+		.tp-bullets.simplebullets.round .bullet {
+			border-color: #111;
+
+			&.selected {
+				background: rgba(255, 255, 255, 0.5);
+			}
+		}
+
+	}
+
+} // style-thin-outline

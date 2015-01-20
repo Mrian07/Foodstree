@@ -1,0 +1,63 @@
+/*****************************
+ *****************************
+ *
+ * Navigation used in post listing/archives pagination
+ *
+ * Used to style the number and arrows used in navigation, e.g. 1,2,3
+ * and < > arrows as well
+ *
+ *****************************
+*****************************/
+
+.paging-navigation {
+
+	margin-bottom: 20px;
+
+	.nav-links {
+		text-align: center;
+	}
+	
+	//General Styles
+	a, span {	
+
+		display: inline-block;
+		background: @nav-bg;
+		color: @nav-color;
+
+		border: 1px solid @nav-border; // this width is usually 2px
+
+		font-size: 15px;
+		font-weight: normal;
+
+		box-sizing: content-box;
+		-webkit-box-sizing: content-box;
+		-moz-box-sizing: content-box;
+		-o-box-sizing: content-box;
+
+		width: 38px;
+		height: 38px;
+		line-height: 38px;
+
+		text-align: center;
+
+		margin-right: 10px;
+		margin-bottom: 3px;
+
+		&:hover {
+			border-color: @nav-border-hover;
+			background-color: @nav-bg-hover;
+			color: @nav-color-hover;
+		}
+
+		&.current {
+			border-color: @nav-border-hover;
+			background-color: @nav-bg-hover;
+			color: @nav-color-hover;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+	}
+}

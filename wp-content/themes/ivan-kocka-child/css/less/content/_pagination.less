@@ -1,0 +1,46 @@
+/*****************************
+ *****************************
+ *
+ * Navigation used in post and comments pagination
+ *
+ * Like when you paginate posts or pages with <!--nextpage--> or
+ * when your comments are being paginated
+ *
+ *****************************
+*****************************/
+
+.page-links {
+
+	margin: 20px 0;
+	
+	//General Styles
+	a, span {
+		display: inline-block;
+		background: transparent;
+		color: @pag-color;
+		
+		font-size: 14px;
+
+		width: 35px;
+		height: 35px;
+		line-height: 35px;
+
+		text-align: center;
+
+		margin-right: 3px;
+		margin-bottom: 3px;
+
+		background: transparent;
+
+		.lh-transition(all 350ms ease-in-out);
+	}
+
+	a span {	
+		background-color: @pag-bg;
+	}
+
+	a:hover span {
+		background-color: @pag-bg-hover;
+		color: @pag-color-hover;
+	}
+}

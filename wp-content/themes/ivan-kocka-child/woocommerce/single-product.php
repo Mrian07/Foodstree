@@ -63,12 +63,21 @@ if( true == ivan_get_option( 'header-negative-height' ) && false == ivan_get_opt
 
 		<div class="<?php echo apply_filters( 'iv_content_wrapper_classes', 'iv-layout content-wrapper single-product-wrapper ', 'shop' ); ?>">
 			<div class="container">
+
 			<h2 class="title-heading-header">
-				Beverages
+				
+				<?php
+					/**
+					 * Breadcrumb to Single Page
+					 **/
+					if( false == ivan_get_option('woo-disable-breadcrumb') ) :
+						get_template_part( 'woocommerce/single-product/single', 'breadcrumb' );
+					endif;
+				?>
 		</h2>
-		<div class=" text-center"><br>
-							<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur</p>
-		</div>
+		<!--<div class=" text-center"><br>
+							<p>Categories: Imported Products, Packaged Food.</p>
+		</div>-->
 				<?php
 				// Boxed Page Logic
 				if( true == ivan_get_option('shop-boxed-page') && false == ivan_get_option('header-negative-height') ) : ?>

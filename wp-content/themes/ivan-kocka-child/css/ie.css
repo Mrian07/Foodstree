@@ -1,0 +1,7 @@
+/*
+ * IE Specific Fixes
+*/
+
+.header #mega_main_menu > .menu_holder > .menu_inner > ul > li > .item_link:after {
+	opacity: 0 !important;
+}

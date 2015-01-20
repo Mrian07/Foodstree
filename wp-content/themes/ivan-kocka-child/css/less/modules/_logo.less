@@ -1,0 +1,71 @@
+//
+// Class Ivan_Module_Logo
+// --------------------------------------------------
+
+.logo {
+	display: block;
+	margin: 25px 0;
+
+	img {
+		max-width: 100%;
+		width: auto;
+		height: auto;
+		display: block;
+	}
+
+	.sd-res {
+
+	}
+
+	.hd-res {
+		display: none !important;
+	}
+}
+
+// Media query to retina logo usage in HD displays...
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 2dppx) {
+
+	/* Retina-specific stuff here */
+	&.has-hd {
+
+		&.logo .sd-res {
+			display: none !important;
+		}
+
+		&.logo .hd-res {
+			display: block !important;
+		}
+
+	}
+
+	.iv-layout.header {
+		// Logo Alternative Colors Configuration
+		&.light, &.dark {
+			
+			.has-hd.has-alt .hd-res.logo-normal {
+				display: none !important;
+			}
+
+			.has-hd.has-alt .hd-res.logo-alt {
+				display: block !important;
+			}
+		}
+
+		&.stuck {
+			
+			.has-hd.has-alt .hd-res.logo-normal {
+				display: block !important;
+			}
+
+			.has-hd.has-alt .hd-res.logo-alt {
+				display: none !important;
+			}
+		}
+	}
+
+}

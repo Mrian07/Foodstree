@@ -1,0 +1,206 @@
+//
+// Class Ivan_Layout_Header_Classic_Logo_Centered
+// --------------------------------------------------
+
+.only-menu {
+
+	/* General Styles */
+
+	.row {
+		position: relative;
+	}
+
+	.header-right-area {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+	}
+
+	/* Modules */
+
+	.iv-module {
+		float: right;
+		display: table !important;
+
+		height: 100%;
+
+		margin-left: 30px;
+		position: relative;
+
+		.centered {
+			display: table-cell !important;
+			vertical-align: middle !important;
+		}
+
+		&:last-child {
+			margin-left: 0;
+		}
+	}
+
+	/* Menu Module */
+	.iv-module-menu {
+		float: right;
+
+		height: 100%;
+
+		margin-left: 30px;
+		position: relative;
+
+		&:last-child {
+			margin-left: 0;
+		}
+	}
+
+	.mega_main_menu .mega_main_menu_ul {
+
+		height: 100%;
+
+		> li {
+			float: left;
+			position: relative;
+			height: 100%;
+
+			> .item_link {
+				display: inline-block;
+				height: 100%;
+
+				.item_link_content {
+					display: block;
+					.iv-center-rules();
+				}
+				
+			}
+		}
+	}
+
+	// Menu Area
+	.menu-area-wrapper {
+
+		.mega_main_menu {
+			float: none !important;
+			display: block;
+			position: relative;
+			z-index: 15000;
+
+			.mega_main_menu_ul {
+				display: inline-block;
+			}
+
+			&.centralized-menu {
+				text-align: center;
+				width: 100%;
+			}
+		}
+		
+		.iv-module, .iv-module-menu {
+			height: 90px;
+		}
+
+		.iv-module {
+			position: relative;
+			z-index: 20000;
+		}
+	}
+
+}
+
+/* Lateral Lines Layout */
+
+.only-menu.lateral-lines {
+	
+	.iv-module {
+
+		/* Centralized Lines */
+
+		padding-left: 30px;
+
+		&:after {
+			content: "";
+			display: block;
+			width: 1px;
+			height: 30px;
+			border-left: 1px dotted @header-border;
+			position: absolute;
+			top: 50%;
+			left: 0px;
+			margin-top: -15px;
+		}
+
+		&:last-child {
+			padding-left: 0;
+
+			&:after {
+				display: none;
+			}
+		}
+
+	}
+}
+
+.only-menu.stuck {
+
+	//border-bottom: 1px solid @header-stuck-border;
+	
+	.iv-module {
+
+		&:after {
+
+
+		}
+	}
+}
+
+// XSS Screen Phone Portrait
+@media (max-width: @screen-xxs-min) {
+	
+}
+
+// XS Screen Phone
+@media (max-width: @screen-xs-max) {
+	.only-menu {
+
+		.iv-module {
+			margin-left: 20px;
+
+			&:first-child {
+				.inner-wrapper {
+					right: 0 !important;
+				}
+			}
+		}
+
+		&.lateral-lines .iv-module {
+			padding-left: 20px;
+		}
+	}
+}
+
+// SM Screen Tablet
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+	
+}
+
+// MD Screen Desktop
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+
+	.only-menu {
+
+		.iv-module {
+			margin-left: 20px;
+		}
+	}
+
+	.only-menu.lateral-lines {
+
+		.iv-module {
+			padding-left: 20px;
+		}
+	}
+	
+}
+
+// LG Screen Large Desktop
+@media (min-width: @screen-lg-min) {
+	
+}
