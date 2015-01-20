@@ -13,6 +13,39 @@ global $woocommerce;
 
 wc_print_notices();
 
+
+
+
+if( isset($_POST['coupon_code']) && $_POST['coupon_code'] == '' ){ ?>
+<div class="ivan-message  with-icon error woo-msg-wrapper woocommerce-message">
+	<div class="ivan-message-inner">
+
+		<div class="ivan-message-icon-holder">
+			<div class="ivan-message-icon">
+				<div class="ivan-message-icon-inner">
+					<i class="fa fa-close fa-lg"></i>
+				</div>
+			</div>
+		</div>
+
+		<div class="ivan-message-text-holder">
+			<div class="ivan-message-text">
+				<div class="ivan-message-text-inner">
+					<ul class="woocommerce-error">
+						<li>Coupon code was empty!</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<?php } ?>
+
+
+
+
+<?php
 do_action( 'woocommerce_before_cart' ); ?>
 	<h2 class="title-heading-header">
 				View Cart
