@@ -44,10 +44,26 @@ if( ( false == ivan_get_option('woo-disable-title') && false == ivan_get_option(
 					endif;	
 					?>
 		<h2 class="title-heading-header">
-				Beverages
+
+			<?php
+			if(is_product_category()){
+			$product_cats = get_product_category_by_id( get_queried_object_id() );
+			echo $product_cats;
+			}else{
+				echo "Products";
+			}
+			?>
+
 		</h2>
 		<div class=" text-center"><br>
-							<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur</p>
+							<p>
+								<?php
+								if(is_product_category()){
+									$product_desc = get_product_category_description_by_id( get_queried_object_id() );
+									echo $product_desc;
+								}
+								?>
+							</p>
 		</div>
 					<?php if( ivan_get_option('breadcrumb-shop-disable') == false && $title_class != 'large' ) : ?>
 							<?php 

@@ -192,6 +192,21 @@ if(isset($_POST['billing_phone'])){
 
 
 
+function get_product_category_by_id( $category_id ) {
+    $term = get_term_by( 'id', $category_id, 'product_cat', 'ARRAY_A' );
+    return $term['name'];
+}
+
+function get_product_category_description_by_id( $category_id ) {
+    $term = get_term_by( 'id', $category_id, 'product_cat', 'ARRAY_A' );
+    return $term['description'];
+}
+
+
+
+
+
+
 
 
 
