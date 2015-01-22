@@ -161,7 +161,7 @@ die();
 
 
 
-
+//Custom validation for checkout page
 add_action('woocommerce_checkout_process', 'my_custom_checkout_field_process');
 
 function my_custom_checkout_field_process() {
@@ -191,12 +191,13 @@ if(isset($_POST['billing_phone'])){
 
 
 
-
+//Get product category name by id
 function get_product_category_by_id( $category_id ) {
     $term = get_term_by( 'id', $category_id, 'product_cat', 'ARRAY_A' );
     return $term['name'];
 }
 
+//Get product category description by id
 function get_product_category_description_by_id( $category_id ) {
     $term = get_term_by( 'id', $category_id, 'product_cat', 'ARRAY_A' );
     return $term['description'];
@@ -204,8 +205,21 @@ function get_product_category_description_by_id( $category_id ) {
 
 
 
+//Add product description tab to a new location
+function price_below(){
+  wc_get_template( 'single-product/tabs/tabs.php' );
+}
+add_action( 'woocommerce_single_product_summary', 'price_below', 12 );
+
+//Remove tab description block from current position
+remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10 );
 
 
+//Remove add to cart from current position
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30);
+
+//Register add to cart to a new location
+add_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 35);
 
 
 
