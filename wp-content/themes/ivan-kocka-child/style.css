@@ -355,7 +355,6 @@ height: 137px;
 .cart{
 	width: 37%;
 	margin: auto;
-	display: inline-block;
 	text-align: center;
 	
 }
@@ -501,4 +500,14 @@ font-size: .8em;
 }
 .ivan-message{
 	margin-top: 10px !important;
+}
+.woocommerce-tabs{
+	display: none;
+}
+.product-subtotal .amount{
+	color:#000;
+}
+.btn-bg{
+	background: #FF8402!important;
+	color: #fff!important;
 }
