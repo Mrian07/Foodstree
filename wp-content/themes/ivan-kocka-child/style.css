@@ -122,7 +122,7 @@ color: #FFF !important;
 .simple-logo-centered .iv-module {
     float: left !important;
 }
-body .cart{ margin-left: 30px !important;}
+
 .cart span{
     border: 1px dashed #fff;
     color: #fff;
@@ -498,4 +498,7 @@ font-size: .8em;
 }
 .iv-layout-footer a:hover{
 	color: #fff !important;
+}
+.ivan-message{
+	margin-top: 10px !important;
 }
