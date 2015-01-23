@@ -295,19 +295,19 @@ height: 137px;
 	float: right;
 }
 .sales{
-	background: url(images/sprite.png) -225px no-repeat;
+	background: url(images/sprite.png) 13px no-repeat;
 	width: 96px;
-	height: 63px;
+	height: 80px;
 }
 .free{
-	background: url(images/sprite.png) 0px no-repeat;
+	background: url(images/sprite.png) -85px no-repeat;
 	width: 96px;
-	height: 63px;
+	height: 80px;
 }
 .shipping-track{
-	background: url(images/sprite.png) -134px no-repeat;
+	background: url(images/sprite.png) -192px no-repeat;
 	width: 96px;
-	height: 63px;
+	height: 80px;
 }
 .facility hr{
 	width: 70px;
@@ -352,7 +352,7 @@ height: 137px;
 .price {
 	color:#ff8402 !important;
 }
-.cart{
+.header-fixed .cart{
 	width: 37%;
 	margin: auto;
 	text-align: center;
@@ -508,4 +508,7 @@ font-size: .8em;
 .btn-bg{
 	background: #FF8402!important;
 	color: #fff!important;
+}
+.ft-spacer{
+  height:40px;
 }
