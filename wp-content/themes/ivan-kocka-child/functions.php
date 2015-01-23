@@ -206,7 +206,7 @@ function get_product_category_description_by_id( $category_id ) {
 
 
 //Add product description tab to a new location
-function price_below(){
+/*function price_below(){
   wc_get_template( 'single-product/tabs/tabs.php' );
 }
 add_action( 'woocommerce_single_product_summary', 'price_below', 12 );
@@ -220,7 +220,7 @@ remove_action('woocommerce_single_product_summary', 'woocommerce_template_single
 
 //Register add to cart to a new location
 add_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 35);
-
+*/
 
 
 
