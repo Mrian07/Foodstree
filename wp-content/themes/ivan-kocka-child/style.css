@@ -122,7 +122,7 @@ color: #FFF !important;
 .simple-logo-centered .iv-module {
     float: left !important;
 }
-body .cart{ margin-left: 30px !important;}
+
 .cart span{
     border: 1px dashed #fff;
     color: #fff;
@@ -355,7 +355,6 @@ height: 137px;
 .cart{
 	width: 37%;
 	margin: auto;
-	display: inline-block;
 	text-align: center;
 	
 }
@@ -498,4 +497,15 @@ font-size: .8em;
 }
 .iv-layout-footer a:hover{
 	color: #fff !important;
+}
+.ivan-message{
+	margin-top: 10px !important;
+}
+
+.product-subtotal .amount{
+	color:#000;
+}
+.btn-bg{
+	background: #FF8402!important;
+	color: #fff!important;
 }

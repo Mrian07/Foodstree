@@ -32,7 +32,7 @@ global $post;
 <div itemscope itemtype="<?php echo woocommerce_get_product_schema(); ?>" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 	<div class="row">
-		<div class="<?php echo apply_filters('ivan_woo_single_product_thumb_area', 'col-xs-12 col-sm-6 col-md-6'); ?>">
+		<div class="<?php echo apply_filters('ivan_woo_single_product_thumb_area', 'col-xs-12 col-sm-4 col-md-4'); ?>">
 			<div class="col-wrapper">
 
 			<?php
@@ -48,7 +48,7 @@ global $post;
 			</div><!--.col-wrapper-->
 		</div>
 
-		<div class="<?php echo apply_filters('ivan_woo_single_product_summary_area', 'col-xs-12 col-sm-6 col-md-6 text-center'); ?>">
+		<div class="<?php echo apply_filters('ivan_woo_single_product_summary_area', 'col-xs-12 col-sm-8 col-md-8 '); ?>">
 			<div class="col-wrapper">
 				
 			<div class="summary entry-summary">

@@ -1,3 +1,8 @@
+	<h2 class="title-heading-header">
+				View Cart
+		</h2>
+		
+
 <?php
 /**
  * Cart Page
@@ -47,12 +52,7 @@ if( isset($_POST['coupon_code']) && $_POST['coupon_code'] == '' ){ ?>
 
 <?php
 do_action( 'woocommerce_before_cart' ); ?>
-	<h2 class="title-heading-header">
-				View Cart
-		</h2>
-		<div class=" text-center"><br>
-							<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur</p>
-		</div>
+
 <form action="<?php echo esc_url( WC()->cart->get_cart_url() ); ?>" method="post">
 
 <div class="row">
@@ -172,7 +172,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 				<div class="cart-actions">
 
-					<input type="submit" class="button" name="update_cart" value="<?php _e( 'Update Cart', 'woocommerce' ); ?>" /> <input type="submit" class="checkout-button button alt wc-forward" name="proceed" value="<?php _e( 'Proceed to Checkout', 'woocommerce' ); ?>" />
+					<input type="submit" class="button btn-bg" name="update_cart" value="<?php _e( 'Update Cart', 'woocommerce' ); ?>" /> <input type="submit" class="checkout-button button alt wc-forward" name="proceed" value="<?php _e( 'Proceed to Checkout', 'woocommerce' ); ?>" />
 
 					<?php do_action( 'woocommerce_proceed_to_checkout' ); ?>
 
@@ -185,7 +185,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 				<?php if ( WC()->cart->coupons_enabled() ) { ?>
 					<div class="coupon">
 
-						<label for="coupon_code"><?php _e( 'Coupon', 'woocommerce' ); ?>:</label> <input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php _e( 'Coupon code', 'woocommerce' ); ?>" /> <input type="submit" class="button" name="apply_coupon" value="<?php _e( 'Apply Coupon', 'woocommerce' ); ?>" />
+						<label for="coupon_code"><?php _e( 'Coupon', 'woocommerce' ); ?>:</label> <input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php _e( 'Coupon code', 'woocommerce' ); ?>" /> <input type="submit" class="button btn-bg" name="apply_coupon" value="<?php _e( 'Apply Coupon', 'woocommerce' ); ?>" />
 
 						<?php do_action('woocommerce_cart_coupon'); ?>
 
