@@ -52,7 +52,7 @@ if( isset($_POST['coupon_code']) && $_POST['coupon_code'] == '' ){ ?>
 
 <?php
 do_action( 'woocommerce_before_cart' ); ?>
-
+<br><br>
 <form action="<?php echo esc_url( WC()->cart->get_cart_url() ); ?>" method="post">
 
 <div class="row">

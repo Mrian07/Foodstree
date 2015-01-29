@@ -165,7 +165,7 @@ endif;
 									<div class="row">
 
 										<div class="col-xs-12 col-sm-12 col-md-12 ivan-title-inner">
-											<h2><?php echo ivan_get_option('title-text-shop'); ?></h2>
+											<h2 ><?php echo ivan_get_option('title-text-shop'); ?></h2>
 											<?php // Display optional description of shop
 											if( ivan_get_option('title-desc-shop') != '' ) : ?>
 												<div class="title-description">

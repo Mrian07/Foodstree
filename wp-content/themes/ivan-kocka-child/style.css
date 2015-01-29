@@ -92,6 +92,9 @@ background: none !important;
 .menu-item  a {
 color: #FFF !important;
 }
+.menu-item  a:hover{
+color: #000 !important;
+}
 .fa-user{
 	color: #fff !important;
 }
@@ -123,15 +126,15 @@ color: #FFF !important;
     float: left !important;
 }
 
-.cart span{
+.header-right-area .cart span{
     border: 1px dashed #fff;
     color: #fff;
     padding: 6px;
 }
-.cart .amount{
+.header-right-area  .cart .amount{
 	border: 0px;
 }
-.title-heading-header{
+.blog h2, .title-heading-header{
 	text-align: center;
 	border-top: 3px solid #7a7483;
 	border-bottom: 3px solid #7a7483;
@@ -139,6 +142,20 @@ color: #FFF !important;
 	font-size: 17px !important;
 	display: table;
 	margin: auto !important;
+	padding: 10px;
+	line-height: 1.65;
+	color: #000;
+	font-weight: 600!important;
+    letter-spacing: 3px;
+}
+.blog .container h2{
+	text-align: center;
+	border-top: 3px solid #7a7483;
+	border-bottom: 3px solid #7a7483;
+	text-transform: uppercase;
+	font-size: 17px !important;
+	display: table;
+margin: 40px auto !important;
 	padding: 10px;
 	line-height: 1.65;
 	color: #000;
@@ -341,7 +358,7 @@ height: 137px;
 	padding: 9px;
 }
 .content-wrapper.no-title-wrapper {
-	padding-top: 45px;
+	padding-top: 65px;
 }
 .seller-name{
 	border-top: 3px solid #000;
@@ -463,7 +480,7 @@ text-align:right;
 .yith-wrapper{
 	display:none !important;
 }
-.product_meta .posted_in{
+.product_meta span{
 	font-size: 1.2em!important;
 }
 .product_meta .posted_in a{
@@ -511,4 +528,12 @@ font-size: .8em;
 }
 .ft-spacer{
   height:40px;
+}
+
+a:hover, a:focus {
+	color: #FF8402;
+}
+.cart-details-col{
+	background: #F4F4F4;
+	padding: 19px;
 }
