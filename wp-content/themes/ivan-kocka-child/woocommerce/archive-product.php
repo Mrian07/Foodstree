@@ -125,7 +125,7 @@ endif;
 					<h4>
 						<?php
 						if(isset($_SESSION['all_sellers']) && $_SESSION['all_sellers']=='yes'){
-							echo "You currently viewing products from all seller";
+							echo "You currently viewing products from all sellers";
 						}else{
 							echo "<i class='fa fa-map-marker'></i> Your city is <strong>".$_COOKIE['user_city']."</strong> and pincode <strong>".$_COOKIE['user_pincode']."</strong> <a id='change-pincode'>[ Change Pincode ]</a>";
 						}
@@ -135,7 +135,7 @@ endif;
 						if(isset($_SESSION['all_sellers']) && $_SESSION['all_sellers']=='yes'){
 							echo '<a id="set_all_seller" data-seller="no">[ View products based on your pincode ]</a>';
 						}else{
-							echo '<a id="set_all_seller" data-seller="yes">[ View products from all seller ]</a>';
+							echo '<a id="set_all_seller" data-seller="yes">[ View products from all sellers ]</a>';
 						}
 						?>
 					</h4>

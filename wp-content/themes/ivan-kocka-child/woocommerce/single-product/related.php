@@ -11,43 +11,48 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 global $product, $woocommerce_loop;
 
-if ( empty( $product ) || ! $product->exists() ) {
-	return;
-}
-
-$related = $product->get_related( $posts_per_page );
+$related = $product->get_related( apply_filters('ivan_woo_related_products', 12) );
 
 if ( sizeof( $related ) == 0 ) return;
 
 $args = apply_filters( 'woocommerce_related_products_args', array(
-	'post_type'            => 'product',
-	'ignore_sticky_posts'  => 1,
-	'no_found_rows'        => 1,
-	'posts_per_page'       => $posts_per_page,
-	'orderby'              => $orderby,
-	'post__in'             => $related,
-	'post__not_in'         => array( $product->id )
+	'post_type'				=> 'product',
+	'ignore_sticky_posts'	=> 1,
+	'no_found_rows' 		=> 1,
+	'posts_per_page' 		=> apply_filters('ivan_woo_related_products', 12),
+	'orderby' 				=> $orderby,
+	'post__in' 				=> $related,
+	'post__not_in'			=> array( $product->id )
 ) );
 
 $products = new WP_Query( $args );
 
-$woocommerce_loop['columns'] = $columns;
+$woocommerce_loop['columns'] = apply_filters( 'loop_shop_columns', 1 );
 
 if ( $products->have_posts() ) : ?>
 
 	<div class="related products">
 
-		
+		<h2><?php _e( 'Related Products', 'woocommerce' ); ?></h2>
 
-		<?php woocommerce_product_loop_start(); ?>
+		<div class="row">
+			<div class="">
+				<div class="related-carousel">
 
-			<?php while ( $products->have_posts() ) : $products->the_post(); ?>
+					<?php woocommerce_product_loop_start(); ?>
 
-				<?php wc_get_template_part( 'content', 'product' ); ?>
+						<?php while ( $products->have_posts() ) : $products->the_post(); ?>
 
-			<?php endwhile; // end of the loop. ?>
+							<?php wc_get_template_part( 'content', 'product' ); ?>
 
-		<?php woocommerce_product_loop_end(); ?>
+						<?php endwhile; // end of the loop. ?>
+
+					<?php woocommerce_product_loop_end(); ?>
+
+				</div><!--.related-carousel-->
+
+			</div>
+		</div><!--.row-->
 
 	</div>
 

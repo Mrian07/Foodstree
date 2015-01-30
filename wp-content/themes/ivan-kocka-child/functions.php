@@ -226,3 +226,28 @@ add_action('woocommerce_single_product_summary', 'woocommerce_template_single_ad
 
 
 
+/*add_filter( 'woocommerce_product_tabs', 'woo_rename_tabs', 98 );
+function woo_rename_tabs( $tabs ) {
+
+  $tabs['description']['title'] = __( 'Additional Information' );   // Rename the description tab
+ 
+  return $tabs;
+
+}
+*/
+
+
+//Remove reviews tab
+add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
+function woo_remove_product_tabs( $tabs ) {
+    unset( $tabs['reviews'] ); 
+    return $tabs;
+}
+
+
+//Hide trailing zeros for product price
+add_filter( 'woocommerce_price_trim_zeros', 'wc_hide_trailing_zeros', 10, 1 );
+function wc_hide_trailing_zeros( $trim ) {
+    // set to false to show trailing zeros
+    return true;
+}
