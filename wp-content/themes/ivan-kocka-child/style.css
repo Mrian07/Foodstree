@@ -537,3 +537,25 @@ a:hover, a:focus {
 	background: #F4F4F4;
 	padding: 19px;
 }
+
+.group_table {
+	width:auto !important;
+}
+.group_table tr{
+	background:none !important;
+}
+.group_table tr .price{
+padding-top: 30px!important;
+text-align: center!important;
+}
+.group_table tr .amount{
+display: block;
+margin-bottom: -6%;
+}
+.group_table tr .price .in-stock{
+color: #A5A4A4;
+font-weight: 100!important;
+}
+.woocommerce div.product form.cart .group_table tr:nth-child(even), .woocommerce-page div.product form.cart .group_table tr:nth-child(even) {
+border-top: 1px solid;
+}
