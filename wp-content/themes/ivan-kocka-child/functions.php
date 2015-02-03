@@ -21,9 +21,17 @@ function get_authored_products($query) {
     return $query;
 }
 
+
+if(!isset($_SESSION['all_sellers'])){
+
+  $_SESSION['all_sellers'] = 'no';
+
+}
+
 if($_SESSION['all_sellers'] !='yes'){
 add_filter('pre_get_posts', 'get_authored_products');
 }
+
 
 // get seller ids based on pincode value saved in the cookie
 function get_pincode_sellers(){
