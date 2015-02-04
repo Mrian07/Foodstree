@@ -11,26 +11,39 @@ function enqueue_parent_theme_style() {
 
 
 function get_authored_products($query) {
-    
+
+  if($_SESSION['all_sellers'] =='no'){
+
+    if(((!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] == 'product') || is_woocommerce()) && !is_admin() ){
+      
     //check if post type is product or page is woocommerce template and not admin dashboard interface
-    if(($query->query_vars['post_type'] == 'product' || is_woocommerce()) && !is_admin()){
-        $authors = get_pincode_sellers();
-        $query->set('author__in',  $authors);
+   // if(($query->query_vars['post_type'] == 'product' || is_woocommerce()) && !is_admin()){
+      $authors = get_pincode_sellers();
+      $query->set('author__in',  $authors);
+    //}
+
     }
-    
-    return $query;
+
+  }
+
+  return $query;
 }
 
 
-if(!isset($_SESSION['all_sellers'])){
 
-  $_SESSION['all_sellers'] = 'no';
 
+
+function filterAllSeller(){
+  if(!isset($_SESSION['all_sellers'])){
+    $_SESSION['all_sellers'] = 'no';
+  }
 }
 
-if($_SESSION['all_sellers'] !='yes'){
-add_filter('pre_get_posts', 'get_authored_products');
-}
+add_action( 'template_redirect', 'filterAllSeller' );
+
+
+
+
 
 
 // get seller ids based on pincode value saved in the cookie
@@ -194,6 +207,10 @@ if(isset($_POST['billing_phone'])){
 }
 
 }
+
+
+
+
 
 
 

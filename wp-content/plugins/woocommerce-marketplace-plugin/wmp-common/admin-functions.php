@@ -124,6 +124,9 @@ if(wmp_is_seller()){
         $classes[] = 'sub-order parent-' . $post->post_parent;
     }
 }else{
+
+    if(isset($_GET['post_status'])){
+
     if( $_GET['post_status'] != 'wc-processing' && $_GET['post_status'] != 'wc-on-hold' && $_GET['post_status'] != 'wc-completed' ){
     
     if ( $post->post_type == 'shop_order' && $post->post_parent != 0 ) {
@@ -131,6 +134,9 @@ if(wmp_is_seller()){
     }
 
 }
+
+}
+
 }
 
 
@@ -421,7 +427,9 @@ function wmp_seller_order_query($query){
  
  global $current_user;
 
- if($query->query_vars['post_type'] == 'shop_order' && wmp_is_seller()){
+ if(!empty($query->query_vars['post_type']) && ($query->query_vars['post_type'] == 'shop_order')  && wmp_is_seller()){
+
+ //if($query->query_vars['post_type'] == 'shop_order' && wmp_is_seller()){
        
     $query->set('author', $current_user->ID); 
 }
@@ -440,7 +448,9 @@ function wmp_seller_product_query($query){
  
  global $current_user;
 
- if($query->query_vars['post_type'] == 'product' && wmp_is_seller()){
+ if(!empty($query->query_vars['post_type']) && ($query->query_vars['post_type'] == 'product')  && wmp_is_seller()){
+
+ //if($query->query_vars['post_type'] == 'product' && wmp_is_seller()){
        
     $query->set('author', $current_user->ID); 
 }
