@@ -178,7 +178,7 @@ function wmp_admin_shop_order_scripts() {
 
        <?php if( $_GET['post_status'] == 'wc-processing' || $_GET['post_status'] == 'wc-on-hold' || $_GET['post_status'] == 'wc-completed'){ ?>
 
-        //$('tr.sub-order').toggle();
+        $('tr.sub-order').toggle();
 
         $('.post-type-shop_order tr.author-self').hide();
 
@@ -203,11 +203,18 @@ function wmp_admin_shop_order_scripts() {
 
 $('.post-type-shop_order ul.subsubsub').html('<?php echo wmp_generate_order_status_admin_count(); ?>');
 
+//$('tr.level-1').hide();
+
 $('button.toggle-sub-orders').on('click', function(e) {
             e.preventDefault();
 
             $('tr.sub-order').toggle();
+            //$('tr.level-1').toggle();
         });
+
+
+
+
 <?php } ?>
 
         
@@ -215,6 +222,8 @@ $('button.toggle-sub-orders').on('click', function(e) {
 
     });
     </script>
+
+
 
     <style type="text/css">
         tr.sub-order {
@@ -504,7 +513,8 @@ function wmp_generate_order_status_admin_count(){
     global $wpdb;
 
 
-    $count_all = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type IN ('shop_order') and post_status != 'auto-draft' and post_parent <= 0" );
+    //$count_all = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type IN ('shop_order') and post_status != 'auto-draft' and post_parent <= 0" );
+    $count_all = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type IN ('shop_order') and post_status NOT IN ('auto-draft','trash') and post_parent <= 0" );
     $count_processing = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wmp_orders WHERE order_status = 'processing' and seller_id > 0" );
     $count_on_hold = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wmp_orders WHERE order_status = 'on-hold' and seller_id > 0" );
     $count_completed = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wmp_orders WHERE order_status = 'completed' and seller_id > 0" );
