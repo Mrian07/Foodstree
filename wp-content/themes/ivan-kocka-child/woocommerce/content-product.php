@@ -139,7 +139,7 @@ if(is_admin())
 		<div id="overlay" class="quick-info"><br>
 				<div class="cart-icon"></div>
 				<div> Add to cart</div>
-				<div class="shipby"> <a href="<?php echo get_site_url().'/seller/'.get_the_author(); ?>">Shipped by : <?php echo get_seller_name($post->post_author); ?></a></div>
+				<div class="shipby"> <a href="<?php echo get_site_url().'/seller/'.get_seller_query_var($post->post_author); ?>">Shipped by : <?php echo get_seller_display_name($post->post_author); ?></a></div>
 			</div>
 		</div><!--.product-info-->
 

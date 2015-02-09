@@ -130,7 +130,7 @@ if ( current_user_can( 'create_users') ) {
 // Load up the passed data, else set to a default.
 $creating = isset( $_POST['createuser'] );
 
-$new_company_info = $creating && isset( $_POST['company_info'] ) ? wp_unslash( $_POST['company_info'] ) : '';
+$new_seller_display_name = $creating && isset( $_POST['seller_display_name'] ) ? wp_unslash( $_POST['seller_display_name'] ) : '';
 $new_seller_name = $creating && isset( $_POST['seller_name'] ) ? wp_unslash( $_POST['seller_name'] ) : '';
 $new_first_name = $creating && isset( $_POST['first_name'] ) ? wp_unslash( $_POST['first_name'] ) : '';
 $new_last_name = $creating && isset( $_POST['last_name'] ) ? wp_unslash( $_POST['last_name'] ) : '';
@@ -164,11 +164,16 @@ $new_user_send_password = $creating && isset( $_POST['send_password'] ) ? wp_uns
 $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unslash( $_POST['noconfirmation'] ) : '';
 
 ?>
+
+
+<h3><?php _e('Company Information') ?></h3>
+
+
 <table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="company_info"><?php _e('Company information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
-		<td><input name="company_info" type="text" id="company_info" value="<?php echo esc_attr($new_company_info); ?>" aria-required="true" /></td>
+		<th scope="row"><label for="seller_display_name"><?php _e('Display Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<td><input name="seller_display_name" type="text" id="seller_display_name" value="<?php echo esc_attr($new_seller_display_name); ?>" aria-required="true" /></td>
 	</tr>
 	
 
@@ -185,7 +190,7 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 	
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_name"><?php _e('Company'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="seller_name"><?php _e('Company Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_name" type="text" id="seller_name" value="<?php echo esc_attr($new_seller_name); ?>" aria-required="true" /></td>
 	</tr>
 
@@ -391,13 +396,13 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 		<td><input name="seller_logo" type="file" id="seller_logo" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?></label></th>
 		<td><input name="seller_pan_copy" type="file" id="seller_pan_copy" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?></label></th>
 		<td><input name="seller_cancelled_cheque" type="file" id="seller_cancelled_cheque" /></td>
 	</tr>
 

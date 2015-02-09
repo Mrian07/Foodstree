@@ -182,7 +182,7 @@ jQuery('#seller_billing_yes').change(function() {
 jQuery("#your-profile").validate({
   
 rules: {
-            company_info: "required",
+            seller_display_name: "required",
             first_name: "required",
             last_name: "required",
             seller_name: "required",
@@ -248,7 +248,7 @@ rules: {
   jQuery("#createuser").validate({
   
 rules: {
-            company_info: "required",
+            seller_display_name: "required",
             first_name: "required",
             last_name: "required",
             seller_name: "required",
@@ -295,8 +295,8 @@ rules: {
                   required: false,
                   minlength: 50
             },
-            seller_pan_copy: "required",
-            seller_cancelled_cheque: "required",
+            //seller_pan_copy: "required",
+            //seller_cancelled_cheque: "required",
             user_login: "required",
             pass1: "required",
             pass2: "required"

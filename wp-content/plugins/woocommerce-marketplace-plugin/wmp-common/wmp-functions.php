@@ -79,7 +79,7 @@ function wmp_seller_additionaldata_save( $user_id ) {
   global $aj_csvimport;
 
   $additional_fields = array(
-    'company_info',
+    'seller_display_name',
     'seller_name',
     'mobile_number',
     'seller_address',
@@ -346,15 +346,17 @@ $role = get_user_role($post->post_author);
 function wmp_seller_tab_content(){
   global $post;
   $seller_id = $post->post_author;
-  $seller_name = get_user_meta( $seller_id, 'seller_name', true );
-  echo '<div class="seller-name"><a href="'.get_site_url().'/seller/'.get_the_author().'">'.$seller_name.'</a></div>';
+  //$seller_name = get_user_meta( $seller_id, 'seller_name', true );
+  $seller_name = get_seller_display_name($seller_id);
+  $seller_var = get_seller_query_var($seller_id);
+  echo '<div class="seller-name"><a href="'.get_site_url().'/seller/'.$seller_var.'">'.$seller_name.'</a></div>';
   }
 
 
 
 //Get seller name by id
 function get_seller_name($seller_id){
-  $seller_name = get_user_meta( $seller_id, 'seller_name', true );
+   $seller_name = get_user_meta( $seller_id, 'seller_name', true );
   if($seller_name){
     return $seller_name;
   }else{
@@ -364,6 +366,24 @@ function get_seller_name($seller_id){
 }
 
 
+
+
+//Get seller name by id
+function get_seller_display_name($seller_id){
+  $seller_name = get_user_meta( $seller_id, 'seller_display_name', true );
+  $seller_name2 = get_user_meta( $seller_id, 'seller_name', true );
+  if($seller_name){
+    return $seller_name;
+  }else if($seller_name2){
+    return $seller_name2;
+  }else{
+    $user_info = get_userdata($seller_id);
+    return $user_info->user_login;
+  }
+}
+
+
+
 //Get seller id by login name - seller page
 function get_query_id(){
 if(get_query_var( 'seller' )){
@@ -371,6 +391,26 @@ $seller = get_userdatabylogin(get_query_var( 'seller' ));
 return $seller->ID;
 }
 }
+
+
+
+
+
+function get_userid_by_company($company_name){
+global $wpdb;
+$company = urldecode($company_name);
+$results = $wpdb->get_col("SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'seller_name' AND meta_value = '".$company."' ");
+return $results[0];
+}
+
+
+
+function get_seller_query_var($seller_id){
+   $seller_query_var = urlencode(get_seller_name($seller_id));
+   return $seller_query_var;
+}
+
+
 
 
 //Get products list in array by seller id
@@ -442,8 +482,10 @@ function wmp_seller_info() {
   $seller_id = $post->post_author;
   $role = get_user_role($seller_id);
   if($role == 'seller'){
-    $seller_name = get_user_meta( $seller_id, 'seller_name', true );
-    echo '<div class="seller-name">Sold by: <a href="'.get_site_url().'/seller/'.get_the_author().'">'.$seller_name.'</a></div>';
+    //$seller_name = get_user_meta( $seller_id, 'seller_name', true );
+    $seller_name = get_seller_display_name($seller_id);
+     $seller_var = get_seller_query_var($seller_id);
+    echo '<div class="seller-name">Sold by: <a href="'.get_site_url().'/seller/'.$seller_var.'">'.$seller_name.'</a></div>';
   }
 }
 add_action( 'woocommerce_single_product_summary', 'wmp_seller_info', 6 );

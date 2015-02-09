@@ -137,7 +137,7 @@ wp_enqueue_script(
 
 <hr />
 
-<h3><?php _e('Personal Info') ?></h3>
+<h3><?php _e('Company Information') ?></h3>
 
 
 
@@ -145,8 +145,8 @@ wp_enqueue_script(
 <table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="company_info"><?php _e('Company information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
-		<td><input name="company_info" type="text" id="company_info" value="<?php echo get_user_meta( $user_id, 'company_info', true ); ?>" aria-required="true" /></td>
+		<th scope="row"><label for="seller_display_name"><?php _e('Display name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<td><input name="seller_display_name" type="text" id="seller_display_name" value="<?php echo get_user_meta( $user_id, 'seller_display_name', true ); ?>" aria-required="true" /></td>
 	</tr>
 	
 
@@ -163,7 +163,7 @@ wp_enqueue_script(
 	
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_name"><?php _e('Company'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="seller_name"><?php _e('Company name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_name" type="text" id="seller_name" value="<?php echo get_user_meta( $user_id, 'seller_name', true ); ?>" aria-required="true" /></td>
 	</tr>
 
@@ -393,8 +393,8 @@ wp_enqueue_script(
 		<?php } ?>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?> <span class="description"><?php _e('(required)'); ?></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?></label></th>
 		<td><input name="seller_pan_copy" type="file" id="seller_pan_copy" /></td>
 		<?php if(get_user_meta( $user_id, 'seller_pan_copy', true ) !=''){
 			$pan_copy = get_user_meta( $user_id, 'seller_pan_copy', true );
@@ -404,8 +404,8 @@ wp_enqueue_script(
 		<?php } ?>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?> <span class="description"><?php _e('(required)'); ?></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?></label></th>
 		<td><input name="seller_cancelled_cheque" type="file" id="seller_cancelled_cheque" /></td>
 		<?php if(get_user_meta( $user_id, 'seller_cancelled_cheque', true ) !=''){
 			$cheque_copy = get_user_meta( $user_id, 'seller_cancelled_cheque', true );
