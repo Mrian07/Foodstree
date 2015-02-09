@@ -21,7 +21,7 @@ wc_print_notices();
 
 
 
-if( isset($_POST['coupon_code']) && $_POST['coupon_code'] == '' ){ ?>
+if( isset($_POST['apply_coupon']) && isset($_POST['coupon_code']) && $_POST['coupon_code'] == '' ){ ?>
 <div class="ivan-message  with-icon error woo-msg-wrapper woocommerce-message">
 	<div class="ivan-message-inner">
 
