@@ -1,4 +1,10 @@
-    jQuery(document).ready(function() {        
+    jQuery(document).ready(function() { 
+
+
+      //check if form submitted and billing clone checked, then hide biling address wraper
+      if(jQuery('#seller_billing_yes').prop('checked')){
+        jQuery('#billing_adddress_wrap').hide();
+      }       
     
         jQuery('#pincode_upload_block').css('display','none');
         

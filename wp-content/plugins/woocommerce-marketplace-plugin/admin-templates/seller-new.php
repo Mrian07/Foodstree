@@ -138,10 +138,17 @@ $new_user_login = $creating && isset( $_POST['user_login'] ) ? wp_unslash( $_POS
 $new_user_email = $creating && isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '';
 $new_mobile_number = $creating && isset( $_POST['mobile_number'] ) ? wp_unslash( $_POST['mobile_number'] ) : '';
 $new_user_uri = $creating && isset( $_POST['url'] ) ? wp_unslash( $_POST['url'] ) : '';
+
 $new_seller_address = $creating && isset( $_POST['seller_address'] ) ? wp_unslash( $_POST['seller_address'] ) : '';
 $new_seller_city = $creating && isset( $_POST['seller_city'] ) ? wp_unslash( $_POST['seller_city'] ) : '';
 $new_seller_pincode = $creating && isset( $_POST['seller_pincode'] ) ? wp_unslash( $_POST['seller_pincode'] ) : '';
 $new_seller_state = $creating && isset( $_POST['seller_state'] ) ? wp_unslash( $_POST['seller_state'] ) : '';
+
+
+$new_seller_billing_address = $creating && isset( $_POST['seller_billing_address'] ) ? wp_unslash( $_POST['seller_billing_address'] ) : '';
+$new_seller_billing_city = $creating && isset( $_POST['seller_billing_city'] ) ? wp_unslash( $_POST['seller_billing_city'] ) : '';
+$new_seller_billing_pincode = $creating && isset( $_POST['seller_billing_pincode'] ) ? wp_unslash( $_POST['seller_billing_pincode'] ) : '';
+$new_seller_billing_state = $creating && isset( $_POST['seller_billing_state'] ) ? wp_unslash( $_POST['seller_billing_state'] ) : '';
 
 
 $new_seller_pan = $creating && isset( $_POST['seller_pan'] ) ? wp_unslash( $_POST['seller_pan'] ) : '';
@@ -260,7 +267,7 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 
 	<tr>
 		<th scope="row"><label for="seller_billing_yes"><?php _e('') ?></label></th>
-		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php checked( $new_seller_activate ); ?> /> <?php _e('Check if billing address same as registered address'); ?></td>
+		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php if($_POST['seller_billing_yes'] == '1') echo 'checked'; ?> /> <?php _e('Check if billing address same as registered address'); ?> <?php echo $_POST['seller_billing_yes']; ?></td>
 	</tr>
 
 	</table>
