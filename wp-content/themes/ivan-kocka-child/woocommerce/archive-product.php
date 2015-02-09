@@ -35,14 +35,14 @@ if( ( false == ivan_get_option('woo-disable-title') && false == ivan_get_option(
 
 				<div class="col-xs-12 col-sm-12 col-md-12 ivan-title-inner">
 					<!--<h2><?php echo ivan_get_option('title-text-shop'); ?></h2>-->
-					<?php // Display optional description of shop
+					<!--<?php // Display optional description of shop
 					if( ivan_get_option('title-desc-shop') != '' ) : ?>
 						<div class="title-description">
 							<p><?php echo nl2br(ivan_get_option('title-desc-shop')); ?></p>
 						</div>
 					<?php 
 					endif;	
-					?>
+					?>-->
 		<h2 class="title-heading-header">
 
 			<?php
@@ -55,7 +55,7 @@ if( ( false == ivan_get_option('woo-disable-title') && false == ivan_get_option(
 			?>
 
 		</h2>
-		<div class=" text-center"><br>
+		<!--<div class=" text-center"><br>
 							<p>
 								<?php
 								if(is_product_category()){
@@ -64,7 +64,7 @@ if( ( false == ivan_get_option('woo-disable-title') && false == ivan_get_option(
 								}
 								?>
 							</p>
-		</div>
+		</div>-->
 					<?php if( ivan_get_option('breadcrumb-shop-disable') == false && $title_class != 'large' ) : ?>
 							<?php 
 							// Display Breadcrumb
