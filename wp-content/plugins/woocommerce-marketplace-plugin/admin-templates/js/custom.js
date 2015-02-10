@@ -4,7 +4,24 @@
       //check if form submitted and billing clone checked, then hide biling address wraper
       if(jQuery('#seller_billing_yes').prop('checked')){
         jQuery('#billing_adddress_wrap').hide();
-      }       
+      } 
+
+
+       //check for shipping method and check by default
+       var shipMethodValue = jQuery('input[name=seller_ship_method]:checked').val();
+       if(shipMethodValue == 'fixed'){
+        jQuery('#ship_price').show();
+      }
+
+      
+
+
+    //toggle fixed price text box for shipping based on selection
+    jQuery('.ship_method').change(function() {
+    if(jQuery(this).val() == 'fixed') {jQuery('#ship_price').show();}
+    if(jQuery(this).val() == 'pincode') {jQuery('#ship_price').hide(); jQuery('#seller_ship_fixed_price').val('');}
+    });
+
     
         jQuery('#pincode_upload_block').css('display','none');
         
@@ -222,6 +239,7 @@ rules: {
             seller_billing_city: "required",
             seller_billing_state: "required",
             seller_billing_country: "required",
+            seller_ship_method: "required",
             seller_pan: "required",
             seller_vat: "required",
             seller_rtgs: "required",

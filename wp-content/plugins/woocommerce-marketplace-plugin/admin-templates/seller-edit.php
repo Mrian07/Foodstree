@@ -247,7 +247,7 @@ wp_enqueue_script(
 
 	<tr>
 		<th scope="row"><label for="seller_billing_yes"><?php _e('') ?></label></th>
-		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php checked( $new_seller_activate ); ?> /> <?php _e('Check if billing address same as registered address'); ?></td>
+		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php if(get_user_meta( $user_id, 'seller_billing_yes', true ) == '1') echo 'checked'; ?> /> <?php _e('Check if billing address same as registered address'); ?></td>
 	</tr>
 
 	</table>
@@ -376,6 +376,35 @@ wp_enqueue_script(
 </table>
 
 <hr />
+
+
+
+
+<h3><?php _e('Shipping Info') ?></h3>
+
+<table class="form-table">
+
+
+	<tr class="form-field form-required">
+		<th scope="row"><label for="seller_ship_method"><?php _e('Shipping Method') ?> <span class="description"><?php _e('(required)'); ?></label></th>
+		<td>
+			<input type="radio" name="seller_ship_method" class="ship_method" value="fixed" <?php if(get_user_meta( $user_id, 'seller_ship_method', true ) == 'fixed') echo 'checked'; ?>>Fixed
+			 &nbsp;<input type="radio" name="seller_ship_method" class="ship_method" value="pincode" <?php if(get_user_meta( $user_id, 'seller_ship_method', true ) == 'pincode') echo 'checked'; ?>>Pincode base
+		</td>
+	</tr>
+
+	<tr class="form-field form-required" id="ship_price" style="display:none">
+		<th scope="row"><label for="seller_ship_fixed_price"><?php _e('Fixed Shipping Price') ?></label></th>
+		<td><input name="seller_ship_fixed_price" type="text" id="seller_ship_fixed_price" value="<?php echo get_user_meta( $user_id, 'seller_ship_fixed_price', true ); ?>" /></td>
+	</tr>
+
+</table>
+
+<hr />
+
+
+
+
 
 <h3><?php _e('Uploads') ?></h3>
 

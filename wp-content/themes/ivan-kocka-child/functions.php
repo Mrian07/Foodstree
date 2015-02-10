@@ -29,6 +29,8 @@ function get_authored_products($query) {
   return $query;
 }
 
+add_action( 'pre_get_posts', 'get_authored_products' );
+
 
 
 
