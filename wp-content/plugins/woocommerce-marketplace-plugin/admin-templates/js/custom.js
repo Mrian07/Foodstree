@@ -8,7 +8,7 @@
 
 
        //check for shipping method and check by default
-       var shipMethodValue = jQuery('input[name=seller_ship_method]:checked').val();
+       /*var shipMethodValue = jQuery('input[name=seller_ship_method]:checked').val();
        if(shipMethodValue == 'fixed'){
         jQuery('#ship_price').show();
       }
@@ -21,6 +21,78 @@
     if(jQuery(this).val() == 'fixed') {jQuery('#ship_price').show();}
     if(jQuery(this).val() == 'pincode') {jQuery('#ship_price').hide(); jQuery('#seller_ship_fixed_price').val('');}
     });
+*/
+
+
+
+function reorder_shipping_methods() {
+  jQuery.each( jQuery( '.pricing_methods' ), function( i ){
+    jQuery(this).find('input.min_total').attr( 'name', 'seller_shipping_methods[' + i + '][min_total]' );
+    jQuery(this).find('input.max_total').attr( 'name', 'seller_shipping_methods[' + i + '][max_total]' );
+    jQuery(this).find('select.method').attr( 'name', 'seller_shipping_methods[' + i + '][method]' );
+    jQuery(this).find('input.rate').attr( 'name', 'seller_shipping_methods[' + i + '][rate]' );
+    jQuery(this).find('input.cod_charges').attr( 'name', 'seller_shipping_methods[' + i + '][cod_charges]' );
+  })
+}
+
+
+
+jQuery(document).on( 'click', '#add-shipping-method', function() {
+    element = jQuery( '.pricing_methods:first' ).clone();
+    element.find( 'input' ).val('');
+    //element.find( '.monthdaypicker' ).removeClass( 'hasDatepicker' ).removeAttr( 'id' )
+    jQuery('.pricing_methods:last').after( element );
+    reorder_shipping_methods();
+
+    return false;
+  })
+
+
+
+jQuery(document).on( 'click', '.remove-shipping-method', function() {
+    element = jQuery(this).parents( 'tr:first' );
+    if( jQuery('.pricing_methods').length > 1 ) {
+      element.remove();
+    }
+    else {
+      jQuery('.pricing_methods').find( 'input' ).val( '' )
+    }
+    reorder_shipping_methods();
+    return false;
+  })
+
+
+
+
+
+
+//jQuery(".method").change(function(){
+  jQuery(document).on( 'change', '.method', function(e) {
+            // $( "select option:selected").each(function(){
+            //     if($(this).attr("value")=="red"){
+            //         $(".box").hide();
+            //         $(".red").show();
+            //     }
+            //     if($(this).attr("value")=="green"){
+            //         $(".box").hide();
+            //         $(".green").show();
+            //     }
+
+            e.preventDefault();
+    var newval = jQuery(this).next('input').val();
+
+    //alert(newval);
+
+   //return false;
+
+            })
+
+
+
+
+
+
+
 
     
         jQuery('#pincode_upload_block').css('display','none');

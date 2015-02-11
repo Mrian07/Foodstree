@@ -382,25 +382,67 @@ wp_enqueue_script(
 
 <h3><?php _e('Shipping Info') ?></h3>
 
-<table class="form-table">
 
+<?php
+$value = maybe_unserialize(get_user_meta( $user_id, 'seller_shipping_methods', true ));
+if( empty( $value ) ) {
+	$value = array( array(
+		'min_total'   => '',
+		'max_total'     => '',
+		'method'     => '',
+		'rate'     => '',
+		'cod_charges'     => '',
+		
+		));
+}
+?>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_ship_method"><?php _e('Shipping Method') ?> <span class="description"><?php _e('(required)'); ?></label></th>
-		<td>
-			<input type="radio" name="seller_ship_method" class="ship_method" value="fixed" <?php if(get_user_meta( $user_id, 'seller_ship_method', true ) == 'fixed') echo 'checked'; ?>>Fixed
-			 &nbsp;<input type="radio" name="seller_ship_method" class="ship_method" value="pincode" <?php if(get_user_meta( $user_id, 'seller_ship_method', true ) == 'pincode') echo 'checked'; ?>>Pincode base
-		</td>
-	</tr>
+<table class='dynamic-shipping-methods-table'>
+	<thead>
+		<tr>
+			<th class='text-left'>Minimum total</th>
+			<th class='text-left'>Maximum total</th>
+			<th class='text-left'>Method</th>
+			<th class='text-left'>Delivery charges(for fixed method only)</th>
+			<th class='text-left'>COD charges (if applicable)</th>
+			<th class='text-left'>Remove</th>
+		</tr>
+	</thead>
+	<tbody>
 
-	<tr class="form-field form-required" id="ship_price" style="display:none">
-		<th scope="row"><label for="seller_ship_fixed_price"><?php _e('Fixed Shipping Price') ?></label></th>
-		<td><input name="seller_ship_fixed_price" type="text" id="seller_ship_fixed_price" value="<?php echo get_user_meta( $user_id, 'seller_ship_fixed_price', true ); ?>" /></td>
-	</tr>
+		<?php
+		$i = 0;
+		foreach( $value as $season ) :
+			?>
+		<tr class='pricing_methods'>
+			<td>
+				<input class='min_total' style='width:100px' name='seller_shipping_methods[<?php echo $i ?>][min_total]' value='<?php echo $season['min_total'] ?>' type='text' placeholder='Min. total'>
+			</td>
+			<td>
+				<input class='max_total' name='seller_shipping_methods[<?php echo $i ?>][max_total]' value='<?php echo $season['max_total'] ?>' type='text' placeholder='Max. total'>
+			</td>
+			<td>
+				<select name="seller_shipping_methods[<?php echo $i ?>][method]" class="method">
+					<option value="fixed">Fixed</option>
+					<option value="pincode">Pincode base</option>
+				</select>
+			</td>
+			<td>
+				<input class='rate' name='seller_shipping_methods[<?php echo $i ?>][rate]' value='<?php echo $season['rate'] ?>' type='text' placeholder='Rate'>
+			</td>
 
-</table>
+			<td>
+				<input class='cod_charges' name='seller_shipping_methods[<?php echo $i ?>][cod_charges]' value='<?php echo $season['cod_charges'] ?>' type='text' placeholder='COD charges'>
+			</td>
 
-<hr />
+			<td><a href='#' class='remove-shipping-method button'>Remove</a></td>
+		</tr>
+		<?php $i++; endforeach ?>
+	</table>
+	<br>
+	<a href='#' id='add-shipping-method' class="button">+ Add</a>
+
+	<hr />
 
 
 

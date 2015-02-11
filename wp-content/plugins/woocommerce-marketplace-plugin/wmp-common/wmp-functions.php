@@ -93,8 +93,7 @@ function wmp_seller_additionaldata_save( $user_id ) {
     'seller_billing_state',
     'seller_billing_country',
     'seller_billing_yes',
-    'seller_ship_method',
-    'seller_ship_fixed_price',
+    'seller_shipping_methods',
     'seller_pan',
     'seller_vat',
     'seller_rtgs',
@@ -120,7 +119,7 @@ function wmp_seller_additionaldata_save( $user_id ) {
 
   foreach($additional_fields as $field){
     if ( isset( $_POST[$field] ) ){
-      update_user_meta($user_id, $field, $_POST[$field]);
+      update_user_meta($user_id, $field, maybe_serialize($_POST[$field]));
     }
   }
 
@@ -553,7 +552,8 @@ function theme_add_csv_components($defined_csv_components){
                                                         'Domestic Service',
                                                         'International Services',
                                                         'ODA-OPA / Regular Classification (Dom +Intl)',
-                                                        'COD Serviceable (Domestic Only)');
+                                                        'COD Serviceable (Domestic Only)',
+                                                        'Shipping rate');
     return $defined_csv_components;
 
 }
@@ -610,7 +610,7 @@ function update_seller_to_pincode($user_id,$record){
     $seller_ids = $wpdb->get_var( $query );
     if(is_null($seller_ids)){
         $sellers_data = array();
-        $temparray =  array('user_id' => (string) $user_id,'cod'=> (bool) $record[6]);
+        $temparray =  array('user_id' => (string) $user_id,'cod'=> (bool) $record[6],'shipping'=> (int) $record[7]);
         array_push($sellers_data, $temparray);
         $flag = 1;
     }
@@ -621,7 +621,7 @@ function update_seller_to_pincode($user_id,$record){
         }
         
         if(!in_array($record[0], $update_seller_ids)){
-            $temparray = array('user_id' => (string) $user_id,'cod'=> (bool) $record[6]);
+            $temparray = array('user_id' => (string) $user_id,'cod'=> (bool) $record[6],'shipping'=> (int) $record[7]);
             $flag = 1;
             array_push($sellers_data, $temparray);
         }
@@ -695,7 +695,7 @@ add_action("wp_ajax_pincode_csv_upload_confirm", "pincode_csv_upload_confirm");
 // function to add a pincode to a seller by hooking into the CSV plugin filter ajci_import_record_seller_pincodes
 function import_csv_seller_pincode_record($import_response,$record,$csv_master_info){
  
-    if(count($record) != 7){
+    if(count($record) != 8){
        $import_response['imported'] = false;
        $import_response['reason'] = 'Column count does not match';
     }
@@ -741,8 +741,9 @@ function ajax_get_seller_pincode_info(){
             if((int)$seller_info['user_id'] != $user_id){
                 continue;
             }else{
-                $cod = ($seller_info['cod'])? 'on' : 'off';
-                $msg = 'Pincode is assigned to seller , COD: '.$cod;
+                $cod = ($seller_info['cod'])? 'available' : 'not available';
+                $shipping = ($seller_info['shipping'])? $seller_info['shipping'] : 'not available';
+                $msg = 'Pincode is assigned to seller , COD: '.$cod.', Custom shipping rate : '.$shipping;
                 $response = array('code'=>'OK','msg'=>$msg);
                 $found = 1;
                 break;
