@@ -137,8 +137,11 @@ if(is_admin())
 			<?php endif; ?>-->
 </a>
 		<div id="overlay" class="quick-info"><br>
-				<div class="cart-icon"></div>
-				<div> Add to cart</div>
+
+<?php $add_to_cart = do_shortcode('[add_to_cart_url id="'.$post->ID.'"]'); ?>
+
+				<a href="<?php echo $add_to_cart; ?>"><div class="cart-icon"></div></a>
+				<div> <a href="<?php echo $add_to_cart; ?>">Add to cart</a></div>
 				<div class="shipby"> <a href="<?php echo get_site_url().'/seller/'.get_seller_query_var($post->post_author); ?>">Shipped by : <?php echo get_seller_display_name($post->post_author); ?></a></div>
 			</div>
 		</div><!--.product-info-->
