@@ -3,9 +3,17 @@
 
 <div class="container">
 
-	<h2><?php echo get_seller_name(get_query_id()); ?></h2>
+	<?php
+	$seller_id = get_userid_by_company(get_query_var('seller'));
+	if($seller_id){
+	?>
 
-	<?php echo seller_listing(get_query_id()); ?>
+
+	<h2><?php echo get_seller_display_name($seller_id); ?></h2>
+
+	<?php echo seller_listing($seller_id); ?>
+
+	<?php } ?>
 
 </div>
 

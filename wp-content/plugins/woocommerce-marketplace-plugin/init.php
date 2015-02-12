@@ -52,10 +52,13 @@ function wmp_constructor() {
     require_once( 'wmp-common/wmp-countries.php' );
     require_once( 'wmp-list-table.php' );
     require_once( 'class.wmp.php' );
+    require_once( 'class.seller_shipping.php' );
 
     // Let's start the game!
     global $ajency_wmp;
+    //global $ajency_wmp_shipping;
     $ajency_wmp = new AJENCY_WMP();
+    //$ajency_wmp_shipping = new WC_WMP_Shipping_Method();
 }
 
 add_action( 'plugins_loaded', 'wmp_constructor' );

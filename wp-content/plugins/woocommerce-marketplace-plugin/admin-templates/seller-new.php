@@ -130,7 +130,7 @@ if ( current_user_can( 'create_users') ) {
 // Load up the passed data, else set to a default.
 $creating = isset( $_POST['createuser'] );
 
-$new_company_info = $creating && isset( $_POST['company_info'] ) ? wp_unslash( $_POST['company_info'] ) : '';
+$new_seller_display_name = $creating && isset( $_POST['seller_display_name'] ) ? wp_unslash( $_POST['seller_display_name'] ) : '';
 $new_seller_name = $creating && isset( $_POST['seller_name'] ) ? wp_unslash( $_POST['seller_name'] ) : '';
 $new_first_name = $creating && isset( $_POST['first_name'] ) ? wp_unslash( $_POST['first_name'] ) : '';
 $new_last_name = $creating && isset( $_POST['last_name'] ) ? wp_unslash( $_POST['last_name'] ) : '';
@@ -138,10 +138,17 @@ $new_user_login = $creating && isset( $_POST['user_login'] ) ? wp_unslash( $_POS
 $new_user_email = $creating && isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '';
 $new_mobile_number = $creating && isset( $_POST['mobile_number'] ) ? wp_unslash( $_POST['mobile_number'] ) : '';
 $new_user_uri = $creating && isset( $_POST['url'] ) ? wp_unslash( $_POST['url'] ) : '';
+
 $new_seller_address = $creating && isset( $_POST['seller_address'] ) ? wp_unslash( $_POST['seller_address'] ) : '';
 $new_seller_city = $creating && isset( $_POST['seller_city'] ) ? wp_unslash( $_POST['seller_city'] ) : '';
 $new_seller_pincode = $creating && isset( $_POST['seller_pincode'] ) ? wp_unslash( $_POST['seller_pincode'] ) : '';
 $new_seller_state = $creating && isset( $_POST['seller_state'] ) ? wp_unslash( $_POST['seller_state'] ) : '';
+
+
+$new_seller_billing_address = $creating && isset( $_POST['seller_billing_address'] ) ? wp_unslash( $_POST['seller_billing_address'] ) : '';
+$new_seller_billing_city = $creating && isset( $_POST['seller_billing_city'] ) ? wp_unslash( $_POST['seller_billing_city'] ) : '';
+$new_seller_billing_pincode = $creating && isset( $_POST['seller_billing_pincode'] ) ? wp_unslash( $_POST['seller_billing_pincode'] ) : '';
+$new_seller_billing_state = $creating && isset( $_POST['seller_billing_state'] ) ? wp_unslash( $_POST['seller_billing_state'] ) : '';
 
 
 $new_seller_pan = $creating && isset( $_POST['seller_pan'] ) ? wp_unslash( $_POST['seller_pan'] ) : '';
@@ -164,11 +171,16 @@ $new_user_send_password = $creating && isset( $_POST['send_password'] ) ? wp_uns
 $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unslash( $_POST['noconfirmation'] ) : '';
 
 ?>
+
+
+<h3><?php _e('Company Information') ?></h3>
+
+
 <table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="company_info"><?php _e('Company information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
-		<td><input name="company_info" type="text" id="company_info" value="<?php echo esc_attr($new_company_info); ?>" aria-required="true" /></td>
+		<th scope="row"><label for="seller_display_name"><?php _e('Display Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<td><input name="seller_display_name" type="text" id="seller_display_name" value="<?php echo esc_attr($new_seller_display_name); ?>" aria-required="true" /></td>
 	</tr>
 	
 
@@ -185,7 +197,7 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 	
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_name"><?php _e('Company'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="seller_name"><?php _e('Company Name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_name" type="text" id="seller_name" value="<?php echo esc_attr($new_seller_name); ?>" aria-required="true" /></td>
 	</tr>
 
@@ -255,7 +267,7 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 
 	<tr>
 		<th scope="row"><label for="seller_billing_yes"><?php _e('') ?></label></th>
-		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php checked( $new_seller_activate ); ?> /> <?php _e('Check if billing address same as registered address'); ?></td>
+		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php if($_POST['seller_billing_yes'] == '1') echo 'checked'; ?> /> <?php _e('Check if billing address same as registered address'); ?> <?php echo $_POST['seller_billing_yes']; ?></td>
 	</tr>
 
 	</table>
@@ -391,13 +403,13 @@ $new_user_ignore_pass = $creating && isset( $_POST['noconfirmation'] ) ? wp_unsl
 		<td><input name="seller_logo" type="file" id="seller_logo" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?></label></th>
 		<td><input name="seller_pan_copy" type="file" id="seller_pan_copy" /></td>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?></label></th>
 		<td><input name="seller_cancelled_cheque" type="file" id="seller_cancelled_cheque" /></td>
 	</tr>
 

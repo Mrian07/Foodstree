@@ -79,7 +79,7 @@ function wmp_seller_additionaldata_save( $user_id ) {
   global $aj_csvimport;
 
   $additional_fields = array(
-    'company_info',
+    'seller_display_name',
     'seller_name',
     'mobile_number',
     'seller_address',
@@ -92,6 +92,8 @@ function wmp_seller_additionaldata_save( $user_id ) {
     'seller_billing_pincode',
     'seller_billing_state',
     'seller_billing_country',
+    'seller_billing_yes',
+    'seller_shipping_methods',
     'seller_pan',
     'seller_vat',
     'seller_rtgs',
@@ -117,7 +119,7 @@ function wmp_seller_additionaldata_save( $user_id ) {
 
   foreach($additional_fields as $field){
     if ( isset( $_POST[$field] ) ){
-      update_user_meta($user_id, $field, $_POST[$field]);
+      update_user_meta($user_id, $field, maybe_serialize($_POST[$field]));
     }
   }
 
@@ -346,15 +348,17 @@ $role = get_user_role($post->post_author);
 function wmp_seller_tab_content(){
   global $post;
   $seller_id = $post->post_author;
-  $seller_name = get_user_meta( $seller_id, 'seller_name', true );
-  echo '<div class="seller-name"><a href="'.get_site_url().'/seller/'.get_the_author().'">'.$seller_name.'</a></div>';
+  //$seller_name = get_user_meta( $seller_id, 'seller_name', true );
+  $seller_name = get_seller_display_name($seller_id);
+  $seller_var = get_seller_query_var($seller_id);
+  echo '<div class="seller-name"><a href="'.get_site_url().'/seller/'.$seller_var.'">'.$seller_name.'</a></div>';
   }
 
 
 
 //Get seller name by id
 function get_seller_name($seller_id){
-  $seller_name = get_user_meta( $seller_id, 'seller_name', true );
+   $seller_name = get_user_meta( $seller_id, 'seller_name', true );
   if($seller_name){
     return $seller_name;
   }else{
@@ -364,6 +368,24 @@ function get_seller_name($seller_id){
 }
 
 
+
+
+//Get seller name by id
+function get_seller_display_name($seller_id){
+  $seller_name = get_user_meta( $seller_id, 'seller_display_name', true );
+  $seller_name2 = get_user_meta( $seller_id, 'seller_name', true );
+  if($seller_name){
+    return $seller_name;
+  }else if($seller_name2){
+    return $seller_name2;
+  }else{
+    $user_info = get_userdata($seller_id);
+    return $user_info->user_login;
+  }
+}
+
+
+
 //Get seller id by login name - seller page
 function get_query_id(){
 if(get_query_var( 'seller' )){
@@ -371,6 +393,26 @@ $seller = get_userdatabylogin(get_query_var( 'seller' ));
 return $seller->ID;
 }
 }
+
+
+
+
+
+function get_userid_by_company($company_name){
+global $wpdb;
+$company = urldecode($company_name);
+$results = $wpdb->get_col("SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'seller_name' AND meta_value = '".$company."' ");
+return $results[0];
+}
+
+
+
+function get_seller_query_var($seller_id){
+   $seller_query_var = urlencode(get_seller_name($seller_id));
+   return $seller_query_var;
+}
+
+
 
 
 //Get products list in array by seller id
@@ -442,8 +484,10 @@ function wmp_seller_info() {
   $seller_id = $post->post_author;
   $role = get_user_role($seller_id);
   if($role == 'seller'){
-    $seller_name = get_user_meta( $seller_id, 'seller_name', true );
-    echo '<div class="seller-name">Sold by: <a href="'.get_site_url().'/seller/'.get_the_author().'">'.$seller_name.'</a></div>';
+    //$seller_name = get_user_meta( $seller_id, 'seller_name', true );
+    $seller_name = get_seller_display_name($seller_id);
+     $seller_var = get_seller_query_var($seller_id);
+    echo '<div class="seller-name">Sold by: <a href="'.get_site_url().'/seller/'.$seller_var.'">'.$seller_name.'</a></div>';
   }
 }
 add_action( 'woocommerce_single_product_summary', 'wmp_seller_info', 6 );
@@ -508,7 +552,8 @@ function theme_add_csv_components($defined_csv_components){
                                                         'Domestic Service',
                                                         'International Services',
                                                         'ODA-OPA / Regular Classification (Dom +Intl)',
-                                                        'COD Serviceable (Domestic Only)');
+                                                        'COD Serviceable (Domestic Only)',
+                                                        'Shipping rate');
     return $defined_csv_components;
 
 }
@@ -565,7 +610,7 @@ function update_seller_to_pincode($user_id,$record){
     $seller_ids = $wpdb->get_var( $query );
     if(is_null($seller_ids)){
         $sellers_data = array();
-        $temparray =  array('user_id' => (string) $user_id,'cod'=> (bool) $record[6]);
+        $temparray =  array('user_id' => (string) $user_id,'cod'=> (bool) $record[6],'shipping'=> (int) $record[7]);
         array_push($sellers_data, $temparray);
         $flag = 1;
     }
@@ -576,7 +621,7 @@ function update_seller_to_pincode($user_id,$record){
         }
         
         if(!in_array($record[0], $update_seller_ids)){
-            $temparray = array('user_id' => (string) $user_id,'cod'=> (bool) $record[6]);
+            $temparray = array('user_id' => (string) $user_id,'cod'=> (bool) $record[6],'shipping'=> (int) $record[7]);
             $flag = 1;
             array_push($sellers_data, $temparray);
         }
@@ -650,7 +695,7 @@ add_action("wp_ajax_pincode_csv_upload_confirm", "pincode_csv_upload_confirm");
 // function to add a pincode to a seller by hooking into the CSV plugin filter ajci_import_record_seller_pincodes
 function import_csv_seller_pincode_record($import_response,$record,$csv_master_info){
  
-    if(count($record) != 7){
+    if(count($record) != 8){
        $import_response['imported'] = false;
        $import_response['reason'] = 'Column count does not match';
     }
@@ -696,8 +741,9 @@ function ajax_get_seller_pincode_info(){
             if((int)$seller_info['user_id'] != $user_id){
                 continue;
             }else{
-                $cod = ($seller_info['cod'])? 'on' : 'off';
-                $msg = 'Pincode is assigned to seller , COD: '.$cod;
+                $cod = ($seller_info['cod'])? 'available' : 'not available';
+                $shipping = ($seller_info['shipping'])? $seller_info['shipping'] : 'not available';
+                $msg = 'Pincode is assigned to seller , COD: '.$cod.', Custom shipping rate : '.$shipping;
                 $response = array('code'=>'OK','msg'=>$msg);
                 $found = 1;
                 break;

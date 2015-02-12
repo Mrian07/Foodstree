@@ -41,6 +41,7 @@ Author URI: http://www.mrova.com/
             $this -> access_code      = $this -> settings['access_code'];
             
             $this -> liveurl  = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
+            $this -> testurl  = 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
             $this->notify_url = str_replace( 'https:', 'http:', home_url( '/wc-api/WC_Mrova_Ccave' )  );
 
             $this -> msg['message'] = "";

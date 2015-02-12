@@ -1,4 +1,99 @@
-    jQuery(document).ready(function() {        
+    jQuery(document).ready(function() { 
+
+
+      //check if form submitted and billing clone checked, then hide biling address wraper
+      if(jQuery('#seller_billing_yes').prop('checked')){
+        jQuery('#billing_adddress_wrap').hide();
+      } 
+
+
+       //check for shipping method and check by default
+       /*var shipMethodValue = jQuery('input[name=seller_ship_method]:checked').val();
+       if(shipMethodValue == 'fixed'){
+        jQuery('#ship_price').show();
+      }
+
+      
+
+
+    //toggle fixed price text box for shipping based on selection
+    jQuery('.ship_method').change(function() {
+    if(jQuery(this).val() == 'fixed') {jQuery('#ship_price').show();}
+    if(jQuery(this).val() == 'pincode') {jQuery('#ship_price').hide(); jQuery('#seller_ship_fixed_price').val('');}
+    });
+*/
+
+
+
+function reorder_shipping_methods() {
+  jQuery.each( jQuery( '.pricing_methods' ), function( i ){
+    jQuery(this).find('input.min_total').attr( 'name', 'seller_shipping_methods[' + i + '][min_total]' );
+    jQuery(this).find('input.max_total').attr( 'name', 'seller_shipping_methods[' + i + '][max_total]' );
+    jQuery(this).find('select.method').attr( 'name', 'seller_shipping_methods[' + i + '][method]' );
+    jQuery(this).find('input.rate').attr( 'name', 'seller_shipping_methods[' + i + '][rate]' );
+    jQuery(this).find('input.cod_charges').attr( 'name', 'seller_shipping_methods[' + i + '][cod_charges]' );
+  })
+}
+
+
+
+jQuery(document).on( 'click', '#add-shipping-method', function() {
+    element = jQuery( '.pricing_methods:first' ).clone();
+    element.find( 'input' ).val('');
+    //element.find( '.monthdaypicker' ).removeClass( 'hasDatepicker' ).removeAttr( 'id' )
+    jQuery('.pricing_methods:last').after( element );
+    reorder_shipping_methods();
+
+    return false;
+  })
+
+
+
+jQuery(document).on( 'click', '.remove-shipping-method', function() {
+    element = jQuery(this).parents( 'tr:first' );
+    if( jQuery('.pricing_methods').length > 1 ) {
+      element.remove();
+    }
+    else {
+      jQuery('.pricing_methods').find( 'input' ).val( '' )
+    }
+    reorder_shipping_methods();
+    return false;
+  })
+
+
+
+
+
+
+//jQuery(".method").change(function(){
+  jQuery(document).on( 'change', '.method', function(e) {
+            // $( "select option:selected").each(function(){
+            //     if($(this).attr("value")=="red"){
+            //         $(".box").hide();
+            //         $(".red").show();
+            //     }
+            //     if($(this).attr("value")=="green"){
+            //         $(".box").hide();
+            //         $(".green").show();
+            //     }
+
+            e.preventDefault();
+    var newval = jQuery(this).next('input').val();
+
+    //alert(newval);
+
+   //return false;
+
+            })
+
+
+
+
+
+
+
+
     
         jQuery('#pincode_upload_block').css('display','none');
         
@@ -182,7 +277,7 @@ jQuery('#seller_billing_yes').change(function() {
 jQuery("#your-profile").validate({
   
 rules: {
-            company_info: "required",
+            seller_display_name: "required",
             first_name: "required",
             last_name: "required",
             seller_name: "required",
@@ -216,6 +311,7 @@ rules: {
             seller_billing_city: "required",
             seller_billing_state: "required",
             seller_billing_country: "required",
+            seller_ship_method: "required",
             seller_pan: "required",
             seller_vat: "required",
             seller_rtgs: "required",
@@ -248,7 +344,7 @@ rules: {
   jQuery("#createuser").validate({
   
 rules: {
-            company_info: "required",
+            seller_display_name: "required",
             first_name: "required",
             last_name: "required",
             seller_name: "required",
@@ -295,8 +391,8 @@ rules: {
                   required: false,
                   minlength: 50
             },
-            seller_pan_copy: "required",
-            seller_cancelled_cheque: "required",
+            //seller_pan_copy: "required",
+            //seller_cancelled_cheque: "required",
             user_login: "required",
             pass1: "required",
             pass2: "required"

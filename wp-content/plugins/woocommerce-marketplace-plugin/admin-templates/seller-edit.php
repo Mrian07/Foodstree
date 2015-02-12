@@ -137,7 +137,7 @@ wp_enqueue_script(
 
 <hr />
 
-<h3><?php _e('Personal Info') ?></h3>
+<h3><?php _e('Company Information') ?></h3>
 
 
 
@@ -145,8 +145,8 @@ wp_enqueue_script(
 <table class="form-table">
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="company_info"><?php _e('Company information'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
-		<td><input name="company_info" type="text" id="company_info" value="<?php echo get_user_meta( $user_id, 'company_info', true ); ?>" aria-required="true" /></td>
+		<th scope="row"><label for="seller_display_name"><?php _e('Display name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<td><input name="seller_display_name" type="text" id="seller_display_name" value="<?php echo get_user_meta( $user_id, 'seller_display_name', true ); ?>" aria-required="true" /></td>
 	</tr>
 	
 
@@ -163,7 +163,7 @@ wp_enqueue_script(
 	
 
 	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_name"><?php _e('Company'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
+		<th scope="row"><label for="seller_name"><?php _e('Company name'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
 		<td><input name="seller_name" type="text" id="seller_name" value="<?php echo get_user_meta( $user_id, 'seller_name', true ); ?>" aria-required="true" /></td>
 	</tr>
 
@@ -247,7 +247,7 @@ wp_enqueue_script(
 
 	<tr>
 		<th scope="row"><label for="seller_billing_yes"><?php _e('') ?></label></th>
-		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php checked( $new_seller_activate ); ?> /> <?php _e('Check if billing address same as registered address'); ?></td>
+		<td><input type="checkbox" name="seller_billing_yes" id="seller_billing_yes" value="1" <?php if(get_user_meta( $user_id, 'seller_billing_yes', true ) == '1') echo 'checked'; ?> /> <?php _e('Check if billing address same as registered address'); ?></td>
 	</tr>
 
 	</table>
@@ -377,6 +377,77 @@ wp_enqueue_script(
 
 <hr />
 
+
+
+
+<h3><?php _e('Shipping Info') ?></h3>
+
+
+<?php
+$value = maybe_unserialize(get_user_meta( $user_id, 'seller_shipping_methods', true ));
+if( empty( $value ) ) {
+	$value = array( array(
+		'min_total'   => '',
+		'max_total'     => '',
+		'method'     => '',
+		'rate'     => '',
+		'cod_charges'     => '',
+		
+		));
+}
+?>
+
+<table class='dynamic-shipping-methods-table'>
+	<thead>
+		<tr>
+			<th class='text-left'>Minimum total</th>
+			<th class='text-left'>Maximum total</th>
+			<th class='text-left'>Method</th>
+			<th class='text-left'>Delivery charges(for fixed method only)</th>
+			<th class='text-left'>COD charges (if applicable)</th>
+			<th class='text-left'>Remove</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<?php
+		$i = 0;
+		foreach( $value as $season ) :
+			?>
+		<tr class='pricing_methods'>
+			<td>
+				<input class='min_total' style='width:100px' name='seller_shipping_methods[<?php echo $i ?>][min_total]' value='<?php echo $season['min_total'] ?>' type='text' placeholder='Min. total'>
+			</td>
+			<td>
+				<input class='max_total' name='seller_shipping_methods[<?php echo $i ?>][max_total]' value='<?php echo $season['max_total'] ?>' type='text' placeholder='Max. total'>
+			</td>
+			<td>
+				<select name="seller_shipping_methods[<?php echo $i ?>][method]" class="method">
+					<option value="fixed">Fixed</option>
+					<option value="pincode">Pincode base</option>
+				</select>
+			</td>
+			<td>
+				<input class='rate' name='seller_shipping_methods[<?php echo $i ?>][rate]' value='<?php echo $season['rate'] ?>' type='text' placeholder='Rate'>
+			</td>
+
+			<td>
+				<input class='cod_charges' name='seller_shipping_methods[<?php echo $i ?>][cod_charges]' value='<?php echo $season['cod_charges'] ?>' type='text' placeholder='COD charges'>
+			</td>
+
+			<td><a href='#' class='remove-shipping-method button'>Remove</a></td>
+		</tr>
+		<?php $i++; endforeach ?>
+	</table>
+	<br>
+	<a href='#' id='add-shipping-method' class="button">+ Add</a>
+
+	<hr />
+
+
+
+
+
 <h3><?php _e('Uploads') ?></h3>
 
 <table class="form-table">
@@ -393,8 +464,8 @@ wp_enqueue_script(
 		<?php } ?>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?> <span class="description"><?php _e('(required)'); ?></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_pan_copy"><?php _e('PAN registration copy') ?></label></th>
 		<td><input name="seller_pan_copy" type="file" id="seller_pan_copy" /></td>
 		<?php if(get_user_meta( $user_id, 'seller_pan_copy', true ) !=''){
 			$pan_copy = get_user_meta( $user_id, 'seller_pan_copy', true );
@@ -404,8 +475,8 @@ wp_enqueue_script(
 		<?php } ?>
 	</tr>
 
-	<tr class="form-field form-required">
-		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?> <span class="description"><?php _e('(required)'); ?></label></th>
+	<tr class="form-field">
+		<th scope="row"><label for="seller_cancelled_cheque"><?php _e('Cancelled cheque copy') ?></label></th>
 		<td><input name="seller_cancelled_cheque" type="file" id="seller_cancelled_cheque" /></td>
 		<?php if(get_user_meta( $user_id, 'seller_cancelled_cheque', true ) !=''){
 			$cheque_copy = get_user_meta( $user_id, 'seller_cancelled_cheque', true );
