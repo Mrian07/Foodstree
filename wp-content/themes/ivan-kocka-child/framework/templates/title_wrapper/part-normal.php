@@ -25,7 +25,7 @@ if( ivan_get_option('title-wrapper-color-scheme') != null ) {
 	<div class="container">
 		<div class="row">
 
-			<div class="col-xs-12 col-sm-12 col-md-12 ivan-title-inner">sss
+			<div class="col-xs-12 col-sm-12 col-md-12 ivan-title-inner">
 				<?php do_action('ivan_display_title'); // Display Title ?>
 
 				<?php // Display optional description of home
