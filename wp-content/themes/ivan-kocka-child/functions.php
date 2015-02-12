@@ -196,11 +196,11 @@ if(isset($_POST['billing_postcode'])){
   }
 }
 
-if(isset($_POST['shipping_postcode'])){
+/*if(isset($_POST['shipping_postcode'])){
   if ( !is_numeric($_POST['shipping_postcode']) || strlen($_POST['shipping_postcode']) > 6 || strlen($_POST['shipping_postcode']) < 6){
     $woocommerce->add_error( __('Please enter 6 digit number for postcode') );
   }
-}
+}*/
 
 if(isset($_POST['billing_phone'])){
   if ( strlen($_POST['billing_phone']) > 10 || strlen($_POST['billing_phone']) < 10){
@@ -278,3 +278,4 @@ function wc_hide_trailing_zeros( $trim ) {
     // set to false to show trailing zeros
     return true;
 }
+
