@@ -278,3 +278,4 @@ function wc_hide_trailing_zeros( $trim ) {
     // set to false to show trailing zeros
     return true;
 }
+
