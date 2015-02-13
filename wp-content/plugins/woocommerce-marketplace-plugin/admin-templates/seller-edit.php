@@ -380,6 +380,11 @@ wp_enqueue_script(
 
 
 
+
+
+
+
+
 <h3><?php _e('Shipping Info') ?></h3>
 
 
@@ -412,27 +417,28 @@ if( empty( $value ) ) {
 
 		<?php
 		$i = 0;
-		foreach( $value as $season ) :
+		foreach( $value as $method ) :
 			?>
 		<tr class='pricing_methods'>
 			<td>
-				<input class='min_total' style='width:100px' name='seller_shipping_methods[<?php echo $i ?>][min_total]' value='<?php echo $season['min_total'] ?>' type='text' placeholder='Min. total'>
+				<input class='min_total' style='width:100px' name='seller_shipping_methods[<?php echo $i ?>][min_total]' value='<?php echo $method['min_total'] ?>' type='text' placeholder='Min. total'>
 			</td>
 			<td>
-				<input class='max_total' name='seller_shipping_methods[<?php echo $i ?>][max_total]' value='<?php echo $season['max_total'] ?>' type='text' placeholder='Max. total'>
+				<input class='max_total' name='seller_shipping_methods[<?php echo $i ?>][max_total]' value='<?php echo $method['max_total'] ?>' type='text' placeholder='Max. total'>
 			</td>
 			<td>
+				
 				<select name="seller_shipping_methods[<?php echo $i ?>][method]" class="method">
-					<option value="fixed">Fixed</option>
-					<option value="pincode">Pincode base</option>
+					<option value="fixed" <?php if($method['method'] == 'fixed') echo 'selected'; ?>>Fixed</option>
+					<option value="pincode" <?php if($method['method'] == 'pincode') echo 'selected'; ?>>Pincode base</option>
 				</select>
 			</td>
 			<td>
-				<input class='rate' name='seller_shipping_methods[<?php echo $i ?>][rate]' value='<?php echo $season['rate'] ?>' type='text' placeholder='Rate'>
+				<input class='rate' name='seller_shipping_methods[<?php echo $i ?>][rate]' value='<?php echo $method['rate'] ?>' type='text' placeholder='Rate'>
 			</td>
 
 			<td>
-				<input class='cod_charges' name='seller_shipping_methods[<?php echo $i ?>][cod_charges]' value='<?php echo $season['cod_charges'] ?>' type='text' placeholder='COD charges'>
+				<input class='cod_charges' name='seller_shipping_methods[<?php echo $i ?>][cod_charges]' value='<?php echo $method['cod_charges'] ?>' type='text' placeholder='COD charges'>
 			</td>
 
 			<td><a href='#' class='remove-shipping-method button'>Remove</a></td>
@@ -443,6 +449,10 @@ if( empty( $value ) ) {
 	<a href='#' id='add-shipping-method' class="button">+ Add</a>
 
 	<hr />
+
+
+
+
 
 
 
