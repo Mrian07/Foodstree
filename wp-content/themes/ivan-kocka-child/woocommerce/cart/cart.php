@@ -170,6 +170,8 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 				<?php woocommerce_cart_totals(); ?>
 
+				<?php do_action( 'wmp_cod_is_available' ); ?>
+
 				<div class="cart-actions">
 
 					<input type="submit" class="button btn-bg" name="update_cart" value="<?php _e( 'Update Cart', 'woocommerce' ); ?>" /> <input type="submit" class="checkout-button button alt wc-forward" name="proceed" value="<?php _e( 'Proceed to Checkout', 'woocommerce' ); ?>" />

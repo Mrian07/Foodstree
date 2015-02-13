@@ -379,6 +379,83 @@ wp_enqueue_script(
 
 <hr />
 
+
+
+
+
+<h3><?php _e('Shipping Info') ?></h3>
+
+
+<?php
+$value = maybe_unserialize(get_user_meta( $user_id, 'seller_shipping_methods', true ));
+if( empty( $value ) ) {
+	$value = array( array(
+		'min_total'   => '',
+		'max_total'     => '',
+		'method'     => '',
+		'rate'     => '',
+		'cod_charges'     => '',
+		
+		));
+}
+?>
+
+<table class='dynamic-shipping-methods-table'>
+	<thead>
+		<tr>
+			<th class='text-left'>Minimum total</th>
+			<th class='text-left'>Maximum total</th>
+			<th class='text-left'>Method</th>
+			<th class='text-left'>Delivery charges(for fixed method only)</th>
+			<th class='text-left'>COD charges (if applicable)</th>
+			<th class='text-left'>Remove</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<?php
+		$i = 0;
+		foreach( $value as $method ) :
+			?>
+		<tr class='pricing_methods'>
+			<td>
+				<input class='min_total' style='width:100px' name='seller_shipping_methods[<?php echo $i ?>][min_total]' value='<?php echo $method['min_total'] ?>' type='text' placeholder='Min. total'>
+			</td>
+			<td>
+				<input class='max_total' name='seller_shipping_methods[<?php echo $i ?>][max_total]' value='<?php echo $method['max_total'] ?>' type='text' placeholder='Max. total'>
+			</td>
+			<td>
+				
+				<select name="seller_shipping_methods[<?php echo $i ?>][method]" class="method">
+					<option value="fixed" <?php if($method['method'] == 'fixed') echo 'selected'; ?>>Fixed</option>
+					<option value="pincode" <?php if($method['method'] == 'pincode') echo 'selected'; ?>>Pincode base</option>
+				</select>
+			</td>
+			<td>
+				<input class='rate' name='seller_shipping_methods[<?php echo $i ?>][rate]' value='<?php echo $method['rate'] ?>' type='text' placeholder='Rate'>
+			</td>
+
+			<td>
+				<input class='cod_charges' name='seller_shipping_methods[<?php echo $i ?>][cod_charges]' value='<?php echo $method['cod_charges'] ?>' type='text' placeholder='COD charges'>
+			</td>
+
+			<td><a href='#' class='remove-shipping-method button'>Remove</a></td>
+		</tr>
+		<?php $i++; endforeach ?>
+	</table>
+	<br>
+	<a href='#' id='add-shipping-method' class="button">+ Add</a>
+
+	<hr />
+
+
+
+
+
+
+
+
+
 <h3><?php _e('Uploads') ?></h3>
 
 <table class="form-table">
