@@ -190,6 +190,8 @@ public function wmp_shipping_rate(){
 public function seller_ship_amount($id, $subtotal){
  $value = maybe_unserialize(get_user_meta( $id, 'seller_shipping_methods', true ));
 
+ if($value){
+
  foreach( $value as $method ){
   $min_total = $method['min_total'];
   $max_total = $method['max_total'];
@@ -216,7 +218,12 @@ public function seller_ship_amount($id, $subtotal){
 
 }
 
-return $rate; 
+return $rate;
+
+}else{
+    return 0;
+}
+
 }
 
 
@@ -324,6 +331,8 @@ public function wmp_additional_cod_charge(){
 public function seller_additional_cod_amount($id, $subtotal){
  $value = maybe_unserialize(get_user_meta( $id, 'seller_shipping_methods', true ));
 
+ if($value){
+
  foreach( $value as $method ){
   $min_total = $method['min_total'];
   $max_total = $method['max_total'];
@@ -344,7 +353,12 @@ public function seller_additional_cod_amount($id, $subtotal){
 
 }
 
-return $cod_rate; 
+return $cod_rate;
+
+}else{
+    return 0;
+}
+
 }
 
 
