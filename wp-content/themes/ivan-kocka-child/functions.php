@@ -279,3 +279,305 @@ function wc_hide_trailing_zeros( $trim ) {
     return true;
 }
 
+
+
+
+
+add_filter( 'woocommerce_get_availability', 'custom_get_availability', 1, 2);
+  
+function custom_get_availability( $availability, $_product ) {
+    
+    if ( $_product->is_in_stock() ) $availability['availability'] = __('', 'woocommerce');
+  
+   
+    if ( !$_product->is_in_stock() ) $availability['availability'] = __('', 'woocommerce');
+        return $availability;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*function isKVInArray($k, $v, $array) {
+    $filtered = array_filter($array, function($item) use($k,$v) {
+        return $item[$k] == $v;
+    });
+    if(count($filtered)>=1) return true;
+    else return false;
+}
+*/
+
+
+
+/*function calculate_seller_ship_amount($id, $subtotal){
+
+$value = maybe_unserialize(get_user_meta( $id, 'seller_shipping_methods', true ));
+
+
+
+foreach( $value as $method ){
+  $min_total = $method['min_total'];
+  $max_total = $method['max_total'];
+
+  if($subtotal>$min_total && $subtotal<=$max_total){
+
+  //for fixed shipping price
+  if($method['method'] == 'fixed'){
+
+    $rate = $method['rate'];
+
+  //for pincode base shipping price  
+  }else{
+
+    $pincode = $_POST['calc_shipping_postcode'];
+
+    $rate = get_rate_by_pincode($id,$pincode);
+
+  }
+
+
+  }
+
+
+}
+
+
+return $rate;
+}
+
+
+
+
+
+
+function get_rate_by_pincode($user_id,$pincode){
+  global $wpdb;
+  $query = $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode LIKE %s", $pincode );
+    $sellers_info = $wpdb->get_var( $query );  
+    if(is_null($sellers_info)){
+        $rate = 0;
+    }else{
+
+       $sellers_info = maybe_unserialize($sellers_info);
+        $found = 0;
+        foreach ($sellers_info as  $seller_info){
+            if((int)$seller_info['user_id'] != $user_id){
+                continue;
+            }else{
+                $shipping = ($seller_info['shipping'])? $seller_info['shipping'] : 0;
+                $rate = $shipping;
+                $found = 1;
+                break;
+            }
+        }
+
+        if($found == 0)
+            $rate = 0;
+
+    }
+
+    return $rate;
+}
+
+
+
+
+
+
+ 
+function seller_subtotal_data(){
+global $woocommerce; 
+
+$items = $woocommerce->cart->get_cart();
+
+$seller_count = array();
+foreach($items as $item => $values) {
+        
+        $_product = $values['data']->post;
+        $seller_id = $_product->post_author;
+        $subtotal = $values['line_subtotal'];
+
+       $seller_count[] = array('seller_id'=>$seller_id, 'subtotal'=>$subtotal);
+
+ }
+
+$merged = array();
+
+foreach ($seller_count as $count) {
+    if (isset($merged[$count['seller_id']])) {
+        $merged[$count['seller_id']]['subtotal'] += $count['subtotal'];
+    } else {
+        $merged[$count['seller_id']] = $count;
+    }
+}
+
+
+
+$seller_shipping = array();
+foreach ($merged as $merge) {
+
+$shipping_amount = calculate_seller_ship_amount($merge['seller_id'], $merge['subtotal']);
+
+$seller_shipping[] = array('seller_id'=>$merge['seller_id'], 'shipping_amount'=>$shipping_amount);
+
+}
+
+
+$rate_data = array();
+foreach($seller_shipping as $ship_rate){
+$rate_data[] = $ship_rate['shipping_amount'];
+}
+
+$final_shipping_rate = array_sum($rate_data);
+
+//echo $final_shipping_rate;
+
+
+echo '<pre>';
+print_r($seller_shipping);
+echo '</pre>';
+
+}
+
+add_action('woocommerce_cart_calculate_fees', 'seller_subtotal_data');*/
+
+
+
+
+
+
+
+function is_cod_servicable_current_cart(){
+  global $woocommerce;
+    
+    $seller_ids = array();
+    foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
+           $data = $values['data'];
+           $post_data = $data->post;
+           $seller_ids[] = (int)$post_data->post_author;
+    }
+    
+    $seller_ids = array_unique($seller_ids);
+    
+    if(! is_cod_serviceable($seller_ids)){
+    
+        return false;
+    }else{
+      return true;
+    }
+
+}
+
+
+
+//disable cod if sellers of cart products has no cod for the pincode
+function disable_cod_pincode_not_serviceable( $available_gateways ) {
+        
+    if(! is_cod_servicable_current_cart()){
+    
+        unset(  $available_gateways['cod'] );
+    }
+    
+    return $available_gateways;
+
+}
+add_filter('woocommerce_available_payment_gateways','disable_cod_pincode_not_serviceable',10,1); 
+
+//check if sellers have COD on for the pincode
+function is_cod_serviceable($seller_ids){
+    global $wpdb;
+    
+    if(isset($_COOKIE['user_pincode'])){
+       $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
+       $sellers_data = maybe_unserialize($sellers_data);
+       
+       if(empty($sellers_data))
+           return false;
+       
+       foreach($sellers_data as $seller_data){
+           
+           if(! in_array((int) $seller_data['user_id'],$seller_ids))
+                continue;
+           
+           if(!$seller_data['cod'])
+               return false;
+           
+       }
+       
+       return true;
+    }
+    else{
+        return false;
+    }
+} 
+
+
+
+
+
+
+
+add_action('wmp_cod_is_available', 'cod_enable_field', 0);
+
+function cod_enable_field() {
+
+ if(is_cod_servicable_current_cart()){
+
+  global $ajency_wmp;
+
+  $cod_charge = $ajency_wmp->wmp_additional_cod_charge();
+
+  if($cod_charge > 0){
+    $label = 'Cash on Delivery (Additional fees - '.$ajency_wmp->wmp_additional_cod_charge().').';
+  }else{
+    $label = 'Cash on Delivery';
+  }
+
+  echo '<div id="enable_cod_div" class="coupon">';
+  woocommerce_form_field( 'enable_cod', array(
+    'type'          => 'checkbox',
+    'class'        => array('enable_cod'),
+    'label'        => __($label),
+    'required'        => false,
+    ));
+
+  echo '<div class="clearfix"></div>';
+
+  echo '</div>';
+
+}
+
+}
+
+
+
+
+
+
+function wp_add_cod_charge( $cart_object ) {
+
+   if(is_cod_servicable_current_cart()){
+ 
+    global $woocommerce;
+
+    global $ajency_wmp;
+
+    $cod_charge = $ajency_wmp->wmp_additional_cod_charge();
+  
+  
+    $woocommerce->cart->add_fee( 'Additional COD fees', $cod_charge, true, 'standard' );
+
+  }
+  
+  
+}
+ 
+//add_action( 'woocommerce_cart_calculate_fees', 'wp_add_cod_charge' );
