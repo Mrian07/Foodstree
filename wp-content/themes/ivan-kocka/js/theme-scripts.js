@@ -1291,6 +1291,16 @@ jQuery(document).ready(function() {
 			}
 		});
 	});
+
+
+
+jQuery(document).on("click", '.ivan-message .fa-close', function(event) { 
+
+jQuery(".error ").fadeOut(1000);    
+
+});
+
+
  });
 
 
