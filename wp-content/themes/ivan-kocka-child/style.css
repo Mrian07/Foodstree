@@ -577,3 +577,10 @@ letter-spacing: 3px;
 .ivan-breadcrumb {
 top:41%;
 }
+
+
+
+
+.ivan-message .fa-close{
+	cursor:pointer;
+}
