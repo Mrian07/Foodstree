@@ -12,7 +12,7 @@
  * @since 1.0
  */
 
-class Ivan_Main_Layout_Normal extends Ivan_Main_Layout {
+class Ivan_Main_Layout_Normall extends Ivan_Main_Layoutt {
 
 	// Main Layout slug used as parameters to actions and filters
 	public $slug = 'normal';

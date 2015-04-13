@@ -74,7 +74,7 @@
 
 		<?php 
 		/* @todo: adds who is being hooked */
-		do_action( 'ivan_header_section' ); 
+		do_action( 'ivan_header_section' );
 		?>
 
 		<?php 

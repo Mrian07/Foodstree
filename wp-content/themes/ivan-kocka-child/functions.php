@@ -12,7 +12,8 @@ function enqueue_parent_theme_style() {
 
 function get_authored_products($query) {
 
-  if($_SESSION['all_sellers'] =='no'){
+  
+  if($query->is_main_query()){
 
     if(((!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] == 'product') || is_woocommerce()) && !is_admin() ){
       
@@ -26,23 +27,27 @@ function get_authored_products($query) {
 
   }
 
+  //echo $_SESSION['all_sellers'];
+
   return $query;
 }
 
-add_action( 'pre_get_posts', 'get_authored_products' );
+//add_action( 'pre_get_posts', 'get_authored_products' );
 
 
 
 
 
-function filterAllSeller(){
+/*function filterAllSeller(){
   if(!isset($_SESSION['all_sellers'])){
+    session_start();
     $_SESSION['all_sellers'] = 'no';
   }
+  //print_r(get_pincode_sellers());
 }
 
-add_action( 'template_redirect', 'filterAllSeller' );
-
+add_action( 'wp', 'filterAllSeller' );
+*/
 
 
 
@@ -105,9 +110,14 @@ function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
 }
 
 
+
+function set_pincode_session(){
 if($_SESSION['all_sellers'] !='yes'){
 add_filter('get_terms', 'get_terms_posts_count_filter', 10, 3);
+add_action( 'pre_get_posts', 'get_authored_products' );
 }
+}
+add_action('init', 'set_pincode_session');
 
 
 
