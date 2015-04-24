@@ -45,7 +45,8 @@ z-index: 999999;
 overflow: auto;
 font-size: 14px;
 width: 445px;
-min-height: 420px;
+/*min-height: 420px;*/
+min-height: 340px;
 background: #f9f6ed url(images/pincode.jpg)bottom left no-repeat;
 }
 #pincodepop input{
@@ -583,4 +584,26 @@ top:41%;
 
 .ivan-message .fa-close{
 	cursor:pointer;
+}
+
+
+
+.pincode-btn{
+text-align:center;
+margin-top:10px;
+}
+
+.product-unavailable{
+display:none;
+margin-top:20px;
+}
+
+
+
+.check-preload{
+display:none;
+/*display: inline-block;*/
+background: url(images/pinloader.gif) no-repeat center center;
+width: 30px;
+height: 30px;
 }

@@ -2,11 +2,24 @@
 
 add_action( 'wp_enqueue_scripts', 'enqueue_parent_theme_style' );
 function enqueue_parent_theme_style() {
+  global $woocommerce;
+
     wp_enqueue_style( 'parent-style', get_template_directory_uri().'/style.css' );
-    if(is_woocommerce()){
+    //if(is_woocommerce()){
+
+    
+    $data = array(
+      'ajax_url'=>admin_url('admin-ajax.php'),
+      'theme_url'=>get_stylesheet_directory_uri(),
+      'checkout_url'=>$woocommerce->cart->get_checkout_url(),
+      );
+
+      if(isset($_SESSION['pincode'])){
+        $data['pincode'] = $_SESSION['pincode'];
+      }
        wp_enqueue_script('pincode_popup', get_stylesheet_directory_uri() . '/js/pincode_popup.js', array('jquery'), '', true);
-       wp_localize_script( 'pincode_popup', 'pincode_data', array('ajax_url'=>admin_url('admin-ajax.php'), 'theme_url'=>get_stylesheet_directory_uri()) );
-    }
+       wp_localize_script( 'pincode_popup', 'pincode_data', $data );
+    //}
 }
 
 
@@ -117,7 +130,7 @@ add_filter('get_terms', 'get_terms_posts_count_filter', 10, 3);
 add_action( 'pre_get_posts', 'get_authored_products' );
 }
 }
-add_action('init', 'set_pincode_session');
+//add_action('init', 'set_pincode_session');
 
 
 
@@ -177,8 +190,8 @@ function pincode_list_by_city() {
 
 
 //set session for listing page
-add_action('wp_ajax_nopriv_allseller', 'set_product_listing_session');
-add_action( 'wp_ajax_allseller', 'set_product_listing_session' );
+//add_action('wp_ajax_nopriv_allseller', 'set_product_listing_session');
+//add_action( 'wp_ajax_allseller', 'set_product_listing_session' );
 
 function set_product_listing_session() {
 
@@ -535,7 +548,7 @@ function is_cod_serviceable($seller_ids){
 
 
 
-add_action('wmp_cod_is_available', 'cod_enable_field', 0);
+//add_action('wmp_cod_is_available', 'cod_enable_field', 0);
 
 function cod_enable_field() {
 
@@ -591,3 +604,99 @@ function wp_add_cod_charge( $cart_object ) {
 }
  
 //add_action( 'woocommerce_cart_calculate_fees', 'wp_add_cod_charge' );
+
+
+
+
+
+
+
+
+
+
+function fake_session(){
+  session_start();
+  unset($_SESSION['pincode']);
+//$_SESSION['pincode'] = '742123';
+}
+//add_action('init', 'fake_session');
+
+
+
+
+
+
+
+//Setting pincode session and checking products availibility
+add_action('wp_ajax_nopriv_pincode_session', 'check_pincode_session');
+add_action( 'wp_ajax_pincode_session', 'check_pincode_session' );
+
+function check_pincode_session() {
+
+  global $wpdb;
+  global $woocommerce;
+
+  $pincode = $_POST['pincode'];
+
+  session_start();
+  $_SESSION['pincode'] = $pincode;
+
+ 
+    $unavailable_products = array();
+    foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
+           $data = $values['data'];
+           $post_data = $data->post;
+           $seller_id = (int)$post_data->post_author;
+
+           if(!check_if_seller_available($seller_id, $pincode)){
+            $unavailable_products[] = $post_data->post_title;
+           }
+     }
+
+
+     if(count($unavailable_products)>0){
+      $response = array(
+        'status' => 'false',
+        'products' => $unavailable_products
+        );
+     }else{
+      $response = array(
+        'status' => 'true'
+        );
+     }
+
+    
+echo json_encode($response);
+  
+
+  die();
+}
+
+
+
+
+
+function check_if_seller_available($seller_id, $pincode){
+  global $wpdb;
+   $seller_ids = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$pincode ));
+  $seller_ids = maybe_unserialize($seller_ids);
+  if($seller_ids){
+
+    foreach($seller_ids as $seller){
+
+      if($seller['user_id'] == $seller_id){
+        $exist = true;
+        break;
+      }
+
+    }
+
+    if($exist){
+      return true;
+    }else{
+      return false;
+    }
+  }else{
+    return false;
+  }
+}

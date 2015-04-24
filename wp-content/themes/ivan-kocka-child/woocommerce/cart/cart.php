@@ -53,7 +53,7 @@ if( isset($_POST['apply_coupon']) && isset($_POST['coupon_code']) && $_POST['cou
 <?php
 do_action( 'woocommerce_before_cart' ); ?>
 <br><br>
-<form action="<?php echo esc_url( WC()->cart->get_cart_url() ); ?>" method="post">
+<form action="<?php echo esc_url( WC()->cart->get_cart_url() ); ?>" method="post" id="cart-form">
 
 <div class="row">
 	<div class="col-md-8">
@@ -175,6 +175,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 				<div class="cart-actions">
 
 					<input type="submit" class="button btn-bg" name="update_cart" value="<?php _e( 'Update Cart', 'woocommerce' ); ?>" /> <input type="submit" class="checkout-button button alt wc-forward" name="proceed" value="<?php _e( 'Proceed to Checkout', 'woocommerce' ); ?>" />
+					<span class="check-preload"></div>
 
 					<?php //do_action( 'woocommerce_proceed_to_checkout' ); ?>
 

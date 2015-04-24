@@ -31,7 +31,7 @@
 <!-- Pincode modal -->
 <div id="pincodepop">
 
-<div id="pincode_city_cont">
+<!-- <div id="pincode_city_cont">
 <h2 class="title-heading-header">
 				ENTER CITY
 		</h2><br>
@@ -41,16 +41,25 @@
 
 <div id="pinlist_loader" style="display:none"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/pinloader.gif" /></div>
 
-<div id="pincodelistwrap" style="display:none;"></div>
+<div id="pincodelistwrap" style="display:none;"></div> -->
 
 
-<!-- <div id="pincode_ent">
-<span>Pincode: </span>
-<input type="text" name="pincode" id="pincode" />
+<div id="pincode_ent">
+<h2 class="title-heading-header">
+				ENTER PINCODE
+		</h2><br>
+<input type="text" name="pincode" id="pincode" value="<?php if(isset($_SESSION['pincode'])) echo $_SESSION['pincode'] ?>" />
+<div class="pincode-btn"><button id="pincode-chk">Proceed</button></div>
 </div>
 
+<div id="pinlist_loader" style="display:none"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/pinloader.gif" /></div>
 
-<button id="pincode-btn">Submit</button> -->
+<div class="product-unavailable">
+<span class="nonavailable-message">Following product(s) are not available to your location, remove and proceed to checkout. Alternatively you can check for a new pincode.</span>
+<ul id="nonavailable-list"></ul>
+<div class="pincode-btn"><button id="pincode-pop-close">OK</button></div>
+</div>
+
 </div>
 <div id="background" class="background_overlay"></div>
 

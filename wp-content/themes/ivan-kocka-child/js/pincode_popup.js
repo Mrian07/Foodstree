@@ -1,43 +1,13 @@
 jQuery(document).ready(function(){
 
 
-    if (jQuery.cookie('user_pincode') == null ){
+    /*if (jQuery.cookie('user_pincode') == null ){
 
         jQuery("#pincodepop").css('display', 'block');
         jQuery(".background_overlay").css('display', 'block');
 
     }
 
-
-
-    
-    /*jQuery("#pincode-btn").on('click', function(){
-
-        var pincode = jQuery("#pincode").val();
-        var reg = /^[0-9]+$/;
-
-        if (pincode == ''){
-            alert('Pincode cannot be empty.');
-        }else if (!reg.test(pincode)){
-            alert('Pincode should be numbers only.');
-        }else if ((pincode.length)< 6 || (pincode.length)>6 ){
-            alert('Pincode should only be 6 digits');
-        }else{
-
-            if (jQuery.cookie('user_pincode') == null ){
-                jQuery.cookie('user_pincode', pincode, { expires: 365, path: '/' });
-                jQuery("#pincodepop").css('display', 'none');
-                jQuery(".background_overlay").css('display', 'none');
-                
-                jQuery("#content").html("<div id='pre-loader'></div>");
-                
-                location.reload();
-            }
-
-        }
-
-
-    });*/
 
 
 jQuery("#change-pincode").on('click', function(){
@@ -175,12 +145,181 @@ jQuery.ajax({
 
 
 });
+*/
 
 
 
 
 
 
+
+
+
+
+
+
+jQuery(".checkout-button").on('click', function(event){
+
+    event.preventDefault();
+
+   if (pincode_data.hasOwnProperty("pincode")) {
+
+    jQuery(".check-preload").css('display', 'inline-block');
+
+
+   check_unavailable_pincodes(pincode_data.pincode);
+
+
+
+}else{
+   //event.preventDefault();
+   jQuery("#pincodepop").css('display', 'block');
+   jQuery(".background_overlay").css('display', 'block'); 
+}
+
+});
+
+
+
+
+
+
+
+jQuery("#pincode-chk").on('click', function(){
+
+    jQuery('#nonavailable-list').empty();
+
+    var pincode = jQuery("#pincode").val();
+    var reg = /^[0-9]+$/;
+
+    if (pincode == ''){
+        alert('Pincode cannot be empty.');
+    }else if (!reg.test(pincode)){
+        alert('Pincode should be numbers only.');
+    }else if ((pincode.length)< 6 || (pincode.length)>6 ){
+        alert('Pincode should only be 6 digits');
+    }else{
+
+        jQuery('#pinlist_loader').show();
+
+        check_unavailable_products(pincode);
+
+        
+
+    }
+});
+
+
+
+
+
+
+
+
+function check_unavailable_products(pincode){
+var data = {
+            'action': 'pincode_session',
+            'pincode': pincode
+        };
+
+
+
+        jQuery.ajax({
+            url: pincode_data.ajax_url,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success:function(response){
+             
+             jQuery('#pinlist_loader').hide();
+             
+             if(response.status == 'false'){
+
+                jQuery('.product-unavailable').show();
+
+                 jQuery('#nonavailable-list').empty();
+
+                $.each(response.products, function(k, v) {
+                    jQuery('#nonavailable-list').append('<li>'+v+'</li>');
+                });
+
+             }else{
+                jQuery("#pincodepop").css('display', 'none');
+                jQuery(".background_overlay").css('display', 'none');
+
+                //jQuery("#cart-form").submit();
+                window.location.replace(pincode_data.checkout_url);
+             }
+
+            
+         }
+     });
+}
+
+
+
+
+
+
+
+
+
+
+function check_unavailable_pincodes(pincode){
+var data = {
+            'action': 'pincode_session',
+            'pincode': pincode
+        };
+
+        jQuery.ajax({
+            url: pincode_data.ajax_url,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success:function(response){
+
+            jQuery(".check-preload").css('display', 'none');
+             
+             jQuery('#pinlist_loader').hide();
+             
+             if(response.status == 'false'){
+
+                jQuery("#pincodepop").css('display', 'block');
+                jQuery(".background_overlay").css('display', 'block');
+
+                 jQuery('.product-unavailable').show();
+
+                 jQuery('#nonavailable-list').empty();
+                
+                $.each(response.products, function(k, v) {
+                    jQuery('#nonavailable-list').append('<li>'+v+'</li>');
+                });
+
+             }else{
+                jQuery("#pincodepop").css('display', 'none');
+                jQuery(".background_overlay").css('display', 'none');
+
+                //jQuery("#cart-form").submit();
+                window.location.replace(pincode_data.checkout_url);
+             }
+
+            
+         }
+     });
+}
+
+
+
+
+
+
+
+
+
+jQuery("#pincode-pop-close").on('click', function(){
+    jQuery("#pincodepop").css('display', 'none');
+    jQuery(".background_overlay").css('display', 'none');
+});
 
 
 
