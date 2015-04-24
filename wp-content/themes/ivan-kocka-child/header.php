@@ -55,7 +55,7 @@
 <div id="pinlist_loader" style="display:none"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/pinloader.gif" /></div>
 
 <div class="product-unavailable">
-<span class="nonavailable-message">Following product(s) are not available to your location, remove and proceed to checkout. Alternatively you can check for a new pincode.</span>
+<span class="nonavailable-message">Some products are not available in the above pincode. Please remove the following product(s) to proceed. Alternatively, try another pincode.</span>
 <ul id="nonavailable-list"></ul>
 <div class="pincode-btn"><button id="pincode-pop-close">OK</button></div>
 </div>
