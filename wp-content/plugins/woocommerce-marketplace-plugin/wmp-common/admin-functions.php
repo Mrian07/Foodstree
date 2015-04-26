@@ -424,7 +424,9 @@ add_action('admin_menu', 'wmp_seller_profile_menu' );
 add_action( 'admin_menu', 'remove_additional_menu' );
 }
 
-add_filter("login_redirect", "seller_login_redirect", 10, 3);
+
+add_filter( 'woocommerce_prevent_admin_access', false );
+add_filter("login_redirect", "seller_login_redirect", 1, 3);
 
 
 
