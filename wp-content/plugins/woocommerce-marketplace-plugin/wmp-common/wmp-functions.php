@@ -123,64 +123,64 @@ function wmp_seller_additionaldata_save( $user_id ) {
     }
   }
 
- 
-
-foreach($uploads as $upload){
 
 
-if (!empty($_FILES[$upload]['name'])) {
-    
+  foreach($uploads as $upload){
 
 
-$file = $_FILES[$upload]['tmp_name'];
-$filename = $_FILES[$upload]['name'];
+    if (!empty($_FILES[$upload]['name'])) {
 
-$upload_file = wp_upload_bits($filename, null, file_get_contents($file));
 
-if (!$upload_file['error']) {
+
+      $file = $_FILES[$upload]['tmp_name'];
+      $filename = $_FILES[$upload]['name'];
+
+      $upload_file = wp_upload_bits($filename, null, file_get_contents($file));
+
+      if (!$upload_file['error']) {
 
   /*$seller_directory_uri = wp_upload_dir('url').'/seller/' . $user_id;
 
   $seller_directory = WP_CONTENT_DIR . '/uploads/seller/' . $user_id;
   if (!file_exists($seller_directory)){
   wp_mkdir_p(WP_CONTENT_DIR . '/uploads/seller/' . $user_id);
-  }*/
+}*/
 
 
-  $wp_upload_dir = wp_upload_dir();
-  $wp_filetype = wp_check_filetype($filename, null );
-  $attachment = array(
-    'guid'           => $wp_upload_dir['url'] . '/' . $filename,
+$wp_upload_dir = wp_upload_dir();
+$wp_filetype = wp_check_filetype($filename, null );
+$attachment = array(
+  'guid'           => $wp_upload_dir['url'] . '/' . $filename,
     //'guid'           => $seller_directory_uri . '/' . $filename,
-    'post_mime_type' => $wp_filetype['type'],
-    'post_title' => preg_replace('/\.[^.]+$/', '', $filename),
-    'post_content' => '',
-    'post_author' => get_current_user_id(),
-    'post_status' => 'inherit'
+  'post_mime_type' => $wp_filetype['type'],
+  'post_title' => preg_replace('/\.[^.]+$/', '', $filename),
+  'post_content' => '',
+  'post_author' => get_current_user_id(),
+  'post_status' => 'inherit'
   );
-  $attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
 
 
 $imgExts = array("gif", "jpeg", "jpg", "png");
- $temp = explode(".", $_FILES[$upload]['name']);
- $extension = end($temp);
- if(in_array($extension, $imgExts)){
-    
-if (!is_wp_error($attachment_id)) {
+$temp = explode(".", $_FILES[$upload]['name']);
+$extension = end($temp);
+if(in_array($extension, $imgExts)){
+
+  if (!is_wp_error($attachment_id)) {
     require_once(ABSPATH . "wp-admin" . '/includes/image.php');
     $attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
     wp_update_attachment_metadata( $attachment_id,  $attachment_data );
   }
 
 
- }
+}
 
 
 
-  update_user_meta($user_id, $upload, $attachment_id);
-  }
+update_user_meta($user_id, $upload, $attachment_id);
+}
 
- 
+
 
 }
 
@@ -192,9 +192,48 @@ if (!is_wp_error($attachment_id)) {
 }
 
 
-  
 
-  }
+    if(get_user_role(get_current_user_id()) == 'seller'){
+     $subject = 'A seller details has been updated';
+     $message = "Following seller details has been updated on your website:\n\n";
+     $message .= 'Display Name: '.get_user_meta($user_id, 'seller_display_name', true).'<br />';
+     $message .= 'Seller Name: '.get_user_meta($user_id, 'seller_name', true).'<br />';
+     $message .= 'Mobile Number: '.get_user_meta($user_id, 'mobile_number', true).'<br />';
+     $message .= 'Seller Address: '.get_user_meta($user_id, 'seller_address', true).'<br />';
+     $message .= 'Seller City: '.get_user_meta($user_id, 'seller_city', true).'<br />';
+     $message .= 'Seller Pincode: '.get_user_meta($user_id, 'seller_pincode', true).'<br />';
+     $message .= 'Seller State: '.get_user_meta($user_id, 'seller_state', true).'<br />';
+     $message .= 'Seller Country: '.get_user_meta($user_id, 'seller_country', true).'<br />';
+     $message .= 'Seller Billing Address: '.get_user_meta($user_id, 'seller_billing_address', true).'<br />';
+     $message .= 'Seller Billing City: '.get_user_meta($user_id, 'seller_billing_city', true).'<br />';
+     $message .= 'Seller Billing Pincode: '.get_user_meta($user_id, 'seller_billing_pincode', true).'<br />';
+     $message .= 'Seller Billing State: '.get_user_meta($user_id, 'seller_billing_state', true).'<br />';
+     $message .= 'Seller Billing Country: '.get_user_meta($user_id, 'seller_billing_country', true).'<br />';
+     $message .= 'PAN: '.get_user_meta($user_id, 'seller_pan', true).'<br />';
+     $message .= 'VAT: '.get_user_meta($user_id, 'seller_vat', true).'<br />';
+     $message .= 'RTGS: '.get_user_meta($user_id, 'seller_rtgs', true).'<br />';
+     $message .= 'Beneficiary: '.get_user_meta($user_id, 'seller_beneficiary', true).'<br />';
+     $message .= 'Account Number: '.get_user_meta($user_id, 'seller_account_number', true).'<br />';
+     $message .= 'Account Type: '.get_user_meta($user_id, 'seller_account_type', true).'<br />';
+     $message .= 'Bank Name: '.get_user_meta($user_id, 'seller_bank_name', true).'<br />';
+     $message .= 'Branch Name: '.get_user_meta($user_id, 'seller_branch_name', true).'<br />';
+     $message .= 'Registration No.: '.get_user_meta($user_id, 'seller_registration', true).'<br />';
+     $message .= 'TAN: '.get_user_meta($user_id, 'seller_tan', true).'<br />';
+     $message .= 'Updated from (IP): '.wmp_get_client_ip().'<br />';
+     $message .= 'Updated on: '.current_time( 'mysql' ).'<br />';
+
+     if(!$mailsent){
+     wp_mail( get_option( 'admin_email' ), $subject, $message );
+     $mailsent = true;
+    }
+     
+   }
+
+
+
+
+
+}
 
 
 
@@ -759,4 +798,82 @@ function ajax_get_seller_pincode_info(){
     
 }
 add_action("wp_ajax_get_seller_pincode_info", "ajax_get_seller_pincode_info");
+
+
+
+
+
+
+
+
+
+function wmp_get_client_ip()
+ {
+      $ipaddress = '';
+      if (getenv('HTTP_CLIENT_IP'))
+          $ipaddress = getenv('HTTP_CLIENT_IP');
+      else if(getenv('HTTP_X_FORWARDED_FOR'))
+          $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+      else if(getenv('HTTP_X_FORWARDED'))
+          $ipaddress = getenv('HTTP_X_FORWARDED');
+      else if(getenv('HTTP_FORWARDED_FOR'))
+          $ipaddress = getenv('HTTP_FORWARDED_FOR');
+      else if(getenv('HTTP_FORWARDED'))
+          $ipaddress = getenv('HTTP_FORWARDED');
+      else if(getenv('REMOTE_ADDR'))
+          $ipaddress = getenv('REMOTE_ADDR');
+      else
+          $ipaddress = 'UNKNOWN';
+
+      return $ipaddress;
+ }
+
+
+
+
+
+
+
+
+
+
+ function wmp_product_update_notification( $post_id ) {
+
+  $post = get_post($post_id);
+
+  $author_id=$post->post_author;
+
+  $post_type = $post->post_type;
+
+      // If this is just a revision, don't send the email.
+  if ( wp_is_post_revision( $post_id ) ) {
+    return;
+  }
+
+  if($post_type == 'product' && !is_super_admin( get_current_user_id() )){
+    $post_title = get_the_title( $post_id );
+    $post_url = get_permalink( $post_id );
+    $manage_stock = get_post_meta($post_id, '_manage_stock', true);
+    $stock = get_post_meta($post_id, '_stock', true);
+    $last_modified = $post->post_modified;
+
+    $subject = 'A product has been updated';
+
+    $message = "Following product has been updated on your website:\n\n";
+    $message .= 'Product: '.$post_title.'<br />';
+    $message .= 'Product URL: '.$post_url.'<br />';
+    if($manage_stock == 'yes'){
+      $message .= 'Product Stock: '.(int)$stock.'<br />';
+    }
+    $message .= 'Seller: '.get_seller_name($author_id).'<br />';
+    $message .= 'IP: '.wmp_get_client_ip().'<br />';
+    $message .= 'Modified: '.$last_modified.'<br />';
+
+    // Send email to admin.
+    wp_mail( get_option( 'admin_email' ), $subject, $message );
+  }
+
+
+}
+add_action( 'save_post', 'wmp_product_update_notification' ); 
 
