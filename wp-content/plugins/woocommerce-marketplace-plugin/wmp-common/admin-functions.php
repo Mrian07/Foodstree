@@ -419,13 +419,31 @@ function remove_additional_menu(){
 
 
 
-if(wmp_is_seller()){
-add_action('admin_menu', 'wmp_seller_profile_menu' );
-add_action( 'admin_menu', 'remove_additional_menu' );
+
+function wmp_prevent_access(){
+
+    $prevent_access = false;
+    if ( 'yes' === get_option( 'woocommerce_lock_down_admin', 'yes' ) && ! is_ajax() && ! ( current_user_can( 'edit_posts' ) || current_user_can( 'manage_woocommerce' ) ) && basename( $_SERVER["SCRIPT_FILENAME"] ) !== 'admin-post.php' ) {
+        $prevent_access = true;
+    }
+
+    if(get_user_role(get_current_user_id()) == 'seller'){
+       $prevent_access = true;
+   }
+
+   //return $prevent_access;
+
 }
 
 
-add_filter( 'woocommerce_prevent_admin_access', false );
+
+if(wmp_is_seller()){
+add_action('admin_menu', 'wmp_seller_profile_menu');
+add_action( 'admin_menu', 'remove_additional_menu');
+}
+
+
+add_filter('woocommerce_prevent_admin_access', 'wmp_prevent_access');
 add_filter("login_redirect", "seller_login_redirect", 1, 3);
 
 

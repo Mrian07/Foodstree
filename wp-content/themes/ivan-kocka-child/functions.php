@@ -518,8 +518,9 @@ add_filter('woocommerce_available_payment_gateways','disable_cod_pincode_not_ser
 function is_cod_serviceable($seller_ids){
     global $wpdb;
     
-    if(isset($_COOKIE['user_pincode'])){
-       $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
+    if(isset($_SESSION['pincode'])){
+       //$sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
+       $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_SESSION['pincode'] ));
        $sellers_data = maybe_unserialize($sellers_data);
        
        if(empty($sellers_data))

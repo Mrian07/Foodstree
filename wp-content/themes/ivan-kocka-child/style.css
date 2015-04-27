@@ -607,3 +607,11 @@ background: url(images/pinloader.gif) no-repeat center center;
 width: 30px;
 height: 30px;
 }
+
+.widget_shopping_cart_content .buttons .checkout{
+	display:none;
+}
+
+.widget_shopping_cart_content .buttons{
+text-align:center;
+}
