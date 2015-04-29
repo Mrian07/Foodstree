@@ -955,15 +955,3 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
     }
   }
 
-
-
-?>
-
-<script type="text/javascript">
-
-/*var id = '3';
-var testdata = '<?php echo do_shortcode("[product id='+id+']"); ?>';
-
-alert(testdata);*/
-
-</script>
