@@ -703,6 +703,7 @@ function check_is_pincode_available_for_product() {
   $product_id = $_POST['product_id'];
 
 
+$ispinchange = '';
   session_start();
   if(!isset($_SESSION['pincode'])){
      $_SESSION['pincode'] = $pincode;
@@ -710,7 +711,10 @@ function check_is_pincode_available_for_product() {
   }else if($_SESSION['pincode'] != $pincode){
     $_SESSION['pincode'] = $pincode;
     $woocommerce->cart->empty_cart();
+    $ispinchange = 'data-pinchanged="true"';
   }
+
+  
  
 
   $post = get_post($product_id);
@@ -719,7 +723,8 @@ function check_is_pincode_available_for_product() {
   if(!check_if_seller_available($seller_id, $pincode)){
     $response = array(
       'status' => 'false',
-      'message' => '<h4>Sorry! "'.$post->post_title.'" cannot be shipped to your pincode. >>> <a class="pincode-change" data-product-id="'.$product_id.'" data-seller-id="'.$seller_id.'"><strong>Change pincode</strong></a>.</h4>'
+      'message' => '<h4>Sorry! "'.$post->post_title.'" cannot be shipped to your pincode. >>> <a class="pincode-change" data-product-id="'.$product_id.'" data-seller-id="'.$seller_id.'"><strong>Change pincode</strong></a>.</h4>',
+      'pinchange'=> $ispinchange
       );
   }else{
     $response = array(

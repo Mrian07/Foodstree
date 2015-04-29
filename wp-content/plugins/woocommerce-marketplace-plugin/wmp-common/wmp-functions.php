@@ -850,17 +850,24 @@ function wmp_get_client_ip()
     return;
   }
 
+//return if new post
+  if( $post->post_modified_gmt == $post->post_date_gmt ){
+        return;
+    }
+
   if($post_type == 'product' && !is_super_admin( get_current_user_id() )){
     $post_title = get_the_title( $post_id );
     $post_url = get_permalink( $post_id );
     $manage_stock = get_post_meta($post_id, '_manage_stock', true);
     $stock = get_post_meta($post_id, '_stock', true);
     $last_modified = $post->post_modified;
+    $sku = get_post_meta($post_id, 'sku', true);
 
     $subject = 'A product has been updated';
 
     $message = "Following product has been updated on your website:\n\n";
     $message .= 'Product: '.$post_title.'<br />';
+    $message .= 'SKU: '.$sku.'<br />';
     $message .= 'Product URL: '.$post_url.'<br />';
     if($manage_stock == 'yes'){
       $message .= 'Product Stock: '.(int)$stock.'<br />';

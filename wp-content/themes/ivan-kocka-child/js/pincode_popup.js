@@ -383,8 +383,10 @@ var seller_id = jQuery(this).attr("data-seller-id");
 jQuery(".product-avail-error").css('display', 'none');
 jQuery("#pincode_ent2").css('display', 'none');
 
+
 jQuery("#pinpop").css('display', 'block');
 jQuery(".background_overlay").css('display', 'block');
+jQuery('html, body').animate({ scrollTop: jQuery("#pinpop").offset().top }, 100);
 
 var single_product = 'false';
 
@@ -398,6 +400,7 @@ jQuery("#pincode_ent2").css('display', 'block');
 
 jQuery("#pinpop").css('display', 'block');
 jQuery(".background_overlay").css('display', 'block');
+jQuery('html, body').animate({ scrollTop: jQuery("#pinpop").offset().top }, 100);
 
  
 jQuery("#pincode-chk-list").removeAttr("data-product-id");
@@ -480,7 +483,9 @@ var data = {
             jQuery(".product-avail-error").empty();
               jQuery(".product-avail-error").css('display', 'block');
               jQuery(".product-avail-error").append(response.message);
-               jQuery(".product-avail-error").append('<div class="pincode-btn"><button id="pincode-list-close">CLOSE</button></div>');
+
+              var pinchange = response.pinchange;
+               jQuery(".product-avail-error").append('<div class="pincode-btn"><button id="pincode-list-close" '+pinchange+'>CLOSE</button></div>');
                 
               }else{
 
@@ -533,6 +538,11 @@ jQuery("#pincode-chk-list").attr("data-seller-id",seller_id);
 jQuery(document).on( 'click', '#pincode-list-close', function() {
     jQuery("#pinpop").css('display', 'none');
     jQuery(".background_overlay").css('display', 'none');
+    var pinchanged = jQuery(this).attr("data-pinchanged");
+    if(pinchanged == 'true'){
+    var urlWithoutHash = window.location.href.split("?")[0];
+    window.location.replace(urlWithoutHash);
+    }
 });
 
 
@@ -550,7 +560,8 @@ jQuery(document).on( 'click', '#pincode-chk-cancel', function() {
 jQuery("#change-pincode-list").on('click', function(){
 
 jQuery("#pinchangepop").css('display', 'block');
-jQuery(".background_overlay").css('display', 'block'); 
+jQuery(".background_overlay").css('display', 'block');
+jQuery('html, body').animate({ scrollTop: jQuery("#pinchangepop").offset().top }, 100);
 
 });
 
@@ -622,6 +633,7 @@ jQuery("#pincode_ent2").css('display', 'none');
 
 jQuery("#pinpop").css('display', 'block');
 jQuery(".background_overlay").css('display', 'block');
+jQuery('html, body').animate({ scrollTop: jQuery("#pinpop").offset().top }, 100);
 
 var single_product = 'true';
 
@@ -635,6 +647,7 @@ jQuery("#pincode_ent2").css('display', 'block');
 
 jQuery("#pinpop").css('display', 'block');
 jQuery(".background_overlay").css('display', 'block');
+jQuery('html, body').animate({ scrollTop: jQuery("#pinpop").offset().top }, 100);
 
  
 jQuery("#pincode-chk-list").removeAttr("data-product-id");

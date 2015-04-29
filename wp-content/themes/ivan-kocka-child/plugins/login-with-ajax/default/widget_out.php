@@ -44,6 +44,7 @@
 				<?php endif; ?>
 			</div>
 		</form>
+		<div class="signuplink"><a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">Register</a></div>
 	</div><!-- .lwa-login-form -->
 	<?php if( !empty($lwa_data['remember']) ): ?>
 	<form name="lwa-remember" class="lwa-remember" action="<?php echo esc_attr(LoginWithAjax::$url_remember); ?>" method="post" style="display:none;">
