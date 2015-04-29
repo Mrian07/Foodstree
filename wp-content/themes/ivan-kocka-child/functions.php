@@ -17,6 +17,13 @@ function enqueue_parent_theme_style() {
       if(isset($_SESSION['pincode'])){
         $data['pincode'] = $_SESSION['pincode'];
       }
+
+      if(is_single()){
+        global $post;
+        $data['product_id'] = $post->ID;
+        $data['seller_id'] = $post->post_author;
+      }
+
        wp_enqueue_script('pincode_popup', get_stylesheet_directory_uri() . '/js/pincode_popup.js', array('jquery'), '', true);
        wp_localize_script( 'pincode_popup', 'pincode_data', $data );
     //}
@@ -677,6 +684,102 @@ echo json_encode($response);
 
 
 
+
+
+
+
+
+//Setting pincode session and checking if the product is available
+add_action('wp_ajax_nopriv_available_pincode_product', 'check_is_pincode_available_for_product');
+add_action( 'wp_ajax_available_pincode_product', 'check_is_pincode_available_for_product' );
+
+function check_is_pincode_available_for_product() {
+
+  global $wpdb;
+  global $woocommerce;
+
+  $pincode = $_POST['pincode'];
+  $seller_id = $_POST['seller_id'];
+  $product_id = $_POST['product_id'];
+
+
+  session_start();
+  if(!isset($_SESSION['pincode'])){
+     $_SESSION['pincode'] = $pincode;
+    $woocommerce->cart->empty_cart();
+  }else if($_SESSION['pincode'] != $pincode){
+    $_SESSION['pincode'] = $pincode;
+    $woocommerce->cart->empty_cart();
+  }
+ 
+
+  $post = get_post($product_id);
+
+ 
+  if(!check_if_seller_available($seller_id, $pincode)){
+    $response = array(
+      'status' => 'false',
+      'message' => '<h4>Sorry! "'.$post->post_title.'" cannot be shipped to your pincode. >>> <a class="pincode-change" data-product-id="'.$product_id.'" data-seller-id="'.$seller_id.'"><strong>Change pincode</strong></a>.</h4>'
+      );
+  }else{
+    $response = array(
+      'status' => 'true'
+      );
+  }
+
+    
+echo json_encode($response);
+  
+
+  die();
+}
+
+
+
+
+
+
+
+
+
+//Setting pincode session and checking if the product is available
+add_action('wp_ajax_nopriv_wmp_change_pincode', 'wmp_change_pincode');
+add_action( 'wp_ajax_wmp_change_pincode', 'wmp_change_pincode' );
+
+function wmp_change_pincode() {
+
+  global $woocommerce;
+ 
+
+$pincode = $_POST['pincode'];
+
+  session_start();
+  if(!isset($_SESSION['pincode'])){
+     $_SESSION['pincode'] = $pincode;
+    $woocommerce->cart->empty_cart();
+  }else if($_SESSION['pincode'] != $pincode){
+    $_SESSION['pincode'] = $pincode;
+       $woocommerce->cart->empty_cart();
+  }
+
+  $response = array(
+      'status' => 'true'
+      );
+     
+echo json_encode($response);
+  
+
+  die();
+
+}
+
+
+
+
+
+
+
+
 function check_if_seller_available($seller_id, $pincode){
   global $wpdb;
    $seller_ids = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$pincode ));
@@ -701,3 +804,166 @@ function check_if_seller_available($seller_id, $pincode){
     return false;
   }
 }
+
+
+
+
+
+function wmp_order_by_discount($query) {
+
+
+
+  if ($query->is_main_query()/* && $query->is_post_type_archive()*/) {
+
+
+$args = array_merge( $query->query_vars, array( 'post_type' => 'product' ) );
+  
+$posts_array = query_posts( $args );
+
+$discount_data = array();
+foreach($posts_array as $pro){
+
+  $regular_price = get_post_meta($pro->ID, '_regular_price', true);
+  $sale_price = get_post_meta($pro->ID, '_sale_price', true);
+  if($regular_price != '' && $sale_price != ''){
+    $discount = ((int)$regular_price - (int)$sale_price);
+  }else{
+    $discount = 0;
+  }
+  $discount_data[$pro->ID] = $discount;
+}
+
+arsort($discount_data, SORT_NUMERIC);
+$data = array_reverse($discount_data, true);
+
+$product_ids = array_keys($data);
+
+/*echo "<pre>";
+print_r($product_ids);
+echo "</pre>";*/
+
+ 
+  $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
+  if ( 'discount' == $orderby_value ) {
+  $query->set('post__in', $product_ids);
+  //$query->set('order_by', 'FIELD(ID, '.implode(',',$product_ids).')');
+}
+  }
+  return $query;
+}
+
+
+
+
+
+
+add_filter( 'woocommerce_get_catalog_ordering_args', 'wmp_discount_catalog_ordering_args' );
+function wmp_discount_catalog_ordering_args( $args ) {
+  $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
+  if ( 'discount' == $orderby_value ) {
+    /*$args['orderby']  = 'meta_value_num';
+    $args['order']    = 'DESC';
+    $args['meta_key']   = '_dfrps_salediscount';*/
+   
+  }
+  return $args;
+}
+
+add_filter( 'woocommerce_default_catalog_orderby_options', 'wmp_add_salediscount_to_catalog_orderby' );
+add_filter( 'woocommerce_catalog_orderby', 'wmp_add_salediscount_to_catalog_orderby' );
+function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
+  $sortby['discount']   = 'Sort by discount';
+  return $sortby;
+}
+
+
+
+ //add_action( 'pre_get_posts', 'wmp_order_by_discount' );
+
+
+
+
+ add_filter( 'posts_orderby', 'sort_query_by_post_in', 10, 2 );
+
+  function sort_query_by_post_in( $sortby, $query ) {
+    
+
+if ($query->is_main_query()/* && $query->is_post_type_archive()*/) {
+
+
+$args = array_merge( $query->query_vars, array( 'post_type' => 'product' ) );
+  
+$posts_array = query_posts( $args );
+
+$discount_data = array();
+foreach($posts_array as $pro){
+
+  $regular_price = get_post_meta($pro->ID, '_regular_price', true);
+  $sale_price = get_post_meta($pro->ID, '_sale_price', true);
+  if($regular_price != '' && $sale_price != ''){
+    $discount = ((int)$regular_price - (int)$sale_price);
+  }else{
+    $discount = 0;
+  }
+  $discount_data[$pro->ID] = $discount;
+}
+
+arsort($discount_data, SORT_NUMERIC);
+$data = array_reverse($discount_data, true);
+
+$product_ids = array_keys($data);
+
+//print_r($product_ids);
+
+
+$orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
+  if ( 'discount' == $orderby_value ) {
+      //$sortby = "find_in_set(ID, '" . implode(',', $product_ids) . "')";
+    $sortby = 'FIELD(ID, '.implode(',',$product_ids).')';
+    }
+
+    return $sortby;
+  }
+  }
+
+
+
+
+
+
+  function wmp_modify_cart_button(){
+     global $post;
+    if(isset($_SESSION['pincode'])){
+     if(!check_if_seller_available($post->post_author, $_SESSION['pincode'])){
+        remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+      }
+    }
+  }
+  add_action('template_redirect','wmp_modify_cart_button');
+
+
+  add_action('woocommerce_single_product_summary','wmp_replace_add_to_cart',30);
+  function wmp_replace_add_to_cart() {
+
+    global $product;
+    if(isset($_SESSION['pincode'])){
+     if(!check_if_seller_available($product->post->post_author, $_SESSION['pincode'])){  
+        
+        echo '<h4>This product cannot be shipped to your pincode. >>> <a id="change-pincode-list" data-product-id="'.$product->ID.'" data-seller-id="'.$product->post->post_author.'"><strong>Change pincode</strong></a>.</h4>';
+        
+       }
+    }
+  }
+
+
+
+?>
+
+<script type="text/javascript">
+
+/*var id = '3';
+var testdata = '<?php echo do_shortcode("[product id='+id+']"); ?>';
+
+alert(testdata);*/
+
+</script>

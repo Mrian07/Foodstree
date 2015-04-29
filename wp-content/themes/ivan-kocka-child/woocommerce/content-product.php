@@ -140,8 +140,8 @@ if(is_admin())
 
 <?php $add_to_cart = do_shortcode('[add_to_cart_url id="'.$post->ID.'"]'); ?>
 
-				<a href="<?php echo $add_to_cart; ?>"><div class="cart-icon"></div></a>
-				<div> <a href="<?php echo $add_to_cart; ?>">Add to cart</a></div>
+				<a href="<?php echo $add_to_cart; ?>" class="wmp-cart-btn" data-product-id="<?php echo $post->ID; ?>" data-seller-id="<?php echo $post->post_author; ?>"><div class="cart-icon"></div></a>
+				<div> <a href="<?php echo $add_to_cart; ?>" class="wmp-cart-btn" data-product-id="<?php echo $post->ID; ?>" data-seller-id="<?php echo $post->post_author; ?>">Add to cart</a></div>
 				<div class="shipby"> <a href="<?php echo get_site_url().'/seller/'.get_seller_query_var($post->post_author); ?>">Shipped by : <?php echo get_seller_display_name($post->post_author); ?></a></div>
 			</div>
 		</div><!--.product-info-->

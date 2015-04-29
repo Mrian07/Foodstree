@@ -66,6 +66,58 @@
 
 
 
+
+
+
+
+
+<div id="pinpop">
+
+<div id="pincode_ent2">
+<h2 class="title-heading-header">
+				ENTER PINCODE
+		</h2><br>
+<span class="pincode-txt">Please provide your pincode to check if this product can be be shipped to you.</span>
+<input type="text" name="pincode2" id="pincode2" value="<?php if(isset($_SESSION['pincode'])) echo $_SESSION['pincode'] ?>" />
+<div class="pincode-btn"><button id="pincode-chk-list">Proceed</button></div>
+</div>
+
+<div class="product-avail-error"></div>
+
+<div id="pinlist_loader2" style="display:none"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/pinloader.gif" /></div>
+
+</div>
+
+
+
+
+
+
+<div id="pinchangepop">
+
+<div id="pincode_ent3">
+<h2 class="title-heading-header">
+				ENTER NEW PINCODE
+		</h2><br>
+<input type="text" name="pincode2" id="pincode3" value="<?php if(isset($_SESSION['pincode'])) echo $_SESSION['pincode'] ?>" />
+<span class="pinchange-info">Please note that change of pincode will result in removing all products from your cart.</span>
+<div class="pincode-btn"><button id="pincode-chk-list2">Proceed</button><button id="pincode-chk-cancel">Cancel</button></div>
+</div>
+
+<div id="pinlist_loader3" style="display:none"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/pinloader.gif" /></div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
 <?php get_template_part('part', 'loader'); ?>
 
 <?php flush(); ?>

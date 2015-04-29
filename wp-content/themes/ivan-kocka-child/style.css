@@ -32,7 +32,9 @@ z-index:99999;
 opacity:.95;
 filter: alpha(opacity=95);
 }
-#pincodepop {
+#pincodepop,
+#pinpop,
+#pinchangepop {
 display: none;
 position: absolute;
 margin-left: auto;
@@ -40,16 +42,20 @@ margin-right: auto;
 left: 0;
 right: 0;
 top:25%;
-padding: 10px 10px 200px 10px;
+padding: 10px 10px 30px 10px;
 z-index: 999999;
 overflow: auto;
 font-size: 14px;
 width: 445px;
 /*min-height: 420px;*/
-min-height: 340px;
-background: #f9f6ed url(images/pincode.jpg)bottom left no-repeat;
+/*min-height: 340px;*/
+height:auto;
+background: #f9f6ed;
+/*background: #f9f6ed url(images/pincode.jpg)bottom left no-repeat;*/
 }
-#pincodepop input{
+#pincodepop input,
+#pinpop input,
+#pinchangepop input{
 width: 80%;
 display: block;
 margin: auto;
@@ -404,7 +410,9 @@ height: 137px;
 	text-align: center;
 }
 
-#pinlist_loader{
+#pinlist_loader,
+#pinlist_loader2,
+#pinlist_loader3{
 	text-align:center;
 	margin-top:20px;
 }
@@ -614,4 +622,38 @@ height: 30px;
 
 .widget_shopping_cart_content .buttons{
 text-align:center;
+}
+
+.product-avail-error{
+	display:none;
+	margin-top: 50px;
+	text-align:center;
+}
+
+.product-avail-error a{
+	cursor:pointer;
+}
+
+#change-pincode-list{
+	cursor:pointer;
+}
+
+.pinchange-info{
+ width: 80%;
+ margin: auto;
+ display: block;
+ text-align: center;
+ margin-top: 10px;
+}
+#pincode-chk-cancel{
+	margin-left:10px;
+}
+
+.pincode-txt{
+ width: 80%;
+ margin: auto;
+ display: block;
+ text-align: center;
+ margin-top: 10px;
+ margin-bottom: 10px;
 }
