@@ -1,6 +1,45 @@
 jQuery(document).ready(function(){
 
 
+
+    if (pincode_data.hasOwnProperty("pincode")) {
+
+        var pincode = pincode_data.pincode;
+
+        var ship_to_different = jQuery("#ship-to-different-address-checkbox").val();
+
+        if (jQuery("#ship-to-different-address-checkbox").is(':checked')) {
+             jQuery("#shipping_postcode").val(pincode);
+             jQuery("#shipping_postcode").attr("disabled", "disabled");
+        }else{
+           jQuery("#billing_postcode").val(pincode);
+           jQuery("#billing_postcode").attr("disabled", "disabled"); 
+        }
+
+      }
+
+
+    jQuery(document).on('click','#ship-to-different-address-checkbox',function(){
+      if(jQuery(this).prop('checked')) {
+            jQuery("#billing_postcode").val("");
+            jQuery("#billing_postcode").removeAttr('disabled');
+
+             jQuery("#shipping_postcode").val(pincode);
+             jQuery("#shipping_postcode").attr("disabled", "disabled");
+      } else {
+        jQuery("#shipping_postcode").val("");
+        jQuery("#shipping_postcode").removeAttr('disabled');
+
+        jQuery("#billing_postcode").val(pincode);
+        jQuery("#billing_postcode").attr("disabled", "disabled");
+      }
+   });
+
+
+
+
+
+
     /*if (jQuery.cookie('user_pincode') == null ){
 
         jQuery("#pincodepop").css('display', 'block');
