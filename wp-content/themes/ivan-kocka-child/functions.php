@@ -954,8 +954,3 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
        }
     }
   }
-
-
-
-?>
-
