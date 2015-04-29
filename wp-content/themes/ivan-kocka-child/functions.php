@@ -888,7 +888,7 @@ function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
   function sort_query_by_post_in( $sortby, $query ) {
     
 
-if ($query->is_main_query()/* && $query->is_post_type_archive()*/) {
+if ($query->is_main_query() && $query->is_post_type_archive()) {
 
 
 $args = array_merge( $query->query_vars, array( 'post_type' => 'product' ) );
@@ -954,4 +954,8 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
        }
     }
   }
+
+
+
+?>
 
