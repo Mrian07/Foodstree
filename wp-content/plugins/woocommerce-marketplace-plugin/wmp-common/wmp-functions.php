@@ -861,7 +861,7 @@ function wmp_get_client_ip()
     $manage_stock = get_post_meta($post_id, '_manage_stock', true);
     $stock = get_post_meta($post_id, '_stock', true);
     $last_modified = $post->post_modified;
-    $sku = get_post_meta($post_id, 'sku', true);
+    $sku = get_post_meta($post_id, '_sku', true);
 
     $subject = 'A product has been updated';
 
