@@ -138,6 +138,26 @@ if(is_admin())
 </a>
 		<div id="overlay" class="quick-info"><br>
 
+
+<?php
+//$product = new WC_Product( $post->ID );
+if( $product->is_type( 'simple' ) ){
+  $type = 'simple';
+} else{
+	$type = 'notsimple';
+}
+?>
+
+
+<form method="post" class="singlecart<?php echo $post->ID; ?>" enctype="multipart/form-data">
+<input type="hidden" name="quantity" value="1">
+<input type="hidden" name="ptype" value="<?php echo $type; ?>">
+<input type="hidden" name="plink" value="<?php echo get_permalink( $product->ID ); ?>">
+<input type="hidden" name="add-to-cart" value="<?php echo $post->ID; ?>">
+</form>
+
+
+
 <?php $add_to_cart = do_shortcode('[add_to_cart_url id="'.$post->ID.'"]'); ?>
 
 				<a href="<?php echo $add_to_cart; ?>" class="wmp-cart-btn" data-product-id="<?php echo $post->ID; ?>" data-seller-id="<?php echo $post->post_author; ?>"><div class="cart-icon"></div></a>

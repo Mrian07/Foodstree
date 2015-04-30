@@ -737,7 +737,7 @@ $ispinchange = '';
     $woocommerce->cart->empty_cart();
     $ispinchange = 'data-pinchanged="true"';
   }*/
-    
+
     $response = array(
       'status' => 'true'
       );
@@ -970,3 +970,8 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
        }
     }
   }
+
+
+
+
+ // add_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_add_to_cart' );

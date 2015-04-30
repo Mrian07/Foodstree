@@ -505,8 +505,19 @@ var data = {
                 if (pincode_data.hasOwnProperty("product_id")) {
                     jQuery(".cart").submit();
                 }else{
-                   var urlWithoutHash = window.location.href.split("?")[0];
-                window.location.replace(urlWithoutHash+'?add-to-cart='+product_id); 
+                   /*var urlWithoutHash = window.location.href.split("?")[0];
+                window.location.replace(urlWithoutHash+'?add-to-cart='+product_id);*/ 
+
+
+                var crtid = '.singlecart'+product_id;
+                var ptype = jQuery(crtid).find('input[name="ptype"]').val();
+                var plink = jQuery(crtid).find('input[name="plink"]').val();
+                if(ptype == 'simple'){
+                jQuery(crtid).submit();
+            }else{
+               var urlWithoutHash = window.location.href.split("?")[0];
+                window.location.replace(plink); 
+            }
                 }
 
                 /*if(single_product == 'false'){
