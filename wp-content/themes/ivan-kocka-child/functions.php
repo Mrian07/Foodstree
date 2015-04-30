@@ -727,6 +727,17 @@ $ispinchange = '';
       'pinchange'=> $ispinchange
       );
   }else{
+
+     /*session_start();
+  if(!isset($_SESSION['pincode'])){
+     $_SESSION['pincode'] = $pincode;
+    $woocommerce->cart->empty_cart();
+  }else if($_SESSION['pincode'] != $pincode){
+    $_SESSION['pincode'] = $pincode;
+    $woocommerce->cart->empty_cart();
+    $ispinchange = 'data-pinchanged="true"';
+  }*/
+    
     $response = array(
       'status' => 'true'
       );

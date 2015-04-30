@@ -428,6 +428,7 @@ jQuery("#pincode-chk-list").on('click', function(){
     var seller_id = jQuery(this).attr("data-seller-id");
     var single_product = jQuery(this).attr("data-single-product");
 
+   
     jQuery('#nonavailable-list').empty();
 
     var pincode = jQuery("#pincode2").val();
@@ -472,10 +473,16 @@ var data = {
             dataType: 'json',
             success:function(response){
 
+                
+
                       
              jQuery('#pinlist_loader2').hide();
              
              if(response.status == 'false'){
+
+                console.log('false');
+
+
               
               jQuery("#pincode_ent2").css('display', 'none');
 
@@ -487,20 +494,28 @@ var data = {
               var pinchange = response.pinchange;
                jQuery(".product-avail-error").append('<div class="pincode-btn"><button id="pincode-list-close" '+pinchange+'>CLOSE</button></div>');
                 
-              }else{
+              }else if(response.status == 'true'){
 
+                
                 jQuery("#pinpop").css('display', 'none');
                 jQuery(".background_overlay").css('display', 'none');
 
                 
-                if(single_product == 'false'){
+                
+                if (pincode_data.hasOwnProperty("product_id")) {
+                    jQuery(".cart").submit();
+                }else{
+                   var urlWithoutHash = window.location.href.split("?")[0];
+                window.location.replace(urlWithoutHash+'?add-to-cart='+product_id); 
+                }
+
+                /*if(single_product == 'false'){
                 var urlWithoutHash = window.location.href.split("?")[0];
                 window.location.replace(urlWithoutHash+'?add-to-cart='+product_id);
-                //alert('single product not added');
+                           
                 }else{
-                    //alert('single product added');
                     jQuery(".cart").submit();
-                }
+                }*/
 
                 
              }
@@ -525,6 +540,8 @@ jQuery("#pincode-chk-list").removeAttr("data-seller-id");
 
 jQuery("#pincode-chk-list").attr("data-product-id",product_id);
 jQuery("#pincode-chk-list").attr("data-seller-id",seller_id);
+
+//jQuery("#pincode-chk-list").attr("data-single-product",'false');
 
 
     jQuery(".product-avail-error").empty();
