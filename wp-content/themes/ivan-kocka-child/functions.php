@@ -708,6 +708,7 @@ $ispinchange = '';
   if(!isset($_SESSION['pincode'])){
      $_SESSION['pincode'] = $pincode;
     $woocommerce->cart->empty_cart();
+    $ispinchange = 'data-pinchanged="true"';
   }else if($_SESSION['pincode'] != $pincode){
     $_SESSION['pincode'] = $pincode;
     $woocommerce->cart->empty_cart();
