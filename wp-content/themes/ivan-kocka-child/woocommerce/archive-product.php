@@ -119,12 +119,12 @@ endif;
 
 
 
-				<?php if(isset($_SESSION['pincode'])){ ?>
+				<?php if(isset($_COOKIE['pincode'])){ ?>
 
 				<div id="pin_options" class="text-center">
 					<h4>
 						<?php
-							echo "<i class='fa fa-map-marker'></i> Your pincode is <strong>".$_SESSION['pincode']."</strong> <a id='change-pincode-list'>[ Change Pincode ]</a>";
+							echo "<i class='fa fa-map-marker'></i> Your pincode is <strong>".$_COOKIE['pincode']."</strong> <a id='change-pincode-list'>[ Change Pincode ]</a>";
 						?>
 					</h4>
 				</div>

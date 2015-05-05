@@ -14,8 +14,8 @@ function enqueue_parent_theme_style() {
       'checkout_url'=>$woocommerce->cart->get_checkout_url(),
       );
 
-      if(isset($_SESSION['pincode'])){
-        $data['pincode'] = $_SESSION['pincode'];
+      if(isset($_COOKIE['pincode'])){
+        $data['pincode'] = $_COOKIE['pincode'];
       }
 
       if(is_single()){
@@ -78,8 +78,8 @@ function get_pincode_sellers(){
     global $wpdb;
     
     $sellers = array();
-    if(isset($_COOKIE['user_pincode'])){
-       $seller_ids = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
+    if(isset($_COOKIE['pincode'])){
+       $seller_ids = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['pincode'] ));
        $seller_ids = maybe_unserialize($seller_ids);
 
              
@@ -525,9 +525,9 @@ add_filter('woocommerce_available_payment_gateways','disable_cod_pincode_not_ser
 function is_cod_serviceable($seller_ids){
     global $wpdb;
     
-    if(isset($_SESSION['pincode'])){
+    if(isset($_COOKIE['pincode'])){
        //$sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
-       $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_SESSION['pincode'] ));
+       $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['pincode'] ));
        $sellers_data = maybe_unserialize($sellers_data);
        
        if(empty($sellers_data))
@@ -647,7 +647,7 @@ function check_pincode_session() {
   $pincode = $_POST['pincode'];
 
   session_start();
-  $_SESSION['pincode'] = $pincode;
+  $_COOKIE['pincode'] = $pincode;
 
  
     $unavailable_products = array();
@@ -703,7 +703,10 @@ function check_is_pincode_available_for_product() {
   $product_id = $_POST['product_id'];
 
 
-$ispinchange = '';
+  
+
+
+/*$ispinchange = '';
   session_start();
   if(!isset($_SESSION['pincode'])){
      $_SESSION['pincode'] = $pincode;
@@ -711,6 +714,17 @@ $ispinchange = '';
     $ispinchange = 'data-pinchanged="true"';
   }else if($_SESSION['pincode'] != $pincode){
     $_SESSION['pincode'] = $pincode;
+    $woocommerce->cart->empty_cart();
+    $ispinchange = 'data-pinchanged="true"';
+  }*/
+
+  $ispinchange = '';
+ if (!isset($_COOKIE['pincode'])){
+    setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
+    $woocommerce->cart->empty_cart();
+    $ispinchange = 'data-pinchanged="true"';
+  }else if($_COOKIE['pincode'] != $pincode){
+    setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
     $woocommerce->cart->empty_cart();
     $ispinchange = 'data-pinchanged="true"';
   }
@@ -729,16 +743,7 @@ $ispinchange = '';
       );
   }else{
 
-     /*session_start();
-  if(!isset($_SESSION['pincode'])){
-     $_SESSION['pincode'] = $pincode;
-    $woocommerce->cart->empty_cart();
-  }else if($_SESSION['pincode'] != $pincode){
-    $_SESSION['pincode'] = $pincode;
-    $woocommerce->cart->empty_cart();
-    $ispinchange = 'data-pinchanged="true"';
-  }*/
-
+   
     $response = array(
       'status' => 'true'
       );
@@ -770,12 +775,23 @@ function wmp_change_pincode() {
 
 $pincode = $_POST['pincode'];
 
-  session_start();
+  /*session_start();
   if(!isset($_SESSION['pincode'])){
      $_SESSION['pincode'] = $pincode;
     $woocommerce->cart->empty_cart();
   }else if($_SESSION['pincode'] != $pincode){
     $_SESSION['pincode'] = $pincode;
+       $woocommerce->cart->empty_cart();
+  }*/
+
+
+
+  session_start();
+  if(!isset($_COOKIE['pincode'])){
+     setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
+    $woocommerce->cart->empty_cart();
+  }else if($_COOKIE['pincode'] != $pincode){
+    setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
        $woocommerce->cart->empty_cart();
   }
 
@@ -950,8 +966,8 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
 
   function wmp_modify_cart_button(){
      global $post;
-    if(isset($_SESSION['pincode'])){
-     if(!check_if_seller_available($post->post_author, $_SESSION['pincode'])){
+    if(isset($_COOKIE['pincode'])){
+     if(!check_if_seller_available($post->post_author, $_COOKIE['pincode'])){
         remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
       }
     }
@@ -963,8 +979,8 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
   function wmp_replace_add_to_cart() {
 
     global $product;
-    if(isset($_SESSION['pincode'])){
-     if(!check_if_seller_available($product->post->post_author, $_SESSION['pincode'])){  
+    if(isset($_COOKIE['pincode'])){
+     if(!check_if_seller_available($product->post->post_author, $_COOKIE['pincode'])){  
         
         echo '<h4>This product cannot be shipped to your pincode. >>> <a id="change-pincode-list" data-product-id="'.$product->ID.'" data-seller-id="'.$product->post->post_author.'"><strong>Change pincode</strong></a>.</h4>';
         

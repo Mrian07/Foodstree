@@ -444,6 +444,8 @@ jQuery("#pincode-chk-list").on('click', function(){
 
          wmp_add_to_cart(pincode,product_id, seller_id, single_product);
 
+         //jQuery.cookie('pincode', pincode, { expires: 365, path: '/' });
+
     }
 });
 
