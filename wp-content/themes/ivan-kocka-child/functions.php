@@ -58,16 +58,7 @@ function get_authored_products($query) {
 
 
 
-/*function filterAllSeller(){
-  if(!isset($_SESSION['all_sellers'])){
-    session_start();
-    $_SESSION['all_sellers'] = 'no';
-  }
-  //print_r(get_pincode_sellers());
-}
 
-add_action( 'wp', 'filterAllSeller' );
-*/
 
 
 
