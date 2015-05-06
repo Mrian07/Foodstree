@@ -932,6 +932,32 @@ function wmp_discount_catalog_ordering_args( $args ) {
     /*$args['orderby']  = 'meta_value_num';
     $args['order']    = 'DESC';
     $args['meta_key']   = '_dfrps_salediscount';*/
+
+    $args['post_type'] = 'product';
+
+    $posts_array = query_posts( $args );
+    
+    $discount_data = array();
+foreach($posts_array as $pro){
+
+  $regular_price = get_post_meta($pro->ID, '_regular_price', true);
+  $sale_price = get_post_meta($pro->ID, '_sale_price', true);
+  if($regular_price != '' && $sale_price != ''){
+    $discount = ((int)$regular_price - (int)$sale_price);
+  }else{
+    $discount = 0;
+  }
+  $discount_data[$pro->ID] = $discount;
+}
+
+arsort($discount_data, SORT_NUMERIC);
+$data = array_reverse($discount_data, true);
+
+$product_ids = array_keys($data);
+
+$args['order_by'] = 'FIELD(ID, '.implode(',',$product_ids).')';
+
+
    
   }
   return $args;
@@ -940,9 +966,17 @@ function wmp_discount_catalog_ordering_args( $args ) {
 add_filter( 'woocommerce_default_catalog_orderby_options', 'wmp_add_salediscount_to_catalog_orderby' );
 add_filter( 'woocommerce_catalog_orderby', 'wmp_add_salediscount_to_catalog_orderby' );
 function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
+  unset( $sortby['rating'] );
+  unset( $sortby['date'] );
   $sortby['discount']   = 'Sort by discount';
   return $sortby;
 }
+
+
+
+
+
+
 
 
 
