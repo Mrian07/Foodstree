@@ -256,9 +256,19 @@ jQuery("#pincode-chk").on('click', function(){
 
 
 function check_unavailable_products(pincode){
+
+var cod;
+if (jQuery('input#enable_cod').prop('checked')) {
+ cod = 'yes'; 
+}else{
+cod = 'no'; 
+}
+
+
 var data = {
             'action': 'pincode_session',
-            'pincode': pincode
+            'pincode': pincode,
+            'cod': cod
         };
 
 
@@ -305,9 +315,18 @@ var data = {
 
 
 function check_unavailable_pincodes(pincode){
+
+var cod;
+if (jQuery('input#enable_cod').prop('checked')) {
+ cod = 'yes'; 
+}else{
+cod = 'no';
+}
+
 var data = {
             'action': 'pincode_session',
-            'pincode': pincode
+            'pincode': pincode,
+            'cod': cod
         };
 
         jQuery.ajax({

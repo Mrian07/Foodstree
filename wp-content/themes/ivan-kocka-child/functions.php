@@ -336,14 +336,14 @@ function custom_get_availability( $availability, $_product ) {
 
 
 
-/*function isKVInArray($k, $v, $array) {
+function isKVInArray($k, $v, $array) {
     $filtered = array_filter($array, function($item) use($k,$v) {
         return $item[$k] == $v;
     });
     if(count($filtered)>=1) return true;
     else return false;
 }
-*/
+
 
 
 
@@ -511,15 +511,27 @@ function is_cod_servicable_current_cart(){
 //disable cod if sellers of cart products has no cod for the pincode
 function disable_cod_pincode_not_serviceable( $available_gateways ) {
         
-    if(! is_cod_servicable_current_cart()){
+    /*if(! is_cod_servicable_current_cart()){
     
         unset(  $available_gateways['cod'] );
+    }*/
+
+    if(WC()->session->cart_cod == 'yes'){
+      unset(  $available_gateways['ccavenue'] );
+    }else{
+      unset(  $available_gateways['cod'] );
     }
     
     return $available_gateways;
 
 }
-add_filter('woocommerce_available_payment_gateways','disable_cod_pincode_not_serviceable',10,1); 
+add_filter('woocommerce_available_payment_gateways','disable_cod_pincode_not_serviceable',10,1);
+
+
+
+
+
+
 
 //check if sellers have COD on for the pincode
 function is_cod_serviceable($seller_ids){
@@ -556,7 +568,7 @@ function is_cod_serviceable($seller_ids){
 
 
 
-//add_action('wmp_cod_is_available', 'cod_enable_field', 0);
+add_action('wmp_cod_is_available', 'cod_enable_field', 0);
 
 function cod_enable_field() {
 
@@ -567,7 +579,7 @@ function cod_enable_field() {
   $cod_charge = $ajency_wmp->wmp_additional_cod_charge();
 
   if($cod_charge > 0){
-    $label = 'Cash on Delivery (Additional fees - '.$ajency_wmp->wmp_additional_cod_charge().').';
+    $label = 'Cash on Delivery (Additional fees - Rs.'.$ajency_wmp->wmp_additional_cod_charge().').';
   }else{
     $label = 'Cash on Delivery';
   }
@@ -591,9 +603,22 @@ function cod_enable_field() {
 
 
 
+function remove_cod_session_on_cart_load(){
+  global $woocommerce;
+  if(is_cart()){
+  WC()->session->set( 'cart_cod', 'no' );
+}
+}
+add_action('template_redirect', 'remove_cod_session_on_cart_load');
+
+
+
+
 
 
 function wp_add_cod_charge( $cart_object ) {
+
+ if(WC()->session->cart_cod == 'yes'){
 
    if(is_cod_servicable_current_cart()){
  
@@ -607,11 +632,17 @@ function wp_add_cod_charge( $cart_object ) {
     $woocommerce->cart->add_fee( 'Additional COD fees', $cod_charge, true, 'standard' );
 
   }
+}
+
   
   
 }
  
-//add_action( 'woocommerce_cart_calculate_fees', 'wp_add_cod_charge' );
+add_action( 'woocommerce_cart_calculate_fees', 'wp_add_cod_charge' );
+
+
+
+
 
 
 
@@ -645,7 +676,8 @@ function check_pincode_session() {
   global $woocommerce;
 
   $pincode = $_POST['pincode'];
-
+  $cod = $_POST['cod'];
+ 
   session_start();
   $_COOKIE['pincode'] = $pincode;
 
@@ -668,6 +700,9 @@ function check_pincode_session() {
         'products' => $unavailable_products
         );
      }else{
+
+      WC()->session->set( 'cart_cod', $cod );
+
       $response = array(
         'status' => 'true'
         );
