@@ -14,6 +14,7 @@ global $woocommerce;
 wc_print_notices();
 
 
+
 do_action( 'woocommerce_before_checkout_form', $checkout );
 
 // If checkout registration is disabled and not logged in, the user cannot checkout
