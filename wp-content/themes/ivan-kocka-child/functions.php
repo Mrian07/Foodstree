@@ -637,26 +637,6 @@ add_action( 'woocommerce_cart_calculate_fees', 'wp_add_cod_charge' );
 
 
 
-
-
-
-
-
-
-
-function fake_session(){
-  session_start();
-  unset($_SESSION['pincode']);
-//$_SESSION['pincode'] = '742123';
-}
-//add_action('init', 'fake_session');
-
-
-
-
-
-
-
 //Setting pincode session and checking products availibility
 add_action('wp_ajax_nopriv_pincode_session', 'check_pincode_session');
 add_action( 'wp_ajax_pincode_session', 'check_pincode_session' );
@@ -729,28 +709,14 @@ function check_is_pincode_available_for_product() {
   $product_id = $_POST['product_id'];
 
 
-  
-
-
-/*$ispinchange = '';
-  session_start();
-  if(!isset($_SESSION['pincode'])){
-     $_SESSION['pincode'] = $pincode;
-    $woocommerce->cart->empty_cart();
-    $ispinchange = 'data-pinchanged="true"';
-  }else if($_SESSION['pincode'] != $pincode){
-    $_SESSION['pincode'] = $pincode;
-    $woocommerce->cart->empty_cart();
-    $ispinchange = 'data-pinchanged="true"';
-  }*/
 
   $ispinchange = '';
  if (!isset($_COOKIE['pincode'])){
-    setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
+    setcookie('pincode', $pincode, time() + (86400 * 30), "/");
     $woocommerce->cart->empty_cart();
     $ispinchange = 'data-pinchanged="true"';
   }else if($_COOKIE['pincode'] != $pincode){
-    setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
+    setcookie('pincode', $pincode, time() + (86400 * 30), "/");
     $woocommerce->cart->empty_cart();
     $ispinchange = 'data-pinchanged="true"';
   }
@@ -801,23 +767,15 @@ function wmp_change_pincode() {
 
 $pincode = $_POST['pincode'];
 
-  /*session_start();
-  if(!isset($_SESSION['pincode'])){
-     $_SESSION['pincode'] = $pincode;
-    $woocommerce->cart->empty_cart();
-  }else if($_SESSION['pincode'] != $pincode){
-    $_SESSION['pincode'] = $pincode;
-       $woocommerce->cart->empty_cart();
-  }*/
+ 
 
 
-
-  session_start();
+ 
   if(!isset($_COOKIE['pincode'])){
-     setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
+     setcookie('pincode', $pincode, time() + (86400 * 30), "/");
     $woocommerce->cart->empty_cart();
   }else if($_COOKIE['pincode'] != $pincode){
-    setcookie('pincode', $pincode, time() + (86400 * 30*30), "/");
+    setcookie('pincode', $pincode, time() + (86400 * 30), "/");
        $woocommerce->cart->empty_cart();
   }
 
@@ -895,7 +853,7 @@ foreach($posts_array as $pro){
 arsort($discount_data, SORT_NUMERIC);
 $data = array_reverse($discount_data, true);
 
-$product_ids = array_keys($data);
+$product_ids = array_keys($discount_data);
 
 /*echo "<pre>";
 print_r($product_ids);
@@ -905,7 +863,7 @@ echo "</pre>";*/
   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
   if ( 'discount' == $orderby_value ) {
   $query->set('post__in', $product_ids);
-  //$query->set('order_by', 'FIELD(ID, '.implode(',',$product_ids).')');
+  $query->set('order_by', 'FIELD(ID, '.implode(',',$product_ids).')');
 }
   }
   return $query;
@@ -920,10 +878,7 @@ add_filter( 'woocommerce_get_catalog_ordering_args', 'wmp_discount_catalog_order
 function wmp_discount_catalog_ordering_args( $args ) {
   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
   if ( 'discount' == $orderby_value ) {
-    /*$args['orderby']  = 'meta_value_num';
-    $args['order']    = 'DESC';
-    $args['meta_key']   = '_dfrps_salediscount';*/
-
+   
     $args['post_type'] = 'product';
 
     $posts_array = query_posts( $args );
@@ -944,13 +899,14 @@ foreach($posts_array as $pro){
 arsort($discount_data, SORT_NUMERIC);
 $data = array_reverse($discount_data, true);
 
-$product_ids = array_keys($data);
+/*$product_ids = array_keys($data);*/
+$product_ids = array_keys($discount_data);
+
+$args['post__in'] = implode(',',$product_ids);
 
 $args['order_by'] = 'FIELD(ID, '.implode(',',$product_ids).')';
 
-
-   
-  }
+}
   return $args;
 }
 
@@ -1004,7 +960,7 @@ foreach($posts_array as $pro){
 arsort($discount_data, SORT_NUMERIC);
 $data = array_reverse($discount_data, true);
 
-$product_ids = array_keys($data);
+$product_ids = array_keys($discount_data);
 
 //print_r($product_ids);
 
