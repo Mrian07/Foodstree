@@ -10,10 +10,12 @@ jQuery(document).ready(function(){
 
         if (jQuery("#ship-to-different-address-checkbox").is(':checked')) {
              jQuery("#shipping_postcode").val(pincode);
-             jQuery("#shipping_postcode").attr("disabled", "disabled");
+             //jQuery("#shipping_postcode").attr("disabled", "disabled");
+             jQuery("#shipping_postcode").attr("readonly", "readonly");
         }else{
            jQuery("#billing_postcode").val(pincode);
-           jQuery("#billing_postcode").attr("disabled", "disabled"); 
+           //jQuery("#billing_postcode").attr("disabled", "disabled");
+           jQuery("#billing_postcode").attr("readonly", "readonly");  
         }
 
       }
@@ -22,16 +24,20 @@ jQuery(document).ready(function(){
     jQuery(document).on('click','#ship-to-different-address-checkbox',function(){
       if(jQuery(this).prop('checked')) {
             jQuery("#billing_postcode").val("");
-            jQuery("#billing_postcode").removeAttr('disabled');
+            //jQuery("#billing_postcode").removeAttr('disabled');
+            jQuery("#billing_postcode").removeAttr('readonly');
 
              jQuery("#shipping_postcode").val(pincode);
-             jQuery("#shipping_postcode").attr("disabled", "disabled");
+             //jQuery("#shipping_postcode").attr("disabled", "disabled");
+             jQuery("#shipping_postcode").attr("readonly", "readonly");
       } else {
         jQuery("#shipping_postcode").val("");
-        jQuery("#shipping_postcode").removeAttr('disabled');
+        //jQuery("#shipping_postcode").removeAttr('disabled');
+        jQuery("#shipping_postcode").removeAttr('readonly');
 
         jQuery("#billing_postcode").val(pincode);
-        jQuery("#billing_postcode").attr("disabled", "disabled");
+        //jQuery("#billing_postcode").attr("disabled", "disabled");
+        jQuery("#billing_postcode").attr("readonly", "readonly");
       }
    });
 

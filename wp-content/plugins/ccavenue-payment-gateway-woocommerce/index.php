@@ -220,7 +220,11 @@ Author URI: http://www.mrova.com/
         if($msg['class']=='success'){
             $woocommerce->add_message( $msg['message']);
         }else{
-            $woocommerce->add_error( $msg['message'] );
+            //depreciated on new update
+            //$woocommerce->add_error( $msg['message'] );
+
+            //new error function
+            wc_add_notice( $msg['message'], 'error' );
 
         }
         $woocommerce->set_messages();

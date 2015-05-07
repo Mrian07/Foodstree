@@ -213,19 +213,16 @@ function my_custom_checkout_field_process() {
 
 if(isset($_POST['billing_postcode'])){
   if ( !is_numeric($_POST['billing_postcode']) || strlen($_POST['billing_postcode']) > 6 || strlen($_POST['billing_postcode']) < 6){
-    $woocommerce->add_error( __('Please enter 6 digit number for postcode') );
+    //$woocommerce->add_error( __('Please enter 6 digit number for postcode') );
+    wc_add_notice( 'Please enter 6 digit number for postcode', 'error' );
   }
 }
 
-/*if(isset($_POST['shipping_postcode'])){
-  if ( !is_numeric($_POST['shipping_postcode']) || strlen($_POST['shipping_postcode']) > 6 || strlen($_POST['shipping_postcode']) < 6){
-    $woocommerce->add_error( __('Please enter 6 digit number for postcode') );
-  }
-}*/
 
 if(isset($_POST['billing_phone'])){
   if ( strlen($_POST['billing_phone']) > 10 || strlen($_POST['billing_phone']) < 10){
-    $woocommerce->add_error( __('Please enter 10 digit number for phone') );
+    //$woocommerce->add_error( __('Please enter 10 digit number for phone') );
+    wc_add_notice( 'Please enter 10 digit number for phone', 'error' );
   }
 }
 
