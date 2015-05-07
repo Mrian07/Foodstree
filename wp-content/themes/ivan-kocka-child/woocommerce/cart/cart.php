@@ -197,7 +197,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 				<?php } ?>
 
 
-				<?php woocommerce_shipping_calculator(); ?>
+				<?php //woocommerce_shipping_calculator(); ?>
 
 			</div>
 
