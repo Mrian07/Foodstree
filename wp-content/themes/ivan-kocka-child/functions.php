@@ -646,8 +646,7 @@ function check_pincode_session() {
   $pincode = $_POST['pincode'];
   $cod = $_POST['cod'];
  
-  session_start();
-  $_COOKIE['pincode'] = $pincode;
+  setcookie('pincode', $pincode, time() + (86400 * 30), "/");
 
  
     $unavailable_products = array();
