@@ -207,7 +207,7 @@ public function seller_ship_amount($id, $subtotal){
     }else{
 
     //$pincode = $_POST['calc_shipping_postcode'];
-        $pincode = $_COOKIE['user_pincode'];
+        $pincode = $_COOKIE['pincode'];
 
      $rate = $this->ship_rate_by_pincode($id,$pincode);
 
