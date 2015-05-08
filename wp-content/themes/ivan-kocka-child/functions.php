@@ -910,7 +910,7 @@ add_filter( 'woocommerce_default_catalog_orderby_options', 'wmp_add_salediscount
 add_filter( 'woocommerce_catalog_orderby', 'wmp_add_salediscount_to_catalog_orderby' );
 function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
   unset( $sortby['rating'] );
-  unset( $sortby['date'] );
+  unset( $sortby['popularity'] );
   $sortby['discount']   = 'Sort by discount';
   return $sortby;
 }
