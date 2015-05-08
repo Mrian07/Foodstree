@@ -981,6 +981,8 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
     if(isset($_COOKIE['pincode'])){
      if(!check_if_seller_available($post->post_author, $_COOKIE['pincode'])){
         remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+      }else{
+         add_action( 'woocommerce_single_product_summary', 'current_pincode_text', 30 );
       }
     }
   }
@@ -994,10 +996,17 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
     if(isset($_COOKIE['pincode'])){
      if(!check_if_seller_available($product->post->post_author, $_COOKIE['pincode'])){  
         
-        echo '<h4>This product cannot be shipped to your pincode. >>> <a id="change-pincode-list" data-product-id="'.$product->ID.'" data-seller-id="'.$product->post->post_author.'"><strong>Change pincode</strong></a>.</h4>';
+        echo 'This product cannot be shipped to your pincode - '.$_COOKIE['pincode'].' >>> <a id="change-pincode-list" data-product-id="'.$product->ID.'" data-seller-id="'.$product->post->post_author.'"><strong>Change pincode</strong></a>';
         
        }
     }
+  }
+
+
+
+  function current_pincode_text(){
+    global $product;
+    echo 'Your pincode is '.$_COOKIE['pincode'].' >>> <a id="change-pincode-list" data-product-id="'.$product->ID.'" data-seller-id="'.$product->post->post_author.'"><strong>Change pincode</strong></a>';
   }
 
 
