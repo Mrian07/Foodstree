@@ -1,7 +1,7 @@
 <div data-taxonomy="<?php echo esc_attr( $taxonomy ); ?>" class="woocommerce_attribute wc-metabox closed <?php echo esc_attr( implode( ' ', $metabox_class ) ); ?>" rel="<?php echo $position; ?>">
 	<h3>
-		<button type="button" class="remove_row button"><?php _e( 'Remove', 'woocommerce' ); ?></button>
-		<div class="handlediv" title="<?php _e( 'Click to toggle', 'woocommerce' ); ?>"></div>
+		<a href="#" class="remove_row delete"><?php _e( 'Remove', 'woocommerce' ); ?></a>
+		<div class="handlediv" title="<?php esc_attr_e( 'Click to toggle', 'woocommerce' ); ?>"></div>
 		<strong class="attribute_name"><?php echo esc_html( $attribute_label ); ?></strong>
 	</h3>
 	<div class="woocommerce_attribute_data wc-metabox-content">
@@ -27,12 +27,16 @@
 						<?php if ( $attribute['is_taxonomy'] ) : ?>
 							<?php if ( 'select' === $attribute_taxonomy->attribute_type ) : ?>
 
-								<select multiple="multiple" data-placeholder="<?php _e( 'Select terms', 'woocommerce' ); ?>" class="multiselect attribute_values wc-enhanced-select" name="attribute_values[<?php echo $i; ?>][]">
+								<select multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select terms', 'woocommerce' ); ?>" class="multiselect attribute_values wc-enhanced-select" name="attribute_values[<?php echo $i; ?>][]">
 									<?php
-									$all_terms = get_terms( $taxonomy, 'orderby=name&hide_empty=0' );
+									$args = array(
+										'orderby'    => 'name',
+										'hide_empty' => 0
+									);
+									$all_terms = get_terms( $taxonomy, apply_filters( 'woocommerce_product_attribute_terms', $args ) );
 									if ( $all_terms ) {
 										foreach ( $all_terms as $term ) {
-											echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( has_term( absint( $term->term_id ), $taxonomy, $thepostid ), true, false ) . '>' . $term->name . '</option>';
+											echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( has_term( absint( $term->term_id ), $taxonomy, $thepostid ), true, false ) . '>' . esc_attr( apply_filters( 'woocommerce_product_attribute_term_name', $term->name, $term ) ) . '</option>';
 										}
 									}
 									?>

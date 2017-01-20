@@ -2,10 +2,10 @@
 /**
  * WooCommerce Product Settings
  *
- * @author      WooThemes
- * @category    Admin
- * @package     WooCommerce/Admin
- * @version     2.1.0
+ * @author   WooThemes
+ * @category Admin
+ * @package  WooCommerce/Admin
+ * @version  2.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_Settings_Products' ) ) :
 
 /**
- * WC_Settings_Products
+ * WC_Settings_Products.
  */
 class WC_Settings_Products extends WC_Settings_Page {
 
@@ -34,7 +34,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get sections
+	 * Get sections.
 	 *
 	 * @return array
 	 */
@@ -51,18 +51,18 @@ class WC_Settings_Products extends WC_Settings_Page {
 	}
 
 	/**
-	 * Output the settings
+	 * Output the settings.
 	 */
 	public function output() {
 		global $current_section;
 
 		$settings = $this->get_settings( $current_section );
 
- 		WC_Admin_Settings::output_fields( $settings );
+		WC_Admin_Settings::output_fields( $settings );
 	}
 
 	/**
-	 * Save settings
+	 * Save settings.
 	 */
 	public function save() {
 		global $current_section;
@@ -72,7 +72,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get settings array
+	 * Get settings array.
 	 *
 	 * @return array
 	 */
@@ -109,8 +109,8 @@ class WC_Settings_Products extends WC_Settings_Page {
 					'type'     => 'select',
 					'options'  => array(
 						''              => __( 'Show products', 'woocommerce' ),
-						'subcategories' => __( 'Show categories &amp; subcategories', 'woocommerce' ),
-						'both'          => __( 'Show both', 'woocommerce' ),
+						'subcategories' => __( 'Show categories', 'woocommerce' ),
+						'both'          => __( 'Show categories &amp; products', 'woocommerce' ),
 					),
 					'desc_tip' =>  true,
 				),
@@ -126,7 +126,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 					'options'  => array(
 						''              => __( 'Show products', 'woocommerce' ),
 						'subcategories' => __( 'Show subcategories', 'woocommerce' ),
-						'both'          => __( 'Show both', 'woocommerce' ),
+						'both'          => __( 'Show subcategories &amp; products', 'woocommerce' ),
 					),
 					'desc_tip' =>  true,
 				),
@@ -175,7 +175,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 				array(
 					'title' => __( 'Product Images', 'woocommerce' ),
 					'type' 	=> 'title',
-					'desc' 	=> sprintf( __( 'These settings affect the display and dimensions of images in your catalog - the display on the front-end will still be affected by CSS styles. After changing these settings you may need to <a href="%s">regenerate your thumbnails</a>.', 'woocommerce' ), 'http://wordpress.org/extend/plugins/regenerate-thumbnails/' ),
+					'desc' 	=> sprintf( __( 'These settings affect the display and dimensions of images in your catalog - the display on the front-end will still be affected by CSS styles. After changing these settings you may need to <a href="%s">regenerate your thumbnails</a>.', 'woocommerce' ), 'https://wordpress.org/extend/plugins/regenerate-thumbnails/' ),
 					'id' 	=> 'image_options'
 				),
 
@@ -264,7 +264,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 						'min'  => 0,
 						'step' => 1
 					),
-					'css'               => 'width:50px;',
+					'css'               => 'width: 80px;',
 					'default'           => '60',
 					'autoload'          => false
 				),
@@ -289,12 +289,14 @@ class WC_Settings_Products extends WC_Settings_Page {
 				),
 
 				array(
-					'title'    => __( 'Notification Recipient', 'woocommerce' ),
-					'desc'     => '',
+					'title'    => __( 'Notification Recipient(s)', 'woocommerce' ),
+					'desc'     => __( 'Enter recipients (comma separated) that will receive this notification.', 'woocommerce' ),
 					'id'       => 'woocommerce_stock_email_recipient',
-					'type'     => 'email',
+					'type'     => 'text',
 					'default'  => get_option( 'admin_email' ),
-					'autoload' => false
+					'css'      => 'width: 250px;',
+					'autoload' => false,
+					'desc_tip' => true
 				),
 
 				array(
@@ -321,8 +323,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 						'min'  => 0,
 						'step' => 1
 					),
-					'default'           => '0',
-					'autoload'          => false
+					'default'           => '0'
 				),
 
 				array(
@@ -454,14 +455,14 @@ class WC_Settings_Products extends WC_Settings_Page {
 
 				array(
 					'type' 	=> 'sectionend',
-					'id' 	=> 'product_measurement_options'
+					'id' 	=> 'product_measurement_options',
 				),
 
 				array(
 					'title' => __( 'Reviews', 'woocommerce' ),
 					'type' 	=> 'title',
 					'desc' 	=> '',
-					'id' 	=> 'product_rating_options'
+					'id' 	=> 'product_rating_options',
 				),
 
 				array(
@@ -472,7 +473,6 @@ class WC_Settings_Products extends WC_Settings_Page {
 					'type'            => 'checkbox',
 					'checkboxgroup'   => 'start',
 					'show_if_checked' => 'option',
-					'autoload'        => false
 				),
 
 				array(
@@ -482,7 +482,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 					'type'            => 'checkbox',
 					'checkboxgroup'   => '',
 					'show_if_checked' => 'yes',
-					'autoload'        => false
+					'autoload'        => false,
 				),
 
 				array(
@@ -492,7 +492,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 					'type'            => 'checkbox',
 					'checkboxgroup'   => '',
 					'show_if_checked' => 'yes',
-					'autoload'        => false
+					'autoload'        => false,
 				),
 
 				array(
@@ -502,7 +502,7 @@ class WC_Settings_Products extends WC_Settings_Page {
 					'type'            => 'checkbox',
 					'checkboxgroup'   => 'end',
 					'show_if_checked' => 'yes',
-					'autoload'        => false
+					'autoload'        => false,
 				),
 
 				array(

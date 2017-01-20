@@ -11,7 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="poststuff" class="woocommerce-reports-wide">
 	<div class="postbox">
-		<h3 class="stats_range">
+
+	<?php if ( 'custom' === $current_range && isset( $_GET['start_date'], $_GET['end_date'] ) ) : ?>
+		<h3 class="screen-reader-text"><?php echo esc_html( sprintf( _x( 'From %s to %s', 'start date and end date', 'woocommerce' ), wc_clean( $_GET['start_date'] ), wc_clean( $_GET['end_date'] ) ) ); ?></h3>
+	<?php else : ?>
+		<h3 class="screen-reader-text"><?php echo esc_html( $ranges[ $current_range ] ); ?></h3>
+	<?php endif; ?>
+
+		<div class="stats_range">
 			<?php $this->get_export_button(); ?>
 			<ul>
 				<?php
@@ -38,12 +45,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<input type="hidden" name="range" value="custom" />
 							<input type="text" size="9" placeholder="yyyy-mm-dd" value="<?php if ( ! empty( $_GET['start_date'] ) ) echo esc_attr( $_GET['start_date'] ); ?>" name="start_date" class="range_datepicker from" />
 							<input type="text" size="9" placeholder="yyyy-mm-dd" value="<?php if ( ! empty( $_GET['end_date'] ) ) echo esc_attr( $_GET['end_date'] ); ?>" name="end_date" class="range_datepicker to" />
-							<input type="submit" class="button" value="<?php _e( 'Go', 'woocommerce' ); ?>" />
+							<input type="submit" class="button" value="<?php esc_attr_e( 'Go', 'woocommerce' ); ?>" />
 						</div>
 					</form>
 				</li>
 			</ul>
-		</h3>
+		</div>
 		<?php if ( empty( $hide_sidebar ) ) : ?>
 			<div class="inside chart-with-sidebar">
 				<div class="chart-sidebar">

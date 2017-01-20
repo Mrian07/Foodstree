@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Settings for PayPal Gateway
+ * Settings for PayPal Gateway.
  */
 return array(
 	'enabled' => array(
@@ -32,7 +32,7 @@ return array(
 		'title'       => __( 'PayPal Email', 'woocommerce' ),
 		'type'        => 'email',
 		'description' => __( 'Please enter your PayPal email address; this is needed in order to take payment.', 'woocommerce' ),
-		'default'     => '',
+		'default'     => get_option( 'admin_email' ),
 		'desc_tip'    => true,
 		'placeholder' => 'you@youremail.com'
 	),
@@ -66,7 +66,7 @@ return array(
 	'identity_token' => array(
 		'title'       => __( 'PayPal Identity Token', 'woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Optionally enable "Payment Data Transfer" (Profile > Website Payment Preferences) and then copy your identity token here. This will allow payments to be verified without the need for PayPal IPN.', 'woocommerce' ),
+		'description' => __( 'Optionally enable "Payment Data Transfer" (Profile > Profile and Settings > My Selling Tools > Website Preferences) and then copy your identity token here. This will allow payments to be verified without the need for PayPal IPN.', 'woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 		'placeholder' => ''
@@ -115,7 +115,7 @@ return array(
 	'api_details' => array(
 		'title'       => __( 'API Credentials', 'woocommerce' ),
 		'type'        => 'title',
-		'description' => sprintf( __( 'Enter your PayPal API credentials to process refunds via PayPal. Learn how to access your PayPal API Credentials %shere%s.', 'woocommerce' ), '<a href="https://developer.paypal.com/webapps/developer/docs/classic/api/apiCredentials/#creating-classic-api-credentials">', '</a>' ),
+		'description' => sprintf( __( 'Enter your PayPal API credentials to process refunds via PayPal. Learn how to access your PayPal API Credentials %shere%s.', 'woocommerce' ), '<a href="https://developer.paypal.com/webapps/developer/docs/classic/api/apiCredentials/#creating-an-api-signature">', '</a>' ),
 	),
 	'api_username' => array(
 		'title'       => __( 'API Username', 'woocommerce' ),
@@ -127,7 +127,7 @@ return array(
 	),
 	'api_password' => array(
 		'title'       => __( 'API Password', 'woocommerce' ),
-		'type'        => 'text',
+		'type'        => 'password',
 		'description' => __( 'Get your API credentials from PayPal.', 'woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,

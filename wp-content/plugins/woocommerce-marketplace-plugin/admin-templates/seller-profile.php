@@ -1,5 +1,7 @@
 <?php
 
+print_r($_REQUEST);
+
 
 $user_id = get_current_user_id();
 
@@ -543,10 +545,10 @@ if( empty( $value ) ) {
 $show_password_fields = apply_filters( 'show_password_fields', true, $profileuser );
 if ( $show_password_fields ) :
 ?>
-<tr id="password">
+<!-- <tr id="password">
 	<th><label for="pass1"><?php _e( 'New password' ); ?></label></th>
 	<td>
-		<input class="hidden" value=" " /><!-- #24364 workaround -->
+		<input class="hidden" value=" " />
 		<input type="password" name="pass1" id="pass1" class="regular-text" size="16" value="" autocomplete="off" /><br />
 		<span class="description"><?php _e( 'If you would like to change the password type a new one. Otherwise leave this blank.' ); ?></span>
 	</td>
@@ -560,7 +562,50 @@ if ( $show_password_fields ) :
 	<div id="pass-strength-result"><?php _e( 'Strength indicator' ); ?></div>
 	<p class="description indicator-hint"><?php _e( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; ).' ); ?></p>
 	</td>
+</tr> -->
+
+
+
+<tr id="password" class="user-pass1-wrap">
+	<th><label for="pass1"><?php _e( 'New Password' ); ?></label></th>
+	<td>
+		<input class="hidden" value=" " /><!-- #24364 workaround -->
+		<button type="button" class="button wp-generate-pw hide-if-no-js"><?php _e( 'Generate Password' ); ?></button>
+		<div class="wp-pwd hide-if-js">
+			<span class="password-input-wrapper">
+				<input type="password" name="pass1" id="pass1" class="regular-text" value="" autocomplete="off" data-pw="<?php echo esc_attr( wp_generate_password( 24 ) ); ?>" aria-describedby="pass-strength-result" />
+			</span>
+			<button type="button" class="button wp-hide-pw hide-if-no-js" data-toggle="0" aria-label="<?php esc_attr_e( 'Hide password' ); ?>">
+				<span class="dashicons dashicons-hidden"></span>
+				<span class="text"><?php _e( 'Hide' ); ?></span>
+			</button>
+			<button type="button" class="button wp-cancel-pw hide-if-no-js" data-toggle="0" aria-label="<?php esc_attr_e( 'Cancel password change' ); ?>">
+				<span class="text"><?php _e( 'Cancel' ); ?></span>
+			</button>
+			<div style="display:none" id="pass-strength-result" aria-live="polite"></div>
+		</div>
+	</td>
 </tr>
+<tr class="user-pass2-wrap hide-if-jss">
+	<th scope="row"><label for="pass2"><?php _e( 'Repeat New Password' ); ?></label></th>
+	<td>
+	<input name="pass2" type="password" id="pass2" class="regular-text" value="" autocomplete="off" />
+	<p class="description"><?php _e( 'Type your new password again.' ); ?></p>
+	</td>
+</tr>
+<tr class="pw-weak">
+	<th><?php _e( 'Confirm Password' ); ?></th>
+	<td>
+		<label>
+			<input type="checkbox" name="pw_weak" class="pw-checkbox" />
+			<span id="pw-weak-text-label"><?php _e( 'Confirm use of potentially weak password' ); ?></span>
+		</label>
+	</td>
+</tr>
+
+
+
+
 <?php endif; ?>
 </table>
 

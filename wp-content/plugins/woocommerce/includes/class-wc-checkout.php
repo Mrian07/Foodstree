@@ -1,10 +1,15 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 /**
  * Checkout
  *
  * The WooCommerce checkout class handles the checkout process, collecting user data and processing the payment.
  *
- * @class 		WC_Cart
+ * @class 		WC_Checkout
  * @version		2.1.0
  * @package		WooCommerce/Classes
  * @category		Class
@@ -46,7 +51,7 @@ class WC_Checkout {
 	public $enable_guest_checkout;
 
 	/**
-	 * Main WC_Checkout Instance
+	 * Main WC_Checkout Instance.
 	 *
 	 * Ensures only one instance of WC_Checkout is loaded or can be loaded.
 	 *
@@ -128,7 +133,7 @@ class WC_Checkout {
 	}
 
 	/**
-	 * Checkout process
+	 * Checkout process.
 	 */
 	public function check_cart_items() {
 		// When we process the checkout, lets ensure cart items are rechecked to prevent checkout
@@ -136,37 +141,29 @@ class WC_Checkout {
 	}
 
 	/**
-	 * Output the billing information form
-	 *
-	 * @access public
-	 * @return void
+	 * Output the billing information form.
 	 */
 	public function checkout_form_billing() {
 		wc_get_template( 'checkout/form-billing.php', array( 'checkout' => $this ) );
 	}
 
 	/**
-	 * Output the shipping information form
-	 *
-	 * @access public
-	 * @return void
+	 * Output the shipping information form.
 	 */
 	public function checkout_form_shipping() {
 		wc_get_template( 'checkout/form-shipping.php', array( 'checkout' => $this ) );
 	}
 
 	/**
-	 * Create an order.
-	 *
-	 * Error codes:
-	 * 		400 - Cannot insert order into the database
-	 * 		401 - Cannote update existing order
-	 * 		402 - Cannot create line item
-	 * 		403 - Cannot create fee item
-	 * 		404 - Cannot create shipping item
-	 * 		405 - Cannot create tax item
-	 * 		406 - Cannot create coupon item
-	 *
+	 * Create an order. Error codes:
+	 * 		520 - Cannot insert order into the database.
+	 * 		521 - Cannot get order after creation.
+	 * 		522 - Cannot update order.
+	 * 		525 - Cannot create line item.
+	 * 		526 - Cannot create fee item.
+	 * 		527 - Cannot create shipping item.
+	 * 		528 - Cannot create tax item.
+	 * 		529 - Cannot create coupon item.
 	 * @access public
 	 * @throws Exception
 	 * @return int|WP_ERROR
@@ -181,25 +178,32 @@ class WC_Checkout {
 
 		try {
 			// Start transaction if available
-			$wpdb->query( 'START TRANSACTION' );
+			wc_transaction_query( 'start' );
 
 			$order_data = array(
 				'status'        => apply_filters( 'woocommerce_default_order_status', 'pending' ),
 				'customer_id'   => $this->customer_id,
-				'customer_note' => isset( $this->posted['order_comments'] ) ? $this->posted['order_comments'] : ''
+				'customer_note' => isset( $this->posted['order_comments'] ) ? $this->posted['order_comments'] : '',
+				'cart_hash'     => md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ),
+				'created_via'   => 'checkout',
 			);
 
 			// Insert or update the post data
 			$order_id = absint( WC()->session->order_awaiting_payment );
 
-			// Resume the unpaid order if its pending
-			if ( $order_id > 0 && ( $order = wc_get_order( $order_id ) ) && $order->has_status( array( 'pending', 'failed' ) ) ) {
+			/**
+			 * If there is an order pending payment, we can resume it here so
+			 * long as it has not changed. If the order has changed, i.e.
+			 * different items or cost, create a new order. We use a hash to
+			 * detect changes which is based on cart items + order total.
+			 */
+			if ( $order_id && $order_data['cart_hash'] === get_post_meta( $order_id, '_cart_hash', true ) && ( $order = wc_get_order( $order_id ) ) && $order->has_status( array( 'pending', 'failed' ) ) ) {
 
 				$order_data['order_id'] = $order_id;
 				$order                  = wc_update_order( $order_data );
 
 				if ( is_wp_error( $order ) ) {
-					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 401 ) );
+					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 522 ) );
 				} else {
 					$order->remove_order_items();
 					do_action( 'woocommerce_resume_order', $order_id );
@@ -210,7 +214,9 @@ class WC_Checkout {
 				$order = wc_create_order( $order_data );
 
 				if ( is_wp_error( $order ) ) {
-					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 400 ) );
+					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 520 ) );
+				} elseif ( false === $order ) {
+					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 521 ) );
 				} else {
 					$order_id = $order->id;
 					do_action( 'woocommerce_new_order', $order_id );
@@ -235,7 +241,7 @@ class WC_Checkout {
 				);
 
 				if ( ! $item_id ) {
-					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 402 ) );
+					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 525 ) );
 				}
 
 				// Allow plugins to add order item meta
@@ -247,7 +253,7 @@ class WC_Checkout {
 				$item_id = $order->add_fee( $fee );
 
 				if ( ! $item_id ) {
-					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 403 ) );
+					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 526 ) );
 				}
 
 				// Allow plugins to add order item meta to fees
@@ -260,7 +266,7 @@ class WC_Checkout {
 					$item_id = $order->add_shipping( $package['rates'][ $this->shipping_methods[ $package_key ] ] );
 
 					if ( ! $item_id ) {
-						throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 404 ) );
+						throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 527 ) );
 					}
 
 					// Allows plugins to add order item meta to shipping
@@ -271,14 +277,14 @@ class WC_Checkout {
 			// Store tax rows
 			foreach ( array_keys( WC()->cart->taxes + WC()->cart->shipping_taxes ) as $tax_rate_id ) {
 				if ( $tax_rate_id && ! $order->add_tax( $tax_rate_id, WC()->cart->get_tax_amount( $tax_rate_id ), WC()->cart->get_shipping_tax_amount( $tax_rate_id ) ) && apply_filters( 'woocommerce_cart_remove_taxes_zero_rate_id', 'zero-rated' ) !== $tax_rate_id ) {
-					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 405 ) );
+					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 528 ) );
 				}
 			}
 
 			// Store coupons
 			foreach ( WC()->cart->get_coupons() as $code => $coupon ) {
 				if ( ! $order->add_coupon( $code, WC()->cart->get_coupon_discount_amount( $code ), WC()->cart->get_coupon_discount_tax_amount( $code ) ) ) {
-					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 406 ) );
+					throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 529 ) );
 				}
 			}
 
@@ -329,11 +335,11 @@ class WC_Checkout {
 			do_action( 'woocommerce_checkout_update_order_meta', $order_id, $this->posted );
 
 			// If we got here, the order was created without problems!
-			$wpdb->query( 'COMMIT' );
+			wc_transaction_query( 'commit' );
 
 		} catch ( Exception $e ) {
 			// There was an error adding order data!
-			$wpdb->query( 'ROLLBACK' );
+			wc_transaction_query( 'rollback' );
 			return new WP_Error( 'checkout-error', $e->getMessage() );
 		}
 
@@ -341,10 +347,7 @@ class WC_Checkout {
 	}
 
 	/**
-	 * Process the checkout after the confirm order button is pressed
-	 *
-	 * @access public
-	 * @return void
+	 * Process the checkout after the confirm order button is pressed.
 	 */
 	public function process_checkout() {
 		try {
@@ -362,8 +365,8 @@ class WC_Checkout {
 
 			do_action( 'woocommerce_before_checkout_process' );
 
-			if ( 0 === sizeof( WC()->cart->get_cart() ) ) {
-				throw new Exception( sprintf( __( 'Sorry, your session has expired. <a href="%s" class="wc-backward">Return to homepage</a>', 'woocommerce' ), home_url() ) );
+			if ( WC()->cart->is_empty() ) {
+				throw new Exception( sprintf( __( 'Sorry, your session has expired. <a href="%s" class="wc-backward">Return to shop</a>', 'woocommerce' ), esc_url( wc_get_page_permalink( 'shop' ) ) ) );
 			}
 
 			do_action( 'woocommerce_checkout_process' );
@@ -382,7 +385,7 @@ class WC_Checkout {
 			}
 
 			// Ship to billing only option
-			if ( WC()->cart->ship_to_billing_address_only() ) {
+			if ( wc_ship_to_billing_address_only() ) {
 				$this->posted['ship_to_different_address']  = false;
 			}
 
@@ -405,13 +408,13 @@ class WC_Checkout {
 			foreach ( $this->checkout_fields as $fieldset_key => $fieldset ) {
 
 				// Skip shipping if not needed
-				if ( $fieldset_key == 'shipping' && ( $this->posted['ship_to_different_address'] == false || ! WC()->cart->needs_shipping() ) ) {
+				if ( $fieldset_key == 'shipping' && ( $this->posted['ship_to_different_address'] == false || ! WC()->cart->needs_shipping_address() ) ) {
 					$skipped_shipping = true;
 					continue;
 				}
 
 				// Skip account if not needed
-				if ( $fieldset_key == 'account' && ( is_user_logged_in() || ( $this->must_create_account == false && empty( $this->posted['createaccount'] ) ) ) ) {
+				if ( 'account' === $fieldset_key && ( is_user_logged_in() || ( false === $this->must_create_account && empty( $this->posted['createaccount'] ) ) ) ) {
 					continue;
 				}
 
@@ -442,8 +445,19 @@ class WC_Checkout {
 					$this->posted[ $key ] = apply_filters( 'woocommerce_process_checkout_field_' . $key, $this->posted[ $key ] );
 
 					// Validation: Required fields
-					if ( isset( $field['required'] ) && $field['required'] && empty( $this->posted[ $key ] ) ) {
-						wc_add_notice( '<strong>' . $field['label'] . '</strong> ' . __( 'is a required field.', 'woocommerce' ), 'error' );
+					if ( isset( $field['required'] ) && $field['required'] && ( ! isset( $this->posted[ $key ] ) || "" === $this->posted[ $key ] ) ) {
+						switch ( $fieldset_key ) {
+							case 'shipping' :
+								$field_label = sprintf( _x( 'Shipping %s', 'Shipping FIELDNAME', 'woocommerce' ), $field['label'] );
+							break;
+							case 'billing' :
+								$field_label = sprintf( _x( 'Billing %s', 'Billing FIELDNAME', 'woocommerce' ), $field['label'] );
+							break;
+							default :
+								$field_label = $field['label'];
+							break;
+						}
+						wc_add_notice( apply_filters( 'woocommerce_checkout_required_field_notice', sprintf( _x( '%s is a required field.', 'FIELDNAME is a required field.', 'woocommerce' ), '<strong>' . $field_label . '</strong>' ), $field_label ), 'error' );
 					}
 
 					if ( ! empty( $this->posted[ $key ] ) ) {
@@ -544,23 +558,26 @@ class WC_Checkout {
 			WC()->cart->calculate_totals();
 
 			// Terms
-			if ( ! isset( $_POST['woocommerce_checkout_update_totals'] ) && empty( $this->posted['terms'] ) && wc_get_page_id( 'terms' ) > 0 ) {
+			if ( ! isset( $_POST['woocommerce_checkout_update_totals'] ) && empty( $this->posted['terms'] ) && wc_get_page_id( 'terms' ) > 0 && apply_filters( 'woocommerce_checkout_show_terms', true ) ) {
 				wc_add_notice( __( 'You must accept our Terms &amp; Conditions.', 'woocommerce' ), 'error' );
 			}
 
 			if ( WC()->cart->needs_shipping() ) {
+				$shipping_country = WC()->customer->get_shipping_country();
 
-				if ( ! in_array( WC()->customer->get_shipping_country(), array_keys( WC()->countries->get_shipping_countries() ) ) ) {
+				if ( empty( $shipping_country ) ) {
+					wc_add_notice( __( 'Please enter an address to continue.', 'woocommerce' ), 'error' );
+				} elseif ( ! in_array( WC()->customer->get_shipping_country(), array_keys( WC()->countries->get_shipping_countries() ) ) ) {
 					wc_add_notice( sprintf( __( 'Unfortunately <strong>we do not ship %s</strong>. Please enter an alternative shipping address.', 'woocommerce' ), WC()->countries->shipping_to_prefix() . ' ' . WC()->customer->get_shipping_country() ), 'error' );
 				}
 
 				// Validate Shipping Methods
 				$packages               = WC()->shipping->get_packages();
-				$this->shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
+				$this->shipping_methods = (array) WC()->session->get( 'chosen_shipping_methods' );
 
 				foreach ( $packages as $i => $package ) {
 					if ( ! isset( $package['rates'][ $this->shipping_methods[ $i ] ] ) ) {
-						wc_add_notice( __( 'Invalid shipping method.', 'woocommerce' ), 'error' );
+						wc_add_notice( __( 'No shipping method has been selected. Please double check your address, or contact us if you need any help.', 'woocommerce' ), 'error' );
 						$this->shipping_methods[ $i ] = '';
 					}
 				}
@@ -595,30 +612,30 @@ class WC_Checkout {
 					$password     = ! empty( $this->posted['account_password'] ) ? $this->posted['account_password'] : '';
 					$new_customer = wc_create_new_customer( $this->posted['billing_email'], $username, $password );
 
-                	if ( is_wp_error( $new_customer ) ) {
-                		throw new Exception( $new_customer->get_error_message() );
-                	}
+					if ( is_wp_error( $new_customer ) ) {
+						throw new Exception( $new_customer->get_error_message() );
+					} else {
+						$this->customer_id = absint( $new_customer );
+					}
 
-                	$this->customer_id = $new_customer;
+					wc_set_customer_auth_cookie( $this->customer_id );
 
-                	wc_set_customer_auth_cookie( $this->customer_id );
+					// As we are now logged in, checkout will need to refresh to show logged in data
+					WC()->session->set( 'reload_checkout', true );
 
-                	// As we are now logged in, checkout will need to refresh to show logged in data
-                	WC()->session->set( 'reload_checkout', true );
-
-                	// Also, recalculate cart totals to reveal any role-based discounts that were unavailable before registering
+					// Also, recalculate cart totals to reveal any role-based discounts that were unavailable before registering
 					WC()->cart->calculate_totals();
 
-                	// Add customer info from other billing fields
-                	if ( $this->posted['billing_first_name'] && apply_filters( 'woocommerce_checkout_update_customer_data', true, $this ) ) {
-                		$userdata = array(
+					// Add customer info from other billing fields
+					if ( $this->posted['billing_first_name'] && apply_filters( 'woocommerce_checkout_update_customer_data', true, $this ) ) {
+						$userdata = array(
 							'ID'           => $this->customer_id,
 							'first_name'   => $this->posted['billing_first_name'] ? $this->posted['billing_first_name'] : '',
 							'last_name'    => $this->posted['billing_last_name'] ? $this->posted['billing_last_name'] : '',
 							'display_name' => $this->posted['billing_first_name'] ? $this->posted['billing_first_name'] : ''
-                		);
-                		wp_update_user( apply_filters( 'woocommerce_checkout_customer_userdata', $userdata, $this ) );
-                	}
+						);
+						wp_update_user( apply_filters( 'woocommerce_checkout_customer_userdata', $userdata, $this ) );
+					}
 				}
 
 				// Do a final stock check at this point
@@ -646,13 +663,12 @@ class WC_Checkout {
 					$result = $available_gateways[ $this->posted['payment_method'] ]->process_payment( $order_id );
 
 					// Redirect to success/confirmation/payment page
-					if ( $result['result'] == 'success' ) {
+					if ( isset( $result['result'] ) && 'success' === $result['result'] ) {
 
 						$result = apply_filters( 'woocommerce_payment_successful_result', $result, $order_id );
 
 						if ( is_ajax() ) {
-							echo '<!--WC_START-->' . json_encode( $result ) . '<!--WC_END-->';
-							exit;
+							wp_send_json( $result );
 						} else {
 							wp_redirect( $result['redirect'] );
 							exit;
@@ -677,13 +693,10 @@ class WC_Checkout {
 
 					// Redirect to success/confirmation/payment page
 					if ( is_ajax() ) {
-						echo '<!--WC_START-->' . json_encode(
-							array(
-								'result' 	=> 'success',
-								'redirect'  => apply_filters( 'woocommerce_checkout_no_payment_needed_redirect', $return_url, $order )
-							)
-						) . '<!--WC_END-->';
-						exit;
+						wp_send_json( array(
+							'result' 	=> 'success',
+							'redirect'  => apply_filters( 'woocommerce_checkout_no_payment_needed_redirect', $return_url, $order )
+						) );
 					} else {
 						wp_safe_redirect(
 							apply_filters( 'woocommerce_checkout_no_payment_needed_redirect', $return_url, $order )
@@ -711,17 +724,16 @@ class WC_Checkout {
 				$messages = ob_get_clean();
 			}
 
-			echo '<!--WC_START-->' . json_encode(
-				array(
-					'result'	=> 'failure',
-					'messages' 	=> isset( $messages ) ? $messages : '',
-					'refresh' 	=> isset( WC()->session->refresh_totals ) ? 'true' : 'false',
-					'reload'    => isset( WC()->session->reload_checkout ) ? 'true' : 'false'
-				)
-			) . '<!--WC_END-->';
+			$response = array(
+				'result'	=> 'failure',
+				'messages' 	=> isset( $messages ) ? $messages : '',
+				'refresh' 	=> isset( WC()->session->refresh_totals ) ? 'true' : 'false',
+				'reload'    => isset( WC()->session->reload_checkout ) ? 'true' : 'false'
+			);
 
 			unset( WC()->session->refresh_totals, WC()->session->reload_checkout );
-			exit;
+
+			wp_send_json( $response );
 		}
 	}
 
@@ -747,7 +759,7 @@ class WC_Checkout {
 	}
 
 	/**
-	 * Gets the value either from the posted data, or from the users meta data
+	 * Gets the value either from the posted data, or from the users meta data.
 	 *
 	 * @access public
 	 * @param string $input
@@ -767,31 +779,35 @@ class WC_Checkout {
 			}
 
 			// Get the billing_ and shipping_ address fields
-			$address_fields = array_merge( WC()->countries->get_address_fields(), WC()->countries->get_address_fields( '', 'shipping_' ) );
+			if ( isset( $this->checkout_fields['shipping'] ) && isset( $this->checkout_fields['billing'] ) ) {
 
-			if ( is_user_logged_in() && array_key_exists( $input, $address_fields ) ) {
-				$current_user = wp_get_current_user();
+				$address_fields = array_merge( $this->checkout_fields['billing'], $this->checkout_fields['shipping'] );
 
-				if ( $meta = get_user_meta( $current_user->ID, $input, true ) ) {
-					return $meta;
+				if ( is_user_logged_in() && is_array( $address_fields ) && array_key_exists( $input, $address_fields ) ) {
+					$current_user = wp_get_current_user();
+
+					if ( $meta = get_user_meta( $current_user->ID, $input, true ) ) {
+						return $meta;
+					}
+
+					if ( $input == 'billing_email' ) {
+						return $current_user->user_email;
+					}
 				}
 
-				if ( $input == 'billing_email' ) {
-					return $current_user->user_email;
-				}
 			}
 
 			switch ( $input ) {
 				case 'billing_country' :
-					return apply_filters( 'default_checkout_country', WC()->customer->get_country() ? WC()->customer->get_country() : WC()->countries->get_base_country(), 'billing' );
+					return apply_filters( 'default_checkout_country', WC()->customer->get_country() ? WC()->customer->get_country() : '', 'billing' );
 				case 'billing_state' :
-					return apply_filters( 'default_checkout_state', WC()->customer->has_calculated_shipping() ? WC()->customer->get_state() : '', 'billing' );
+					return apply_filters( 'default_checkout_state', WC()->customer->get_state() ? WC()->customer->get_state() : '', 'billing' );
 				case 'billing_postcode' :
 					return apply_filters( 'default_checkout_postcode', WC()->customer->get_postcode() ? WC()->customer->get_postcode() : '', 'billing' );
 				case 'shipping_country' :
-					return apply_filters( 'default_checkout_country', WC()->customer->get_shipping_country() ? WC()->customer->get_shipping_country() : WC()->countries->get_base_country(), 'shipping' );
+					return apply_filters( 'default_checkout_country', WC()->customer->get_shipping_country() ? WC()->customer->get_shipping_country() : '', 'shipping' );
 				case 'shipping_state' :
-					return apply_filters( 'default_checkout_state', WC()->customer->has_calculated_shipping() ? WC()->customer->get_shipping_state() : '', 'shipping' );
+					return apply_filters( 'default_checkout_state', WC()->customer->get_shipping_state() ? WC()->customer->get_shipping_state() : '', 'shipping' );
 				case 'shipping_postcode' :
 					return apply_filters( 'default_checkout_postcode', WC()->customer->get_shipping_postcode() ? WC()->customer->get_shipping_postcode() : '', 'shipping' );
 				default :

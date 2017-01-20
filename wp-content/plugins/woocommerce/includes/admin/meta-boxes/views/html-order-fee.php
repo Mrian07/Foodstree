@@ -11,8 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <tr class="fee <?php echo ( ! empty( $class ) ) ? $class : ''; ?>" data-order_item_id="<?php echo $item_id; ?>">
-	<td class="check-column"><input type="checkbox" /></td>
-
 	<td class="thumb"><div></div></td>
 
 	<td class="name">
@@ -20,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php echo ! empty( $item['name'] ) ? esc_html( $item['name'] ) : __( 'Fee', 'woocommerce' ); ?>
 		</div>
 		<div class="edit" style="display: none;">
-			<input type="text" placeholder="<?php _e( 'Fee Name', 'woocommerce' ); ?>" name="order_item_name[<?php echo absint( $item_id ); ?>]" value="<?php echo ( isset( $item['name'] ) ) ? esc_attr( $item['name'] ) : ''; ?>" />
+			<input type="text" placeholder="<?php esc_attr_e( 'Fee Name', 'woocommerce' ); ?>" name="order_item_name[<?php echo absint( $item_id ); ?>]" value="<?php echo ( isset( $item['name'] ) ) ? esc_attr( $item['name'] ) : ''; ?>" />
 			<input type="hidden" class="order_item_id" name="order_item_id[]" value="<?php echo esc_attr( $item_id ); ?>" />
 			<input type="hidden" name="order_item_tax_class[<?php echo absint( $item_id ); ?>]" value="<?php echo isset( $item['tax_class'] ) ? esc_attr( $item['tax_class'] ) : ''; ?>" />
 		</div>
@@ -34,10 +32,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<td class="line_cost" width="1%">
 		<div class="view">
 			<?php
-				echo ( isset( $item['line_total'] ) ) ? wc_price( wc_round_tax_total( $item['line_total'] ) ) : '';
+				echo ( isset( $item['line_total'] ) ) ? wc_price( wc_round_tax_total( $item['line_total'] ), array( 'currency' => $order->get_order_currency() ) ) : '';
 
 				if ( $refunded = $order->get_total_refunded_for_item( $item_id, 'fee' ) ) {
-					echo '<small class="refunded">-' . wc_price( $refunded ) . '</small>';
+					echo '<small class="refunded">-' . wc_price( $refunded, array( 'currency' => $order->get_order_currency() ) ) . '</small>';
 				}
 			?>
 		</div>
@@ -61,10 +59,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<td class="line_tax" width="1%">
 						<div class="view">
 							<?php
-								echo ( '' != $tax_item_total ) ? wc_price( wc_round_tax_total( $tax_item_total ) ) : '&ndash;';
+								echo ( '' != $tax_item_total ) ? wc_price( wc_round_tax_total( $tax_item_total ), array( 'currency' => $order->get_order_currency() ) ) : '&ndash;';
 
 								if ( $refunded = $order->get_tax_refunded_for_item( $item_id, $tax_item_id, 'fee' ) ) {
-									echo '<small class="refunded">-' . wc_price( $refunded ) . '</small>';
+									echo '<small class="refunded">-' . wc_price( $refunded, array( 'currency' => $order->get_order_currency() ) ) . '</small>';
 								}
 							?>
 						</div>

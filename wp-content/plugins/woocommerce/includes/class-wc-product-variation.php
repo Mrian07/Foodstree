@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Product Variation Class
+ * Product Variation Class.
  *
  * The WooCommerce product variation class handles product variation data.
  *
@@ -17,17 +17,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Product_Variation extends WC_Product {
 
-	/** @public int ID of the variable product. */
+	/** @public int ID of the variation itself. */
 	public $variation_id;
 
 	/** @public object Parent Variable product object. */
 	public $parent;
 
 	/** @public string Stores the shipping class of the variation. */
-	public $variation_shipping_class         = false;
+	public $variation_shipping_class         = '';
 
 	/** @public int Stores the shipping class ID of the variation. */
-	public $variation_shipping_class_id      = false;
+	public $variation_shipping_class_id      = 0;
 
 	/** @public unused vars @deprecated in 2.2 */
 	public $variation_has_sku                = true;
@@ -80,9 +80,9 @@ class WC_Product_Variation extends WC_Product {
 		/* Get main product data from parent (args) */
 		$this->id = ! empty( $args['parent_id'] ) ? intval( $args['parent_id'] ) : wp_get_post_parent_id( $this->variation_id );
 
-		// The post doesn't have a parent id, therefore its invalid.
+		// The post doesn't have a parent id, therefore its invalid and we should prevent this being created.
 		if ( empty( $this->id ) ) {
-			return;
+			throw new Exception( sprintf( 'No parent product set for variation #%d', $this->variation_id ), 422 );
 		}
 
 		$this->product_type = 'variation';
@@ -97,7 +97,9 @@ class WC_Product_Variation extends WC_Product {
 	 * @return bool
 	 */
 	public function __isset( $key ) {
-		if ( in_array( $key, array_keys( $this->variation_level_meta_data ) ) ) {
+		if ( in_array( $key, array( 'variation_data', 'variation_has_stock' ) ) ) {
+			return true;
+		} elseif ( in_array( $key, array_keys( $this->variation_level_meta_data ) ) ) {
 			return metadata_exists( 'post', $this->variation_id, '_' . $key );
 		} elseif ( in_array( $key, array_keys( $this->variation_inherited_meta_data ) ) ) {
 			return metadata_exists( 'post', $this->variation_id, '_' . $key ) || metadata_exists( 'post', $this->id, '_' . $key );
@@ -135,19 +137,7 @@ class WC_Product_Variation extends WC_Product {
 			}
 
 		} elseif ( 'variation_data' === $key ) {
-			$all_meta = get_post_meta( $this->variation_id );
-
-			// The variation data array
-			$this->variation_data = array();
-
-			// Get the variation attributes from meta
-			foreach ( $all_meta as $name => $value ) {
-				if ( ! strstr( $name, 'attribute_' ) ) {
-					continue;
-				}
-				$this->variation_data[ $name ] = sanitize_title( $value[0] );
-			}
-			return $this->variation_data;
+			return $this->variation_data = wc_get_product_variation_attributes( $this->variation_id );
 
 		} elseif ( 'variation_has_stock' === $key ) {
 			return $this->managing_stock();
@@ -157,6 +147,16 @@ class WC_Product_Variation extends WC_Product {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Return the variation ID
+	 *
+	 * @since 2.5.0
+	 * @return int variation (post) ID
+	 */
+	public function get_id() {
+		return $this->variation_id;
 	}
 
 	/**
@@ -171,11 +171,20 @@ class WC_Product_Variation extends WC_Product {
 	/**
 	 * Wrapper for get_permalink. Adds this variations attributes to the URL.
 	 *
-	 * @param  $cart item array If the cart item is passed, we can get a link containing the exact attributes selected for the variation, rather than the default attributes.
+	 * @param  $item_object item array If a cart or order item is passed, we can get a link containing the exact attributes selected for the variation, rather than the default attributes.
 	 * @return string
 	 */
-	public function get_permalink( $cart_item = null ) {
-		return add_query_arg( array_filter( isset( $cart_item['variation'] ) ? $cart_item['variation'] : $this->variation_data ), get_permalink( $this->id ) );
+	public function get_permalink( $item_object = null ) {
+		if ( ! empty( $item_object['variation'] ) ) {
+			$data = $item_object['variation'];
+		} elseif ( ! empty( $item_object['item_meta_array'] ) ) {
+			$data_keys    = array_map( 'wc_variation_attribute_name', wp_list_pluck( $item_object['item_meta_array'], 'key' ) );
+			$data_values  = wp_list_pluck( $item_object['item_meta_array'], 'value' );
+			$data         = array_intersect_key( array_combine( $data_keys, $data_values ), $this->variation_data );
+		} else {
+			$data = $this->variation_data;
+		}
+		return add_query_arg( array_map( 'urlencode', array_filter( $data ) ), get_permalink( $this->id ) );
 	}
 
 	/**
@@ -184,18 +193,19 @@ class WC_Product_Variation extends WC_Product {
 	 * @return string
 	 */
 	public function add_to_cart_url() {
-		$url = $this->is_purchasable() && $this->is_in_stock() ? remove_query_arg( 'added-to-cart', add_query_arg( array_merge( array( 'variation_id' => $this->variation_id, 'add-to-cart' => $this->id ), $this->variation_data ) ) ) : get_permalink( $this->id );
+		$variation_data = array_map( 'urlencode', $this->variation_data );
+		$url            = $this->is_purchasable() && $this->is_in_stock() ? remove_query_arg( 'added-to-cart', add_query_arg( array_merge( array( 'variation_id' => $this->variation_id, 'add-to-cart' => $this->id ), $variation_data ) ) ) : get_permalink( $this->id );
 
 		return apply_filters( 'woocommerce_product_add_to_cart_url', $url, $this );
 	}
 
 	/**
-	 * Get the add to cart button text
+	 * Get the add to cart button text.
 	 *
 	 * @return string
 	 */
 	public function add_to_cart_text() {
-		$text = $this->is_purchasable() && $this->is_in_stock() ? __( 'Add to cart', 'woocommerce' ) : __( 'Read More', 'woocommerce' );
+		$text = $this->is_purchasable() && $this->is_in_stock() ? __( 'Add to cart', 'woocommerce' ) : __( 'Read more', 'woocommerce' );
 
 		return apply_filters( 'woocommerce_product_add_to_cart_text', $text, $this );
 	}
@@ -260,7 +270,7 @@ class WC_Product_Variation extends WC_Product {
 	}
 
 	/**
-	 * Get variation ID
+	 * Get variation ID.
 	 *
 	 * @return int
 	 */
@@ -269,7 +279,7 @@ class WC_Product_Variation extends WC_Product {
 	}
 
 	/**
-	 * Get variation attribute values
+	 * Get variation attribute values.
 	 *
 	 * @return array of attributes and their values for this variation
 	 */
@@ -278,7 +288,7 @@ class WC_Product_Variation extends WC_Product {
 	}
 
 	/**
-	 * Check if all variation's attributes are set
+	 * Check if all variation's attributes are set.
 	 *
 	 * @return boolean
 	 */
@@ -346,17 +356,20 @@ class WC_Product_Variation extends WC_Product {
 	 * Gets the main product image.
 	 *
 	 * @param string $size (default: 'shop_thumbnail')
+	 * @param bool True to return $placeholder if no image is found, or false to return an empty string.
 	 * @return string
 	 */
-	public function get_image( $size = 'shop_thumbnail', $attr = array() ) {
+	public function get_image( $size = 'shop_thumbnail', $attr = array(), $placeholder = true ) {
 		if ( $this->variation_id && has_post_thumbnail( $this->variation_id ) ) {
 			$image = get_the_post_thumbnail( $this->variation_id, $size, $attr );
 		} elseif ( has_post_thumbnail( $this->id ) ) {
 			$image = get_the_post_thumbnail( $this->id, $size, $attr );
 		} elseif ( ( $parent_id = wp_get_post_parent_id( $this->id ) ) && has_post_thumbnail( $parent_id ) ) {
 			$image = get_the_post_thumbnail( $parent_id, $size , $attr);
-		} else {
+		} elseif ( $placeholder ) {
 			$image = wc_placeholder_img( $size );
+		} else {
+			$image = '';
 		}
 		return $image;
 	}
@@ -369,7 +382,7 @@ class WC_Product_Variation extends WC_Product {
 	public function managing_stock() {
 		if ( 'yes' === get_option( 'woocommerce_manage_stock', 'yes' ) ) {
 			if ( 'no' === $this->manage_stock ) {
-				if ( $this->parent->managing_stock() ) {
+				if ( $this->parent && $this->parent->managing_stock() ) {
 					return 'parent';
 				}
 			} else {
@@ -385,7 +398,25 @@ class WC_Product_Variation extends WC_Product {
 	 * @return int
 	 */
 	public function get_stock_quantity() {
-		return true === $this->managing_stock() ? wc_stock_amount( $this->stock ) : $this->parent->get_stock_quantity();
+		return apply_filters( 'woocommerce_variation_get_stock_quantity', true === $this->managing_stock() ? wc_stock_amount( $this->stock ) : $this->parent->get_stock_quantity(), $this );
+	}
+
+	/**
+	 * Get total stock - This is the stock of parent and children combined.
+	 *
+	 * @return int
+	 */
+	public function get_total_stock() {
+		return $this->get_stock_quantity();
+	}
+
+	/**
+	 * Returns the tax status. Always use parent data.
+	 *
+	 * @return string
+	 */
+	public function get_tax_status() {
+		return $this->parent->get_tax_status();
 	}
 
 	/**
@@ -394,18 +425,20 @@ class WC_Product_Variation extends WC_Product {
 	 * @return bool
 	 */
 	public function is_in_stock() {
-		// If we're managing stock at variation level, check stock levels
-		if ( true === $this->managing_stock() ) {
-			if ( $this->backorders_allowed() ) {
-				return true;
-			} elseif ( $this->get_stock_quantity() <= get_option( 'woocommerce_notify_no_stock_amount' ) ) {
-				return false;
-			} else {
-				return $this->stock_status === 'instock';
-			}
-		} else {
-			return $this->stock_status === 'instock';
+		$status = $this->stock_status === 'instock';
+
+		/**
+		 * Sanity check to ensure stock qty is not lower than 0 but still listed
+		 * instock.
+		 *
+		 * Check is not required for products on backorder since they can be
+		 * instock regardless of actual stock quantity.
+		 */
+		if ( true === $this->managing_stock() && ! $this->backorders_allowed() && $this->get_stock_quantity() <= get_option( 'woocommerce_notify_no_stock_amount' ) ) {
+			$status = false;
 		}
+
+		return apply_filters( 'woocommerce_variation_is_in_stock', $status );
 	}
 
 	/**
@@ -429,13 +462,13 @@ class WC_Product_Variation extends WC_Product {
 			// Update stock in DB directly
 			switch ( $mode ) {
 				case 'add' :
-					$wpdb->query( "UPDATE {$wpdb->postmeta} SET meta_value = meta_value + {$amount} WHERE post_id = {$this->variation_id} AND meta_key='_stock'" );
+					$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_value = meta_value + %f WHERE post_id = %d AND meta_key='_stock'", $amount, $this->variation_id ) );
 				break;
 				case 'subtract' :
-					$wpdb->query( "UPDATE {$wpdb->postmeta} SET meta_value = meta_value - {$amount} WHERE post_id = {$this->variation_id} AND meta_key='_stock'" );
+					$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_value = meta_value - %f WHERE post_id = %d AND meta_key='_stock'", $amount, $this->variation_id ) );
 				break;
 				default :
-					$wpdb->query( "UPDATE {$wpdb->postmeta} SET meta_value = {$amount} WHERE post_id = {$this->variation_id} AND meta_key='_stock'" );
+					$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_value = %f WHERE post_id = %d AND meta_key='_stock'", $amount, $this->variation_id ) );
 				break;
 			}
 
@@ -443,7 +476,7 @@ class WC_Product_Variation extends WC_Product {
 			wp_cache_delete( $this->variation_id, 'post_meta' );
 
 			// Clear total stock transient
-			delete_transient( 'wc_product_total_stock_' . $this->id );
+			delete_transient( 'wc_product_total_stock_' . $this->id . WC_Cache_Helper::get_transient_version( 'product' ) );
 
 			// Stock status
 			$this->check_stock_status();
@@ -462,7 +495,9 @@ class WC_Product_Variation extends WC_Product {
 	}
 
 	/**
-	 * set_stock_status function.
+	 * Set stock status.
+	 *
+	 * @param string $status
 	 */
 	public function set_stock_status( $status ) {
 		$status = 'outofstock' === $status ? 'outofstock' : 'instock';
@@ -481,9 +516,7 @@ class WC_Product_Variation extends WC_Product {
 		if ( update_post_meta( $this->variation_id, '_stock_status', $status ) ) {
 			do_action( 'woocommerce_variation_set_stock_status', $this->variation_id, $status );
 
-			if ( true === $this->managing_stock() ) {
-				WC_Product_Variable::sync_stock_status( $this->id );
-			}
+			WC_Product_Variable::sync_stock_status( $this->id );
 		}
 	}
 
@@ -516,58 +549,6 @@ class WC_Product_Variation extends WC_Product {
 	}
 
 	/**
-	 * Returns the availability of the product.
-	 *
-	 * @return string
-	 */
-	public function get_availability() {
-		$availability = $class = '';
-
-		if ( $this->managing_stock() ) {
-			if ( $this->is_in_stock() && $this->get_stock_quantity() > get_option( 'woocommerce_notify_no_stock_amount' ) ) {
-				switch ( get_option( 'woocommerce_stock_format' ) ) {
-					case 'no_amount' :
-						$availability = __( 'In stock', 'woocommerce' );
-					break;
-					case 'low_amount' :
-						if ( $this->get_stock_quantity() <= get_option( 'woocommerce_notify_low_stock_amount' ) ) {
-							$availability = sprintf( __( 'Only %s left in stock', 'woocommerce' ), $this->get_stock_quantity() );
-
-							if ( $this->backorders_allowed() && $this->backorders_require_notification() ) {
-								$availability .= ' ' . __( '(can be backordered)', 'woocommerce' );
-							}
-						} else {
-							$availability = __( 'In stock', 'woocommerce' );
-						}
-					break;
-					default :
-						$availability = sprintf( __( '%s in stock', 'woocommerce' ), $this->get_stock_quantity() );
-
-						if ( $this->backorders_allowed() && $this->backorders_require_notification() ) {
-							$availability .= ' ' . __( '(can be backordered)', 'woocommerce' );
-						}
-					break;
-				}
-				$class        = 'in-stock';
-			} elseif ( $this->backorders_allowed() && $this->backorders_require_notification() ) {
-				$availability = __( 'Available on backorder', 'woocommerce' );
-				$class        = 'available-on-backorder';
-			} elseif ( $this->backorders_allowed() ) {
-				$availability = __( 'In stock', 'woocommerce' );
-				$class        = 'in-stock';
-			} else {
-				$availability = __( 'Out of stock', 'woocommerce' );
-				$class        = 'out-of-stock';
-			}
-		} elseif ( ! $this->is_in_stock() ) {
-			$availability = __( 'Out of stock', 'woocommerce' );
-			$class        = 'out-of-stock';
-		}
-
-		return apply_filters( 'woocommerce_get_availability', array( 'availability' => $availability, 'class' => $class ), $this );
-	}
-
-	/**
 	 * Returns whether or not the product needs to notify the customer on backorder.
 	 *
 	 * @return bool
@@ -581,7 +562,7 @@ class WC_Product_Variation extends WC_Product {
 	}
 
 	/**
-	 * is_on_backorder function.
+	 * Is on backorder?
 	 *
 	 * @param int $qty_in_cart (default: 0)
 	 * @return bool
@@ -590,7 +571,7 @@ class WC_Product_Variation extends WC_Product {
 		if ( true === $this->managing_stock() ) {
 			return parent::is_on_backorder( $qty_in_cart );
 		} else {
-			return $this->parent->is_on_backorder( $qty_in_cart );
+			return $this->parent->managing_stock() && $this->parent->backorders_allowed() && ( $this->parent->get_stock_quantity() - $qty_in_cart ) < 0;
 		}
 	}
 
@@ -645,6 +626,86 @@ class WC_Product_Variation extends WC_Product {
 	}
 
 	/**
+	 * Get formatted variation data with WC < 2.4 back compat and proper formatting of text-based attribute names.
+	 *
+	 * @return string
+	 */
+	public function get_formatted_variation_attributes( $flat = false ) {
+		$variation_data = $this->get_variation_attributes();
+		$attributes     = $this->parent->get_attributes();
+		$description    = array();
+		$return         = '';
+
+		if ( is_array( $variation_data ) ) {
+
+			if ( ! $flat ) {
+				$return = '<dl class="variation">';
+			}
+
+			foreach ( $attributes as $attribute ) {
+
+				// Only deal with attributes that are variations
+				if ( ! $attribute[ 'is_variation' ] ) {
+					continue;
+				}
+
+				$variation_selected_value = isset( $variation_data[ 'attribute_' . sanitize_title( $attribute[ 'name' ] ) ] ) ? $variation_data[ 'attribute_' . sanitize_title( $attribute[ 'name' ] ) ] : '';
+				$description_name         = esc_html( wc_attribute_label( $attribute[ 'name' ] ) );
+				$description_value        = __( 'Any', 'woocommerce' );
+
+				// Get terms for attribute taxonomy or value if its a custom attribute
+				if ( $attribute[ 'is_taxonomy' ] ) {
+
+					$post_terms = wp_get_post_terms( $this->id, $attribute[ 'name' ] );
+
+					foreach ( $post_terms as $term ) {
+						if ( $variation_selected_value === $term->slug ) {
+							$description_value = esc_html( apply_filters( 'woocommerce_variation_option_name', $term->name ) );
+						}
+					}
+
+				} else {
+
+					$options = wc_get_text_attributes( $attribute[ 'value' ] );
+
+					foreach ( $options as $option ) {
+
+						if ( sanitize_title( $variation_selected_value ) === $variation_selected_value ) {
+							if ( $variation_selected_value !== sanitize_title( $option ) ) {
+								continue;
+							}
+						} else {
+							if ( $variation_selected_value !== $option ) {
+								continue;
+							}
+						}
+
+						$description_value = esc_html( apply_filters( 'woocommerce_variation_option_name', $option ) );
+					}
+				}
+
+				if ( $flat ) {
+					$description[] = $description_name . ': ' . rawurldecode( $description_value );
+				} else {
+					$description[] = '<dt>' . $description_name . ':</dt><dd>' . rawurldecode( $description_value ) . '</dd>';
+				}
+			}
+
+			if ( $flat ) {
+				$return .= implode( ', ', $description );
+			} else {
+				$return .= implode( '', $description );
+			}
+
+			if ( ! $flat ) {
+				$return .= '</dl>';
+			}
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Get product name with extra details such as SKU, price and attributes. Used within admin.
 	 *
 	 * @return string Formatted product name, including attributes and price
@@ -656,9 +717,18 @@ class WC_Product_Variation extends WC_Product {
 			$identifier = '#' . $this->variation_id;
 		}
 
-		$attributes = $this->get_variation_attributes();
-		$extra_data = ' &ndash; ' . implode( ', ', $attributes ) . ' &ndash; ' . wc_price( $this->get_price() );
+		$formatted_attributes = $this->get_formatted_variation_attributes( true );
+		$extra_data           = ' &ndash; ' . $formatted_attributes . ' &ndash; ' . wc_price( $this->get_price() );
 
 		return sprintf( __( '%s &ndash; %s%s', 'woocommerce' ), $identifier, $this->get_title(), $extra_data );
+	}
+
+	/**
+	 * Get product variation description.
+	 *
+	 * @return string
+	 */
+	public function get_variation_description() {
+		return wpautop( do_shortcode( wp_kses_post( get_post_meta( $this->variation_id, '_variation_description', true ) ) ) );
 	}
 }
