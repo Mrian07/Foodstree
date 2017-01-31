@@ -117,6 +117,18 @@ function wmp_seller_additionaldata_save( $user_id ) {
     'seller_registration_copy'
     );
 
+
+
+  if ( isset( $_POST['pass1'] ) &&  !empty($_POST['pass1'])){
+    if($_POST['pass1'] == $_POST['pass2']){
+      //print_r($_POST['pass1']);
+      wp_set_password( $_POST['pass1'], $user_id );
+    }
+    
+  }
+
+
+
   foreach($additional_fields as $field){
     if ( isset( $_POST[$field] ) ){
       update_user_meta($user_id, $field, maybe_serialize($_POST[$field]));
