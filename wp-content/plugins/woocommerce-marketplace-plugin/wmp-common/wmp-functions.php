@@ -80,6 +80,8 @@ function wmp_seller_additionaldata_save( $user_id ) {
 
   $additional_fields = array(
     'seller_display_name',
+    'first_name',
+    'last_name',
     'seller_name',
     'mobile_number',
     'seller_address',
@@ -123,8 +125,15 @@ function wmp_seller_additionaldata_save( $user_id ) {
     if($_POST['pass1'] == $_POST['pass2']){
       //print_r($_POST['pass1']);
       wp_set_password( $_POST['pass1'], $user_id );
-    }
-    
+    }    
+  }
+
+  if ( isset( $_POST['email'] ) &&  !empty($_POST['email'])){
+    wp_update_user( array( 'ID' => $user_id, 'user_email' => $_POST['email'] ) );
+  }
+
+  if ( !isset( $_POST['seller_activate'] )){
+    update_user_meta($user_id, 'seller_activate', 0);
   }
 
 
