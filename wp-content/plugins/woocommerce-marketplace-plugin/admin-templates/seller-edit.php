@@ -1,6 +1,6 @@
 <?php
 
-print_r($_REQUEST);
+//print_r($_REQUEST);
 
 
 $user_id = $_GET['seller'];

@@ -246,6 +246,7 @@ function wmp_is_seller(){
 
 
 
+
 function wmp_seller_product_listing_scripts() {
     $current_role = get_user_role(get_current_user_id());
     ?>
@@ -546,6 +547,20 @@ function wmp_generate_order_status_admin_count(){
 
     echo $list;
 }
+
+
+
+
+function prevent_seller_admin_access() {
+    $redirect = home_url( '/' );
+    if(wmp_is_seller()){
+        $is_active = get_user_meta( get_current_user_id(), 'seller_activate', true );
+        if($is_active == 0){
+           exit( wp_redirect( $redirect ) ); 
+       }        
+    }
+}
+add_action( 'admin_init', 'prevent_seller_admin_access', 100 );
 
 
 
