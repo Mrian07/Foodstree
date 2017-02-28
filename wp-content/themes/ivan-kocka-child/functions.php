@@ -1010,6 +1010,13 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
   }
 
 
+//Disable plugin auto update
+add_filter( 'auto_update_plugin', '__return_false' );
+
+//Disable theme auto update
+add_filter( 'auto_update_theme', '__return_false' );
+
+
 
 
  // add_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_add_to_cart' );
