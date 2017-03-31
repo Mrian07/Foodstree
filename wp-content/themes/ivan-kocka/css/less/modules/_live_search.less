@@ -65,6 +65,7 @@
     .yith-s{
       width: 85%;
       background-image: none !important;
+      border-right: 0;
     }
     #yith-searchsubmit{
       position: absolute;
@@ -75,6 +76,8 @@
         border-color: #463752;
         text-indent: -1000px;
         padding: 14px 25px;
+        z-index: 1;
+    	outline: 0;
     }
     & > div{
       &:after{
@@ -84,6 +87,8 @@
     	right: 1.3em;
     	top: 1.3em;
     	cursor: pointer;
+    	box-shadow: #463752 -1px 2px 0 19px;
+    	background-color: #463752;
         display: inline-block;
       	font: normal normal normal 14px/1 FontAwesome;
       	font-size: inherit;

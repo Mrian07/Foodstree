@@ -699,16 +699,19 @@ text-align:center;
 .yith-ajaxsearchform-container form .yith-s {
   width: 85%;
   background-image: none !important;
+  border-right: 0;
 }
 .yith-ajaxsearchform-container form #yith-searchsubmit {
   position: absolute;
   top: 0;
   right: 0;
   color: #fff;
-  background-color: #463752;
+  background-color: transparent;
   border-color: #463752;
   text-indent: -1000px;
   padding: 14px 25px;
+  z-index: 1;
+  outline: 0;
 }
 .yith-ajaxsearchform-container form > div:after {
   content: "\f002";
@@ -717,12 +720,15 @@ text-align:center;
   right: 1.3em;
   top: 1.3em;
   cursor: pointer;
+  box-shadow: #463752 -1px 2px 0 19px;
+  background-color: #463752;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
 }
+
 
 .woocommerce .quantity input.qty, .woocommerce-page .quantity input.qty {
     border-style: solid !important;
