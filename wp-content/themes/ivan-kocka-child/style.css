@@ -666,3 +666,85 @@ text-align:center;
 .popstate{
 	overflow:hidden;
 }
+
+.woof_products_top_panel {
+  border-bottom: 1px solid #eee;
+}
+.woof_products_top_panel .woof_remove_ppi {
+  background-image: none;
+  padding-left: 1em;
+}
+.woof_products_top_panel .woof_remove_ppi:before,
+.woof_products_top_panel .woof_remove_ppi:after {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.woof_products_top_panel .woof_remove_ppi:before {
+  content: "\f02b";
+  padding-right: 0.5em;
+}
+.woof_products_top_panel .woof_remove_ppi:after {
+  content: "\f00d";
+  color: #dc1c1c;
+  padding-left: 0.5em;
+}
+
+
+.yith-ajaxsearchform-container form {
+  position: relative;
+}
+.yith-ajaxsearchform-container form .yith-s {
+  width: 85%;
+  background-image: none !important;
+  border-right: 0;
+}
+.yith-ajaxsearchform-container form #yith-searchsubmit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  background-color: transparent;
+  border-color: #463752;
+  text-indent: -1000px;
+  padding: 14px 25px;
+  z-index: 1;
+  outline: 0;
+}
+.yith-ajaxsearchform-container form > div:after {
+  content: "\f002";
+  color: #fff;
+  position: absolute;
+  right: 1.3em;
+  top: 1.3em;
+  cursor: pointer;
+  box-shadow: #463752 -1px 2px 0 19px;
+  background-color: #463752;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.woocommerce .quantity input.qty, .woocommerce-page .quantity input.qty {
+    border-style: solid !important;
+    border-width: 1px !important;
+}
+
+
+div.woof_info_popup{
+	background-image: url('images/pinloader.gif');
+    background-repeat: no-repeat;
+    background-color: #fff;
+    text-indent: -1000px;
+    padding: 2em;
+    background-position: center;
+    width: 150px;
+    opacity: 1 !important;
+    border-radius: 0;
+}
+
