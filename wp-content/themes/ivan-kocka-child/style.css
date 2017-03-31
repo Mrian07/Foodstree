@@ -734,3 +734,18 @@ text-align:center;
     border-style: solid !important;
     border-width: 1px !important;
 }
+
+
+div.woof_info_popup{
+	background-image: url('images/pinloader.gif');
+    background-repeat: no-repeat;
+    background-color: #fff;
+    text-indent: -1000px;
+    padding: 2em;
+    background-position: center;
+    width: 150px;
+    opacity: 1 !important;
+    border-radius: 0;
+}
+
+
