@@ -55,6 +55,48 @@
 	}
 }
 
+
+
+
+.yith-ajaxsearchform-container{
+  form{
+    position: relative;
+    .yith-s{
+      width: 85%;
+      background-image: none !important;
+    }
+    #yith-searchsubmit{
+      position: absolute;
+        top: 0;
+        right: 0;
+        color: #fff;
+        background-color: #463752;
+        border-color: #463752;
+        text-indent: -1000px;
+        padding: 14px 25px;
+    }
+    & > div{
+      &:after{
+        content: "\f002";
+        color: #fff;
+    	position: absolute;
+    	right: 1.3em;
+    	top: 1.3em;
+    	cursor: pointer;
+        display: inline-block;
+      	font: normal normal normal 14px/1 FontAwesome;
+      	font-size: inherit;
+      	text-rendering: auto;
+      	-webkit-font-smoothing: antialiased;
+      }
+    }
+  }
+}
+
+
+
+
+
 // XS Screen Phone
 @media (max-width: @screen-xs-max) {	
 	.live-search .inner-wrapper {
