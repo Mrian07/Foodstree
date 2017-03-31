@@ -22,15 +22,6 @@ if( true == ivan_get_option('woo-display-sorting') ) : ?>
 
 			</div>
 		</div>
-		<h1>
-<?php 
-
-if(isset($_REQUEST['s']) && $_REQUEST['s']!='')
-{
-		printf( __( 'Showing results for %s', 'woocommerce' ), $_REQUEST['s'] );
-}
-?>
-</h1>
 	</div>
 
 <?php endif; ?>
