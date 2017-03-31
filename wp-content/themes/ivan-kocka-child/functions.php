@@ -870,7 +870,7 @@ echo "</pre>";*/
 
 
 
-add_filter( 'woocommerce_get_catalog_ordering_args', 'wmp_discount_catalog_ordering_args' );
+// add_filter( 'woocommerce_get_catalog_ordering_args', 'wmp_discount_catalog_ordering_args' );
 function wmp_discount_catalog_ordering_args( $args ) {
   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
   if ( 'discount' == $orderby_value ) {
@@ -906,12 +906,15 @@ $args['order_by'] = 'FIELD(ID, '.implode(',',$product_ids).')';
   return $args;
 }
 
-add_filter( 'woocommerce_default_catalog_orderby_options', 'wmp_add_salediscount_to_catalog_orderby' );
+// add_filter( 'woocommerce_default_catalog_orderby_options', 'wmp_add_salediscount_to_catalog_orderby' );
 add_filter( 'woocommerce_catalog_orderby', 'wmp_add_salediscount_to_catalog_orderby' );
 function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
-  unset( $sortby['rating'] );
-  unset( $sortby['popularity'] );
-  $sortby['discount']   = 'Sort by discount';
+  // unset( $sortby['rating'] );
+  // unset( $sortby['popularity'] );
+  // $sortby['discount']   = 'Sort by discount';
+  $sortby['title']  = 'Sort by A-Z';
+  $sortby['rating'] = 'Sort by Rating';
+  $sortby['date']   = 'Sort by New';
   return $sortby;
 }
 
@@ -928,7 +931,7 @@ function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
 
 
 
- add_filter( 'posts_orderby', 'sort_query_by_post_in', 10, 2 );
+ // add_filter( 'posts_orderby', 'sort_query_by_post_in', 10, 2 );
 
   function sort_query_by_post_in( $sortby, $query ) {
     
