@@ -666,3 +666,61 @@ text-align:center;
 .popstate{
 	overflow:hidden;
 }
+
+.woof_products_top_panel {
+  border-bottom: 1px solid #eee;
+}
+.woof_products_top_panel .woof_remove_ppi {
+  background-image: none;
+  padding-left: 1em;
+}
+.woof_products_top_panel .woof_remove_ppi:before,
+.woof_products_top_panel .woof_remove_ppi:after {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.woof_products_top_panel .woof_remove_ppi:before {
+  content: "\f02b";
+  padding-right: 0.5em;
+}
+.woof_products_top_panel .woof_remove_ppi:after {
+  content: "\f00d";
+  color: #dc1c1c;
+  padding-left: 0.5em;
+}
+
+
+.yith-ajaxsearchform-container form {
+  position: relative;
+}
+.yith-ajaxsearchform-container form .yith-s {
+  width: 85%;
+  background-image: none !important;
+}
+.yith-ajaxsearchform-container form #yith-searchsubmit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  background-color: #463752;
+  border-color: #463752;
+  text-indent: -1000px;
+  padding: 14px 25px;
+}
+.yith-ajaxsearchform-container form > div:after {
+  content: "\f002";
+  color: #fff;
+  position: absolute;
+  right: 1.3em;
+  top: 1.3em;
+  cursor: pointer;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+

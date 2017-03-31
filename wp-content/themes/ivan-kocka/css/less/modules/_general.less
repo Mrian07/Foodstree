@@ -171,3 +171,35 @@
     border-right-color: @border-color;
   }
 }
+
+
+// Product page tag fixes
+
+.woof_products_top_panel{
+  border-bottom: 1px solid #eee;
+  .woof_remove_ppi{
+    background-image: none;
+    padding-left: 1em;
+    &:before,&:after{
+      display: inline-block;
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    &:before{
+      content: "\f02b";
+      padding-right: 0.5em;
+    }
+    &:after{
+      content: "\f00d";
+      color: #dc1c1c;
+      padding-left: 0.5em;
+    }
+  }
+}
+
+
+
+
+
