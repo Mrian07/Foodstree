@@ -724,3 +724,7 @@ text-align:center;
   -webkit-font-smoothing: antialiased;
 }
 
+.woocommerce .quantity input.qty, .woocommerce-page .quantity input.qty {
+    border-style: solid !important;
+    border-width: 1px !important;
+}
