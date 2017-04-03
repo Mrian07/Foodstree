@@ -748,3 +748,6 @@ div.woof_info_popup{
     border-radius: 0;
 }
 
+.woof_show_auto_form {
+  display: none !important;
+}
