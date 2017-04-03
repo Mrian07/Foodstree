@@ -2,7 +2,6 @@
 wp-config.php
 wp-content/plugins/CSV-Plugin/.gitignore
 wp-content/uploads/
-wp-content/plugins
 php.ini
 
 
