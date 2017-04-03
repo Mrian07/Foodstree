@@ -758,7 +758,12 @@ function woof_draw_products_top_panel() {
                 } else {
                     delete woof_current_values[tax];
                 }
-            } else {
+
+                if (tax == 'orderby') {
+                    jQuery('.orderby option[value=date]').attr('selected','selected');
+                }
+            } 
+            else {
                 delete woof_current_values['min_price'];
                 delete woof_current_values['max_price'];
             }
