@@ -912,9 +912,13 @@ function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
   // unset( $sortby['rating'] );
   // unset( $sortby['popularity'] );
   // $sortby['discount']   = 'Sort by discount';
-  $sortby['title']  = 'Sort by A-Z';
-  $sortby['rating'] = 'Sort by Rating';
-  $sortby['date']   = 'Sort by New';
+  $sortby['date']   = 'New';
+  $sortby['title']  = 'A-Z';
+  $sortby['price']   = 'Low to High';
+  $sortby['price-desc']   = 'High to Low';
+  $sortby['popularity']   = 'Popularity';
+  $sortby['rating'] = 'Rating';
+
   return $sortby;
 }
 
@@ -1017,12 +1021,38 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
 
  // add_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_add_to_cart' );
 
+function update_review_for_old_products(){
+  global $wpdb;
 
+  $select="select ID from ".$wpdb->prefix."posts where post_type='product'";
+  $res=$wpdb->get_results($select,ARRAY_A);
 
+  foreach ($res as $value) {
+    $post_id=$value['ID'];
+    update_post_meta( $post_id,'wpcr3_enable', 1 );
+    update_post_meta( $post_id,'wpcr3_format', 'product' );
+  }
+  
+}
 
+// add_action( 'init', 'update_review_for_old_products' );
 
+/*
+function rating_sort($args){
+   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
+  // var_dump($args);
+  if($orderby_value=='rating'){
+      $wc=new WC_Query();
+      $wc->remove_ordering_args();
+      $args['meta_key']='_wc_average_rating';
+      $args['meta_key']='_wc_average_rating';
+      var_dump($args);
+        return $args;
+  }
 
-
+}
+add_filter( 'woocommerce_get_catalog_ordering_args', 'rating_sort' );
+*/
 
 
 
