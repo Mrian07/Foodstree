@@ -582,24 +582,13 @@ class WC_Query {
 			break;
 			case 'popularity' :
 				$args['meta_key'] = 'total_sales';
-				$args['orderby']  = array(
-				'meta_value_num' => 'DESC',
-					'ID'             => 'ASC',
-				);
+
 				// Sorting handled later though a hook
-				//add_filter( 'posts_clauses', array( $this, 'order_by_popularity_post_clauses' ) );
-				
+				add_filter( 'posts_clauses', array( $this, 'order_by_popularity_post_clauses' ) );
 			break;
 			case 'rating' :
 				// Sorting handled later though a hook
-				//add_filter( 'posts_clauses', array( $this, 'order_by_rating_post_clauses' ) );
-				
-				$args['meta_key'] = '_wc_average_rating';
-				$args['orderby']  = array(
-				'meta_value_num' => 'DESC',
-					'ID'             => 'ASC',
-				);
-
+				add_filter( 'posts_clauses', array( $this, 'order_by_rating_post_clauses' ) );
 			break;
 			case 'title' :
 				$args['orderby']  = 'title';
