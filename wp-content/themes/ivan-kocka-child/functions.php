@@ -285,7 +285,7 @@ function woo_rename_tabs( $tabs ) {
 //Remove reviews tab
 add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
 function woo_remove_product_tabs( $tabs ) {
-    unset( $tabs['reviews'] ); 
+    // unset( $tabs['reviews'] ); 
     return $tabs;
 }
 
