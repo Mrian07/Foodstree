@@ -789,6 +789,11 @@ div.woof_info_popup{
     width:30%;
 }
 
+.newsletter-box.newsletter-box .subscribe-button{
+	background-color: #463752 !important;
+	padding: 10px;
+}
+
 
 .blog .container h2{
 	margin: 0 auto !important;
