@@ -482,9 +482,9 @@ function woof_get_submit_link() {
             if (index == swoof_search_slug) {
                 delete woof_current_values[index];
             }
-            if (index == 's') {
+            /*if (index == 's') {
                 delete woof_current_values[index];
-            }
+            }*/
             if (index == 'product') {
 //for single product page (when no permalinks)
                 delete woof_current_values[index];
