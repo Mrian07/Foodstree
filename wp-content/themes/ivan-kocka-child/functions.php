@@ -1037,23 +1037,14 @@ function update_review_for_old_products(){
 
 // add_action( 'init', 'update_review_for_old_products' );
 
-/*
-function rating_sort($args){
-   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
-  // var_dump($args);
-  if($orderby_value=='rating'){
-      $wc=new WC_Query();
-      $wc->remove_ordering_args();
-      $args['meta_key']='_wc_average_rating';
-      $args['meta_key']='_wc_average_rating';
-      var_dump($args);
-        return $args;
-  }
 
+ // add_filter( 'posts_request', 'dump_request' );
+
+function dump_request( $input ) {
+
+    var_dump($input);
+
+    return $input;
 }
-add_filter( 'woocommerce_get_catalog_ordering_args', 'rating_sort' );
-*/
-
-
 
 
