@@ -288,7 +288,31 @@ if($decodedData['wp_newsletter_closeposition']=="top-left-inside")
 <?php }?>
 
 <?php $count =0;?>
-<div class="newsletter-box newsletter_<?php echo $newsletter->id;?>" id="<?php echo $newsletter->id;?>">
+
+<?php
+if(is_user_logged_in()){
+ global $user_ID;
+ 
+ $user_info = get_userdata($user_ID);
+ $usermail = $user_info->user_email;
+
+  global $wpdb;
+  $tbl = $wpdb->prefix.'mk_newsletter_local_records';
+
+  $hiddenclass="";
+  $local_records = $wpdb->get_results('select nl_data from '.$tbl.' where nl_id="'.$newsletter->id.'" order by rid DESC',ARRAY_A);
+    
+    foreach ($local_records as $lvalue) {
+      $userdetail=json_decode( $lvalue['nl_data'] ,true) ;
+      if($usermail== $userdetail['EMAIL']){
+        $hiddenclass="hidden";
+        break;
+      }
+    }
+
+  }
+?>
+<div class="<?php echo $hiddenclass; ?> newsletter-box newsletter_<?php echo $newsletter->id;?>" id="<?php echo $newsletter->id;?>">
 <?php if(!empty($decodedData['wp_newsletter_ribbon_show']) && ($decodedData['wp_newsletter_ribbon_show'] == 1)):?>
 <div class="ribbon"><img src="<?php echo $decodedData['wp_newsletter_ribbon']; ?>"></div>
 <?php endif;?>
