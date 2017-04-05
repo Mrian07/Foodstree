@@ -780,3 +780,12 @@ div.woof_info_popup{
 .woof_show_auto_form {
   display: none !important;
 }
+
+#iv-layout-title-wrapper#iv-layout-title-wrapper{
+	background-color: #f9f9f9;
+}
+
+
+.blog .container h2{
+	margin: 0 auto !important;
+}
