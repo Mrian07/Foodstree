@@ -87,7 +87,7 @@ background: url(images/bow-icon.png)no-repeat right ;
 background: none !important;
 }
 .header .mega_main_menu .mega_main_menu_ul>li>.item_link {
-	padding: 0px 40px 0px 26px !important;
+	padding: 0px 26px 0px 26px !important;
 }
 .iv-layout.header .woo-cart .basket-wrapper .top {
 	border: 2px solid #fff;margin-top: -1px;
@@ -783,6 +783,10 @@ div.woof_info_popup{
 
 #iv-layout-title-wrapper#iv-layout-title-wrapper{
 	background-color: #f9f9f9;
+}
+
+.header-right-area .col-md-5{
+    width:30%;
 }
 
 
