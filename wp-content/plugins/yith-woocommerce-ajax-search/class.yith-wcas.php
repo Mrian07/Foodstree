@@ -170,7 +170,8 @@ if ( !class_exists( 'YITH_WCAS' ) ) {
 				        $product = wc_get_product( $post );
 
 				        $suggestions[] = apply_filters( 'yith_wcas_suggestion', array(
-					        'id'    => $product->get_id(),
+                           'id'    => $product->id,
+					        // 'id'    => $product->get_id(),
 					        'value' => strip_tags( $product->get_title() ),
 					        'url'   => $product->get_permalink()
 				        ), $product );

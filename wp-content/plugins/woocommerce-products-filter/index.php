@@ -1694,11 +1694,11 @@ final class WOOF {
             case 'rating' :
                 //$orderby = '';
                 //$meta_key = '';
-                //add_filter('posts_clauses', array(WC()->query, 'order_by_rating_post_clauses'));
+                add_filter('posts_clauses', array(WC()->query, 'order_by_rating_post_clauses'));
 
-                $orderby = "meta_value_num {$wpdb->posts}.ID";
-                $order = 'DESC';
-                $meta_key = '_wc_average_rating';
+                // $orderby = "meta_value_num {$wpdb->posts}.ID";
+                // $order = 'DESC';
+                // $meta_key = '_wc_average_rating';
                 break;
             case 'title' :
                 $orderby = 'title';
