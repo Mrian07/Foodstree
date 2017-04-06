@@ -410,9 +410,17 @@ function woof_submit_link(link) {
             content = jQuery.parseJSON(content);
             if (jQuery('.woof_results_by_ajax_shortcode').length) {
                 jQuery('#woof_results_by_ajax').replaceWith(content.products);
+
             } else {
                 jQuery('.woof_shortcode_output').replaceWith(content.products);
             }
+         
+                var navlinks=jQuery('#woof_results_by_ajax').find('.nav-links').html();
+                var resultcount=jQuery('#woof_results_by_ajax').find('#woocommerce-result-count-store').html();
+                //console.log(jQuery('.catalog-pagination').find('.nav-links').html());
+                jQuery('.catalog-pagination').find('.nav-links').html(navlinks);
+                jQuery('.catalog-results-number').find('.woocommerce-result-count').html(resultcount);
+         
 
             jQuery('div.woof_redraw_zone').replaceWith(jQuery(content.form).find('.woof_redraw_zone'));
             woof_draw_products_top_panel();
