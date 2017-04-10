@@ -816,6 +816,18 @@ div.woof_info_popup{
     width:30%;
 }
 
+#main-div#main-div{
+	z-index: 999999;
+}
+
+.webdesign-newsLetter .subscribeThreebutton{
+	background-color: #463752 !important;
+}
+
+.webdesign-newsLetter .thanksText:hover{
+	color: #000;
+}
+
 .newsletter-box.newsletter-box .subscribe-button{
 	background-color: #463752 !important;
 	padding: 10px;
