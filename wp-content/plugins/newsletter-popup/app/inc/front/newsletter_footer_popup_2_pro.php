@@ -1,5 +1,31 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; 
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+
 global $wpdb;
+    
+$hiddenstyle="";
+
+if(is_user_logged_in()){
+ global $user_ID;
+ 
+ $user_info = get_userdata($user_ID);
+ $usermail = $user_info->user_email;
+
+  global $wpdb;
+  $tbl = $wpdb->prefix.'mk_newsletter_local_records';
+
+  
+  $local_records = $wpdb->get_results('select nl_data from '.$tbl.' where nl_id="'.$newsletter->id.'" order by rid DESC',ARRAY_A);
+    
+    foreach ($local_records as $lvalue) {
+      $userdetail=json_decode( $lvalue['nl_data'] ,true) ;
+      if($usermail== $userdetail['EMAIL']){
+        $hiddenstyle="hidden";
+        break;
+      }
+    }
+
+  }
+
 $tbl = $wpdb->prefix.'mk_newsletter_data';
 $newsletters = $wpdb->get_results("select * from ".$tbl." where status = 'publish'");
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -15,17 +41,55 @@ if(!empty($newsletters) && is_array($newsletters ))
 window.onbeforeunload = function(e){ 
  return jQuery(".subscribebox_<?php echo $newsletter->id;?>").fadeIn();
 }
+
 <?php } ?>
    <?php if(isset($decodedData['wp_newsletter_popup_time']) && !empty($decodedData['wp_newsletter_popup_time'])) { ?>
 	setTimeout(function(){ jQuery(".subscribebox_<?php echo $newsletter->id;?>").fadeIn(); }, <?php echo ($decodedData['wp_newsletter_popup_time'] * 1000);?>);
 	<?php } else { ?>
 	jQuery(window).load(function(e) {
-        jQuery(".subscribebox_<?php echo $newsletter->id;?>").fadeIn();
+
+     function setCookiePopup(c_name,value,exdays) {
+    var exdate=new Date();
+    exdate.setDate(exdate.getDate() + exdays);
+    var expires = exdate.toUTCString();
+    var isIE8 = (document.documentMode !== undefined);
+    if (exdays == 0) {
+        expires = (isIE8 == true) ? "" : "0";
+    }
+    var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+expires);
+    document.cookie=c_name + "=" + c_value;
+}
+
+function getCookiePopup(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+ function deleteCookiePopup(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+  if (getCookiePopup('visited')) {
+    // deleteCookiePopup('visited');
+  } 
+  else {
+   
+    setCookiePopup('visited','true',1); //999 days expiration
+      <?php if($hiddenstyle!='hidden') { ?>  
+      jQuery(".subscribebox_<?php echo $newsletter->id;?>").fadeIn();
+      <?php } ?>
+  }
     });
 	<?php } ?>
 	jQuery('.nlp_show_oc_<?php echo $newsletter->id;?>').live('click', function(e) {
 		jQuery(".subscribebox_<?php echo $newsletter->id;?>").fadeIn();
 	});
+
 	jQuery(document).ready(function(){
 		 jQuery(".close_<?php echo $newsletter->id;?>").click(function(e){
 			 e.preventDefault();
@@ -310,7 +374,7 @@ if($decodedData['wp_newsletter_closeposition']=="top-left-inside")
 </style>
 <?php }?>
 <?php $count = 0;?>
-<div id="main-div" class="subscribebox_<?php echo $newsletter->id;?>" style="display: none;">
+<div id="main-div" class="subscribebox_<?php echo $newsletter->id;?> " style="display: none;">
 <div class="animated <?php echo $decodedData['wp_newsletter_animation'];?>">
 <div class="webdesign-newsLetter">
     <div class="news-box">
