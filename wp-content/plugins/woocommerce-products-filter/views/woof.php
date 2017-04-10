@@ -348,7 +348,7 @@ if (!function_exists('woof_print_item_by_key'))
 
 
     <?php if ($autohide): ?>
-    <div>
+    <div class="hidden">
         <?php
         if (isset($this->settings['woof_auto_hide_button_img']) AND ! empty($this->settings['woof_auto_hide_button_img']))
         {

@@ -1714,6 +1714,20 @@ final class WOOF {
                 break;
         }
 
+        //custom post changes
+        function filter_posts_clauses( $args ) { 
+            global $wpdb;
+            // make filter magic happen here... 
+            $link = parse_url($_REQUEST['link'], PHP_URL_QUERY);
+            parse_str($link, $_GET); //$_GET data init
+
+            $args['where'] .= " AND (((".$wpdb->prefix."posts.post_title LIKE '%".$_GET['s']."%') OR (post_excerpt LIKE '%".$_GET['s']."%') OR (".$wpdb->prefix."posts.post_excerpt LIKE '%".$_GET['s']."%') OR (".$wpdb->prefix."posts.post_content LIKE '%".$_GET['s']."%')))  ";
+            return $args;
+        }
+             
+        add_filter( 'posts_clauses', 'filter_posts_clauses', 10, 1 ); 
+        //end
+
         //print_r(compact('order', 'orderby', 'meta_key'));
         return compact('order', 'orderby', 'meta_key');
     }

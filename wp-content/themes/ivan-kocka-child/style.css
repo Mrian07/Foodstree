@@ -837,3 +837,7 @@ div.woof_info_popup{
 .blog .container h2{
 	margin: 0 auto !important;
 }
+
+.woof_sid_auto_shortcode{
+  display: none !important;
+}
