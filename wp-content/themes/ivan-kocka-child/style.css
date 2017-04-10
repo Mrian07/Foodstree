@@ -820,7 +820,7 @@ div.woof_info_popup{
 	z-index: 999999;
 }
 
-.webdesign-newsLetter .subscribeThreebutton{
+.webdesign-newsLetter .subscribeThreebutton,.webdesign-newsLetter .close-button{
 	background-color: #463752 !important;
 }
 
