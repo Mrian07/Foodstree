@@ -861,8 +861,14 @@ div.woof_info_popup{
 .webdesign-newsLetter.webdesign-newsLetter .thanksText{
 	font-weight: 600;
     font-size: 1.15em;
+    margin-bottom: 0;
     color: rgb(8, 8, 8);
     font-family: "Open Sans";
+}
+
+.webdesign-newsLetter.webdesign-newsLetter .close-button{
+	right: -12px;
+    top: -16px;
 }
 
 .webdesign-newsLetter .thanksText:hover{
