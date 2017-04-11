@@ -824,6 +824,47 @@ div.woof_info_popup{
 	background-color: #463752 !important;
 }
 
+.webdesign-newsLetter.webdesign-newsLetter .upper-div h1{
+	color: #000000;
+    font-size: 25px;
+    padding: 20px 0 0 0;
+    font-style: inherit;
+    font-family: "Open Sans";
+    font-weight: 500;
+    letter-spacing: inherit;
+}
+
+.webdesign-newsLetter .lower-div{
+	background-size: cover !important;
+}
+
+
+.webdesign-newsLetter.webdesign-newsLetter form{
+	margin: 0;
+}
+
+.webdesign-newsLetter.webdesign-newsLetter .email-textbox{
+	padding: 10px;
+    font-family: "Open Sans";
+}
+
+.webdesign-newsLetter.webdesign-newsLetter .subscribeThreebutton{
+	padding: 11px 15px;
+    margin: 0;
+    font-family: "Open Sans";
+}
+.error_container.error_container{
+	font-weight: 600;
+    font-size: 1.2em;
+}
+
+.webdesign-newsLetter.webdesign-newsLetter .thanksText{
+	font-weight: 600;
+    font-size: 1.15em;
+    color: rgb(8, 8, 8);
+    font-family: "Open Sans";
+}
+
 .webdesign-newsLetter .thanksText:hover{
 	color: #000;
 }
