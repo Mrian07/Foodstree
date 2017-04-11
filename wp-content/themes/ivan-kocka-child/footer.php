@@ -24,3 +24,13 @@
 
 </body>
 </html>
+
+<script type="text/javascript">
+  
+  jQuery("#menu-item-2171").on("click", function(e){ 
+      e.preventDefault();
+      jQuery('#main-div').fadeIn();
+  });
+  
+</script>
+
