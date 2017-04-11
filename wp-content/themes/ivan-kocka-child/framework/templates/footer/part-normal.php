@@ -39,7 +39,7 @@ $_classes = '';
 if( true != ivan_get_option('footer-enable-switch') ) :
 ?>
 <h2 class="title-heading-header">
-				FOOD ADVANTAGES
+				STILL HUNGRY?
 		</h2><BR>
 	<div class="<?php echo apply_filters( 'iv_footer_classes', 'iv-layout footer footer-normal '. $_classes ); ?>">
 		<div class="container">
