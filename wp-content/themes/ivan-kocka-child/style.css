@@ -847,6 +847,7 @@ div.woof_info_popup{
 .webdesign-newsLetter.webdesign-newsLetter .email-textbox{
 	padding: 10px;
     font-family: "Open Sans";
+    color: #999;
 }
 
 .webdesign-newsLetter.webdesign-newsLetter .email-textbox::-webkit-input-placeholder{
