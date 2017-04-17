@@ -27,10 +27,21 @@
 
 <script type="text/javascript">
   
-  jQuery("#menu-item-2171").on("click", function(e){ 
-      e.preventDefault();
-      jQuery('#main-div').fadeIn();
-  });
+  var site_base_url = "<?php echo $_SERVER['SERVER_NAME']; ?>";
+ 
+  if(site_base_url=='www.foodstree.ajency.in'){
+
+    jQuery("#menu-item-2171").on("click", function(e){ 
+        e.preventDefault();
+        jQuery('#main-div').fadeIn();
+    });
+  }
+  else if(site_base_url=='foodstree.com'){
+     jQuery("#menu-item-5403").on("click", function(e){ 
+        e.preventDefault();
+        jQuery('#main-div').fadeIn();
+    });
+  }
   
 </script>
 
