@@ -31,7 +31,7 @@ global $wp_query;
 	} elseif ( $total <= $per_page || -1 == $per_page ) {
 		printf( __( 'Showing %d results '.$for_search, 'woocommerce' ), $total );
 	} else {
-		printf( _x( 'Showing %1$d&ndash;%2$d of %3$d results'.$for_search, '%1$d = first, %2$d = last, %3$d = total', 'woocommerce' ), $first, $last, $total );
+		printf( _x( 'Showing %1$d&ndash;%2$d of %3$d results '.$for_search, '%1$d = first, %2$d = last, %3$d = total', 'woocommerce' ), $first, $last, $total );
 	}
 	?>
 </h4>
