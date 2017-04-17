@@ -285,7 +285,7 @@ function woo_rename_tabs( $tabs ) {
 //Remove reviews tab
 add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
 function woo_remove_product_tabs( $tabs ) {
-    unset( $tabs['reviews'] ); 
+    // unset( $tabs['reviews'] ); 
     return $tabs;
 }
 
@@ -870,7 +870,7 @@ echo "</pre>";*/
 
 
 
-add_filter( 'woocommerce_get_catalog_ordering_args', 'wmp_discount_catalog_ordering_args' );
+// add_filter( 'woocommerce_get_catalog_ordering_args', 'wmp_discount_catalog_ordering_args' );
 function wmp_discount_catalog_ordering_args( $args ) {
   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
   if ( 'discount' == $orderby_value ) {
@@ -906,12 +906,19 @@ $args['order_by'] = 'FIELD(ID, '.implode(',',$product_ids).')';
   return $args;
 }
 
-add_filter( 'woocommerce_default_catalog_orderby_options', 'wmp_add_salediscount_to_catalog_orderby' );
+// add_filter( 'woocommerce_default_catalog_orderby_options', 'wmp_add_salediscount_to_catalog_orderby' );
 add_filter( 'woocommerce_catalog_orderby', 'wmp_add_salediscount_to_catalog_orderby' );
 function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
-  unset( $sortby['rating'] );
-  unset( $sortby['popularity'] );
-  $sortby['discount']   = 'Sort by discount';
+  // unset( $sortby['rating'] );
+  // unset( $sortby['popularity'] );
+  // $sortby['discount']   = 'Sort by discount';
+  $sortby['date']   = 'New';
+  $sortby['title']  = 'A-Z';
+  $sortby['price']   = 'Low to High';
+  $sortby['price-desc']   = 'High to Low';
+  $sortby['popularity']   = 'Popularity';
+  $sortby['rating'] = 'Rating';
+
   return $sortby;
 }
 
@@ -928,7 +935,7 @@ function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
 
 
 
- add_filter( 'posts_orderby', 'sort_query_by_post_in', 10, 2 );
+ // add_filter( 'posts_orderby', 'sort_query_by_post_in', 10, 2 );
 
   function sort_query_by_post_in( $sortby, $query ) {
     
@@ -1021,13 +1028,30 @@ add_filter( 'auto_update_theme', '__return_false' );
 
  // add_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_add_to_cart' );
 
+function update_review_for_old_products(){
+  global $wpdb;
+
+  $select="select ID from ".$wpdb->prefix."posts where post_type='product'";
+  $res=$wpdb->get_results($select,ARRAY_A);
+
+  foreach ($res as $value) {
+    $post_id=$value['ID'];
+    update_post_meta( $post_id,'wpcr3_enable', 1 );
+    update_post_meta( $post_id,'wpcr3_format', 'product' );
+  }
+  
+}
+
+// add_action( 'init', 'update_review_for_old_products' );
 
 
+ // add_filter( 'posts_request', 'dump_request' );
 
+function dump_request( $input ) {
 
+    var_dump($input);
 
-
-
-
+    return $input;
+}
 
 
