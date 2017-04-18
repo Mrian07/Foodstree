@@ -26,15 +26,15 @@
 		// validate for errors
 		private function checkForErrors($prefix = ""){
 			
-			if(mysql_error()){
-				$query = $this->wpdb->last_query;
-				$message = $this->wpdb->last_error;
+			// if(mysql_error()){
+			// 	$query = $this->wpdb->last_query;
+			// 	$message = $this->wpdb->last_error;
 				
-				if($prefix) $message = $prefix.' - <b>'.$message.'</b>';
-				if($query) $message .=  '<br>---<br> Query: ' . $query;
+			// 	if($prefix) $message = $prefix.' - <b>'.$message.'</b>';
+			// 	if($query) $message .=  '<br>---<br> Query: ' . $query;
 				
-				$this->throwError($message);
-			}
+			// 	$this->throwError($message);
+			// }
 		}
 		
 		

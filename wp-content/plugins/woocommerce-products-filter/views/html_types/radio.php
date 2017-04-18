@@ -117,6 +117,9 @@ if (!function_exists('woof_draw_radio_childs'))
 
 <ul class="woof_list woof_list_radio">
     <?php
+    //custom code added  to fetch empty post option
+    $hide_dynamic_empty_pos=get_option( 'woof_hide_dynamic_empty_pos');
+
     $current_request = array();
     $request = $this->get_request_data();
     if ($this->is_isset_in_request_data($tax_slug))
