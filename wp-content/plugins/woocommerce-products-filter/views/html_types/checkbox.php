@@ -114,6 +114,9 @@ if (!function_exists('woof_draw_checkbox_childs'))
 ?>
 <ul class="woof_list woof_list_checkbox">
     <?php
+    
+    $hide_dynamic_empty_pos=get_option( 'woof_hide_dynamic_empty_pos');
+
     $woof_tax_values = array();
     $current_request = array();
     $request = $this->get_request_data();
