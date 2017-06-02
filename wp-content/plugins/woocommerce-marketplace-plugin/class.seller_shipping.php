@@ -85,7 +85,7 @@ public function calculate_shipping( $package ) {
     $rate = array(
         'id' => $this->id,
         'label' => $this->title,
-        'cost' => $ajency_wmp->wmp_shipping_rate(),
+        'cost' => $ajency_wmp->wmp_shipping_rate($package),
         'calc_tax' => 'per_item'
         );
 

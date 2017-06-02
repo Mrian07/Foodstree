@@ -173,7 +173,7 @@ if (!function_exists('woof_draw_checkbox_childs'))
                     $count_string = '<span class="woof_checkbox_count">(' . $count . ')</span>';
                 }
                 //+++
-                if ($hide_dynamic_empty_pos AND $count == 0)
+                if ($count == 0)
                 {
                     continue;
                 }

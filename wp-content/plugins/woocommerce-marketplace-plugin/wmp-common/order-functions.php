@@ -442,6 +442,23 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
             }
         } // foreach
 
+
+
+        //Add COD Charge        
+        global $ajency_wmp;
+        $cod_fee = $ajency_wmp->seller_additional_cod_amount($seller_id, $order_total);
+        if($cod_fee>0){
+            $cod_item_id = wc_add_order_item( $order_id, array(
+                'order_item_name' => 'Additional COD fees',
+                'order_item_type' => 'fee'
+                ) );
+            wc_add_order_item_meta( $cod_item_id, '_line_total', $cod_fee );
+            $order_total = $order_total + (float) $cod_fee;
+        }
+        
+
+
+
         $bill_ship = array(
             '_billing_country', '_billing_first_name', '_billing_last_name', '_billing_company',
             '_billing_address_1', '_billing_address_2', '_billing_city', '_billing_state', '_billing_postcode',
@@ -454,10 +471,12 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
         foreach ($bill_ship as $val) {
             $order_key = ltrim( $val, '_' );
             update_post_meta( $order_id, $val, $parent_order->$order_key );
-        }
+        }        
+
 
         // do shipping
         $shipping_cost = wmp_create_sub_order_shipping( $parent_order, $order_id, $seller_products );
+
 
         // add coupons if any
         wmp_create_sub_order_coupon( $parent_order, $order_id, $product_ids );
@@ -635,6 +654,7 @@ function wmp_create_sub_order_shipping( $parent_order, $order_id, $seller_produc
 
     return 0;
 }
+
 
 
 

@@ -133,10 +133,11 @@ function sellerpage_rewrite_catch() {
 
 
 
-public function wmp_shipping_rate(){
+public function wmp_shipping_rate($package){
     global $woocommerce; 
 
-    $items = $woocommerce->cart->get_cart();
+    //$items = $woocommerce->cart->get_cart();
+    $items = $package['contents'];
 
     $seller_count = array();
     foreach($items as $item => $values) {
