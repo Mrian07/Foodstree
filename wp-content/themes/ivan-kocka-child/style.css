@@ -908,3 +908,41 @@ div.woof_info_popup{
 .woof_sid_auto_shortcode{
   display: none !important;
 }
+
+
+@media screen and (max-width: 650px){
+	body{
+		position: relative;
+	}
+	#main-div.subscribebox_1 {
+    	right: 0;
+    	margin: 0;
+	    max-width: 100%;
+	    bottom: 0;
+	    position: absolute;
+	    height: 100%;
+	}
+	.subscribebox_1 .webdesign-newsLetter{
+		max-width: 100%;
+	}
+	.subscribebox_1 .webdesign-newsLetter .lower-div{
+		max-width: 100%;
+	}
+	.subscribebox_1 .webdesign-newsLetter p{
+		font-size: 15px;
+		line-height: 22px;
+	}
+	.subscribebox_1 .webdesign-newsLetter .close-button{
+		top: -20px !important;
+	}
+	.subscribebox_1 .webdesign-newsLetter.webdesign-newsLetter .subscribeThreebutton{
+		margin-top: 1em;
+    	font-size: 0.8em;
+	}
+	.subscribebox_1 .webdesign-newsLetter.webdesign-newsLetter .thanksText{
+		font-size: 1.05em;
+	}
+}
+
+
+
