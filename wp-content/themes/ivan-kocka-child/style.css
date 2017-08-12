@@ -942,6 +942,9 @@ div.woof_info_popup{
 	.subscribebox_1 .webdesign-newsLetter.webdesign-newsLetter .thanksText{
 		font-size: 1.05em;
 	}
+	.woocommerce ul.products li.product, .woocommerce-page ul.products li.product{
+		width: 50%;
+	}
 }
 
 
