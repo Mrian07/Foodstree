@@ -965,5 +965,8 @@ div.woof_info_popup{
     .woocommerce ul.products li.product, .woocommerce-page ul.products li.product{
         width: calc(50% - 10px);
     }
+    .iv-mobile-menu-wrapper{
+		z-index: 99999999 !important;
+    }
 }
 
