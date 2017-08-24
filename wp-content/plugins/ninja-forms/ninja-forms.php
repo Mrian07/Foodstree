@@ -3,657 +3,800 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 2.8.7
+Version: 3.1.9
 Author: The WP Ninjas
 Author URI: http://ninjaforms.com
 Text Domain: ninja-forms
 Domain Path: /lang/
 
-Copyright 2011 WP Ninjas/Kevin Stover.
-
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-Ninja Forms also uses the following jQuery plugins. Their licenses can be found in their respective files.
-
-	jQuery TipTip Tooltip v1.3
-	code.drewwilson.com/entry/tiptip-jquery-plugin
-	www.drewwilson.com
-	Copyright 2010 Drew Wilson
-
-	jQuery MaskedInput v.1.3.1
-	http://digitalbush.co
-	Copyright (c) 2007-2011 Josh Bush
-
-	jQuery Tablesorter Plugin v.2.0.5
-	http://tablesorter.com
-	Copyright (c) Christian Bach 2012
-
-	jQuery AutoNumeric Plugin v.1.9.15
-	http://www.decorplanit.com/plugin/
-	By: Bob Knothe And okolov Yura aka funny_falcon
-
-	word-and-character-counter.js
-	v2.4 (c) Wilkins Fernandez
-
+Copyright 2016 WP Ninjas.
 */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) )
-	exit;
-
-class Ninja_Forms {
-
-	/**
-	 * @var Ninja_Forms
-	 * @since 2.7
-	 */
-	private static $instance;
-
-	/**
-	 * @var registered_notification_types
-	 */
-	var $notification_types = array();
-
-	/**
-	 * Main Ninja_Forms Instance
-	 *
-	 * Insures that only one instance of Ninja_Forms exists in memory at any one
-	 * time. Also prevents needing to define globals all over the place.
-	 *
-	 * @since 2.7
-	 * @static
-	 * @staticvar array $instance
-	 * @return The highlander Ninja_Forms
-	 */
-	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Ninja_Forms ) ) {
-			self::$instance = new Ninja_Forms;
-			self::$instance->setup_constants();
-			self::$instance->includes();
-
-			// Start our submissions custom post type class
-			self::$instance->subs_cpt = new NF_Subs_CPT();
-
-			// Add our registration class object
-			self::$instance->register = new NF_Register();
-
-			register_activation_hook( __FILE__, 'ninja_forms_activation' );
-			add_action( 'plugins_loaded', array( self::$instance, 'load_lang' ) );
-			add_action( 'init', array( self::$instance, 'set_transient_id'), 1 );
-			add_action( 'init', array( self::$instance, 'init' ), 5 );
-			add_action( 'admin_init', array( self::$instance, 'admin_init' ), 5 );
-		}
-
-		return self::$instance;
-	}
-
-	/**
-	 * Run all of our plugin stuff on init.
-	 * This allows filters and actions to be used by third-party classes.
-	 * 
-	 * @since 2.7
-	 * @return void
-	 */
-	public function init() {
-		// The subs variable won't be interacted with directly.
-		// Instead, the subs() methods will act as wrappers for it.
-		self::$instance->subs = new NF_Subs();
-
-		// Get our notifications up and running.
-		self::$instance->notifications = new NF_Notifications();
-
-		// Get our step processor up and running.
-		// We only need this in the admin.
-		if ( is_admin() ) {
-			self::$instance->step_processing = new NF_Step_Processing();
-			self::$instance->download_all_subs = new NF_Download_All_Subs();
-			self::$instance->convert_notifications = new NF_Convert_Notifications();
-			self::$instance->update_email_settings = new NF_Update_Email_Settings();
-		}
-
-		// Fire our Ninja Forms init filter.
-		// This will allow other plugins to register items to the instance.
-		do_action( 'nf_init', self::$instance );
-	}
-
-	/**
-	 * Run all of our plugin stuff on admin init.
-	 * 
-	 * @since 2.7.4
-	 * @return void
-	 */
-	public function admin_init() {
-		// Check and update our version number.
-		self::$instance->update_version_number();
-	}
-
-	/**
-	 * Throw error on object clone
-	 *
-	 * The whole idea of the singleton design pattern is that there is a single
-	 * object therefore, we don't want the object to be cloned.
-	 *
-	 * @since 2.7
-	 * @access protected
-	 * @return void
-	 */
-	public function __clone() {
-		// Cloning instances of the class is forbidden
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'ninja-forms' ), '2.8' );
-	}
-
-	/**
-	 * Disable unserializing of the class
-	 *
-	 * @since 2.7
-	 * @access protected
-	 * @return void
-	 */
-	public function __wakeup() {
-		// Unserializing instances of the class is forbidden
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'ninja-forms' ), '2.8' );
-	}
-
-	/**
-	 * Function that acts as a wrapper for our individual notification objects.
-	 * It checks to see if an object exists for this notification id.
-	 * If it does, it returns that object. Otherwise, it creates a new one and returns it.
-	 * 
-	 * @access public
-	 * @param int $n_id
-	 * @since 2.8
-	 * @return object self::$instance->$n_var
-	 */
-	public function notification( $n_id = '' ) {
-		// Bail if we don't get a notification id.
-		if ( '' == $n_id )
-			return false;
-
-		$n_var = 'notification_' . $n_id;
-		// Check to see if an object for this notification already exists.
-		// Create one if it doesn't exist.
-		if ( ! isset ( self::$instance->$n_var ) )
-			self::$instance->$n_var = new NF_Notification( $n_id );
-
-		return self::$instance->$n_var;
-	}
-
-	/**
-	 * Function that acts as a wrapper for our individual sub objects.
-	 * It checks to see if an object exists for this sub id.
-	 * If it does, it returns that object. Otherwise, it creates a new one and returns it.
-	 * 
-	 * @access public
-	 * @param int $sub_id
-	 * @since 2.7
-	 * @return object self::$instance->$sub_var
-	 */
-	public function sub( $sub_id = '' ) {
-		// Bail if we don't get a sub id.
-		if ( $sub_id == '' )
-			return false;
-		
-		$sub_var = 'sub_' . $sub_id;
-		// Check to see if an object for this sub already exists.
-		// Create one if it doesn't exist.
-		if ( ! isset( self::$instance->$sub_var ) )
-			self::$instance->$sub_var = new NF_Sub( $sub_id );
-
-		return self::$instance->$sub_var;
-	}
-
-	/**
-	 * Function that acts as a wrapper for our subs_var - NF_Subs() class.
-	 * It doesn't set a sub_id and can be used to interact with methods that affect mulitple submissions
-	 * 
-	 * @access public
-	 * @since 2.7
-	 * @return object self::$instance->subs_var
-	 */
-	public function subs() {
-		return self::$instance->subs;
-	}
-
-	/**
-	 * Function that acts as a wrapper for our form_var - NF_Form() class.
-	 * It sets the form_id and then returns the instance, which is now using the
-	 * proper form id
-	 * 
-	 * @access public
-	 * @param int $form_id
-	 * @since 2.7
-	 * @return object self::$instance->form_var
-	 */
-	public function form( $form_id = '' ) {
-		// Bail if we don't get a form id.
-		if ( $form_id == '' )
-			return false;
-		
-		$form_var = 'form_' . $form_id;
-		// Check to see if an object for this form already exists
-		// Create one if it doesn't exist.
-		if ( ! isset( self::$instance->$form_var ) )
-			self::$instance->$form_var = new NF_Form( $form_id );
-
-		return self::$instance->$form_var;
-	}
-
-	/**
-	 * Setup plugin constants
-	 *
-	 * @access private
-	 * @since 2.7
-	 * @return void
-	 */
-	private function setup_constants() {
-		global $wpdb;
-
-		// Plugin version
-		if ( ! defined( 'NF_PLUGIN_VERSION' ) )
-			define( 'NF_PLUGIN_VERSION', '2.8.7' );
-
-		// Plugin Folder Path
-		if ( ! defined( 'NF_PLUGIN_DIR' ) )
-			define( 'NF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-
-		// Plugin Folder URL
-		if ( ! defined( 'NF_PLUGIN_URL' ) )
-			define( 'NF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-
-		// Plugin Root File
-		if ( ! defined( 'NF_PLUGIN_FILE' ) )
-			define( 'NF_PLUGIN_FILE', __FILE__ );
-
-		// Objects table name
-		if ( ! defined( 'NF_OBJECTS_TABLE_NAME') )
-			define( 'NF_OBJECTS_TABLE_NAME', $wpdb->prefix . 'nf_objects' );
-
-		// Meta table name
-		if ( ! defined( 'NF_OBJECT_META_TABLE_NAME' ) )
-			define( 'NF_OBJECT_META_TABLE_NAME', $wpdb->prefix . 'nf_objectmeta' );
-
-		// Relationships table name
-		if ( ! defined( 'NF_OBJECT_RELATIONSHIPS_TABLE_NAME' ) )
-			define( 'NF_OBJECT_RELATIONSHIPS_TABLE_NAME', $wpdb->prefix . 'nf_relationships' );
-
-		/* Legacy Definitions */
-
-		// Ninja Forms debug mode
-		if ( ! defined( 'NINJA_FORMS_JS_DEBUG' ) )
-			define( 'NINJA_FORMS_JS_DEBUG', false );
-
-		// Ninja Forms plugin directory
-		if ( ! defined( 'NINJA_FORMS_DIR' ) )
-			define( 'NINJA_FORMS_DIR', NF_PLUGIN_DIR );
-		
-		// Ninja Forms plugin url
-		if ( ! defined( 'NINJA_FORMS_URL' ) )
-			define( 'NINJA_FORMS_URL', NF_PLUGIN_URL );
-
-		// Ninja Forms Version
-		if ( ! defined( 'NINJA_FORMS_VERSION' ) )
-			define( 'NINJA_FORMS_VERSION', NF_PLUGIN_VERSION );
-
-		// Ninja Forms table name
-		if ( ! defined( 'NINJA_FORMS_TABLE_NAME' ) )
-			define( 'NINJA_FORMS_TABLE_NAME', $wpdb->prefix . 'ninja_forms' );
-
-		// Fields table name
-		if ( ! defined( 'NINJA_FORMS_FIELDS_TABLE_NAME' ) )
-			define( 'NINJA_FORMS_FIELDS_TABLE_NAME', $wpdb->prefix . 'ninja_forms_fields' );
-
-		// Fav fields table name
-		if ( ! defined( 'NINJA_FORMS_FAV_FIELDS_TABLE_NAME' ) )
-			define( 'NINJA_FORMS_FAV_FIELDS_TABLE_NAME', $wpdb->prefix . 'ninja_forms_fav_fields' );
-
-		// Subs table name
-		if ( ! defined( 'NINJA_FORMS_SUBS_TABLE_NAME' ) )
-			define( 'NINJA_FORMS_SUBS_TABLE_NAME', $wpdb->prefix . 'ninja_forms_subs' );
-	}
-
-	/**
-	 * Include our Class files
-	 *
-	 * @access private
-	 * @since 2.7
-	 * @return void
-	 */
-	private function includes() {
-		// Include our sub object.
-		require_once( NF_PLUGIN_DIR . 'classes/sub.php' );
-		// Include our subs object.
-		require_once( NF_PLUGIN_DIR . 'classes/subs.php' );
-		// Include our subs CPT.
-		require_once( NF_PLUGIN_DIR . 'classes/subs-cpt.php' );
-		// Include our form object.
-		require_once( NF_PLUGIN_DIR . 'classes/form.php' );
-		// Include our field, notification, and sidebar registration class.
-		require_once( NF_PLUGIN_DIR . 'classes/register.php' );
-		// Include our 'nf_action' watcher.
-		require_once( NF_PLUGIN_DIR . 'includes/actions.php' );
-		// Include our single notification object
-		require_once( NF_PLUGIN_DIR . 'classes/notification.php' );
-		// Include our notifications object
-		require_once( NF_PLUGIN_DIR . 'classes/notifications.php' );
-		// Include our notification table object
-		require_once( NF_PLUGIN_DIR . 'classes/notifications-table.php' );
-		// Include our base notification type
-		require_once( NF_PLUGIN_DIR . 'classes/notification-base-type.php' );
-
-		if ( is_admin () ) {
-			// Include our step processing stuff if we're in the admin.
-			require_once( NF_PLUGIN_DIR . 'includes/admin/step-processing.php' );
-			require_once( NF_PLUGIN_DIR . 'classes/step-processing.php' );
-
-
-			// Include our download all submissions php files
-			require_once( NF_PLUGIN_DIR . 'classes/download-all-subs.php' );
-			require_once( NF_PLUGIN_DIR . 'includes/admin/upgrades/convert-notifications.php' );
-			require_once( NF_PLUGIN_DIR . 'includes/admin/upgrades/update-email-settings.php' );
-			require_once( NF_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
-			require_once( NF_PLUGIN_DIR . 'includes/admin/upgrades/convert-subs.php' );
-			require_once( NF_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php' );
-		}
-
-		// Include our upgrade files.
-		require_once( NF_PLUGIN_DIR . 'includes/admin/welcome.php' );
-
-
-		// Include deprecated functions and filters.
-		require_once( NF_PLUGIN_DIR . 'includes/deprecated.php' );
-
-		/* Legacy includes */
-		
-		/* Require Core Files */
-		require_once( NINJA_FORMS_DIR . "/includes/ninja-settings.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/database.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/functions.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/activation.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/register.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/shortcode.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/widget.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/field-type-groups.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/eos.class.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/from-setting-check.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/reply-to-check.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/import-export.php" );
-
-		require_once( NINJA_FORMS_DIR . "/includes/display/scripts.php" );
-
-		// Include Processing Functions if a form has been submitted.
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/class-ninja-forms-processing.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/class-display-loading.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/pre-process.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/process.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/post-process.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/save-sub.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/filter-msgs.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/fields-pre-process.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/fields-process.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/fields-post-process.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/processing/req-fields-pre-process.php" );
-
-		//Display Form Functions
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/display-form.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/display-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/response-message.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/label.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/help.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/desc.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/form-title.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/field-error-message.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/form-wrap.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/form-cont.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/fields-wrap.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/required-label.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/open-form-tag.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/close-form-tag.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/hidden-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/form-visibility.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/sub-limit.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/form/nonce.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/restore-progress.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/inside-label-hidden.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/field-type.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/default-value-filter.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/calc-field-class.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/display/fields/clear-complete.php" );
-
-
-		//Require EDD autoupdate file
-		if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
-			// load our custom updater if it doesn't already exist
-			require_once(NINJA_FORMS_DIR."/includes/EDD_SL_Plugin_Updater.php");
-		}
-
-		require_once( NINJA_FORMS_DIR . "/includes/class-extension-updater.php" );
-
-		require_once( NINJA_FORMS_DIR . "/includes/admin/scripts.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/sidebar.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/tabs.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/post-metabox.php" );
-
-		require_once( NINJA_FORMS_DIR . "/includes/admin/ajax.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/admin.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/sidebar-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/display-screen-options.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/register-screen-options.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/register-screen-help.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/output-tab-metabox.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/form-preview.php" );
-
-		//Edit Field Functions
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/edit-field.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/label.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/hr.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/req.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/custom-class.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/help.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/desc.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/li.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/remove-button.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/save-button.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/calc.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/user-info-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/post-meta-values.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/input-limit.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/edit-field/sub-settings.php" );
-
-		/* * * * ninja-forms - Main Form Editing Page
-
-		/* Tabs */
-
-		/* Form List */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/form-list/form-list.php" );
-
-		/* Form Settings */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/form-settings/form-settings.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/form-settings/help.php" );
-
-		/* Field Settings */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/field-settings.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/empty-rte.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/edit-field-ul.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/help.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/sidebars/def-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/sidebars/fav-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/sidebars/template-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/sidebars/layout-fields.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/sidebars/user-info.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/field-settings/sidebars/payment-fields.php" );
-
-		/* Form Preview */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms/tabs/form-preview/form-preview.php" );
-
-
-		/* * * * ninja-forms-settings - Settings Page
-
-		/* Tabs */
-
-		/* General Settings */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-settings/tabs/general-settings/general-settings.php" );
-
-		/* Favorite Field Settings */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-settings/tabs/favorite-fields/favorite-fields.php" );
-
-		/* Label Settings */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-settings/tabs/label-settings/label-settings.php" );
-
-		/* Ajax Settings */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-settings/tabs/ajax-settings/ajax-settings.php" );
-
-		/* License Settings */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-settings/tabs/license-settings/license-settings.php" );
-
-
-		/* * * * ninja-forms-impexp - Import / Export Page
-
-		/* Tabs */
-
-		/* Import / Export Forms */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-impexp/tabs/impexp-forms/impexp-forms.php" );
-
-		/* Import / Export Fields */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-impexp/tabs/impexp-fields/impexp-fields.php" );
-
-		/* Import / Export Submissions */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-impexp/tabs/impexp-subs/impexp-subs.php" );
-
-		/* Backup / Restore */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-impexp/tabs/impexp-backup/impexp-backup.php" );
-
-		/* * * * ninja-forms-subs - Submissions Review Page
-
-		/* Tabs */
-
-		/* * * ninja-forms-addons - Addons Manager Page
-
-		/* Tabs */
-
-		/* Manage Addons */
-		require_once( NINJA_FORMS_DIR . "/includes/admin/pages/ninja-forms-addons/tabs/addons/addons.php" );
-
-		/* System Status */
-		require_once( NINJA_FORMS_DIR . "/includes/classes/class-nf-system-status.php" );
-
-		/* Require Pre-Registered Fields */
-		require_once( NINJA_FORMS_DIR . "/includes/fields/textbox.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/checkbox.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/list.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/hidden.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/organizer.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/submit.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/spam.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/honeypot.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/timed-submit.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/hr.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/desc.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/textarea.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/password.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/rating.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/calc.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/country.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/tax.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/credit-card.php" );
-		require_once( NINJA_FORMS_DIR . "/includes/fields/number.php" );
-
-		require_once( NINJA_FORMS_DIR . "/includes/admin/save.php" );
-	}
-
-	/**
-	 * Load our language files
-	 * 
-	 * @access public
-	 * @since 2.7
-	 * @return void
-	 */
-	public function load_lang() {
-		/** Set our unique textdomain string */
-		$textdomain = 'ninja-forms';
-
-		/** The 'plugin_locale' filter is also used by default in load_plugin_textdomain() */
-		$locale = apply_filters( 'plugin_locale', get_locale(), $textdomain );
-
-		/** Set filter for WordPress languages directory */
-		$wp_lang_dir = apply_filters(
-			'ninja_forms_wp_lang_dir',
-			WP_LANG_DIR . '/ninja-forms/' . $textdomain . '-' . $locale . '.mo'
-		);
-
-		/** Translations: First, look in WordPress' "languages" folder = custom & update-secure! */
-		load_textdomain( $textdomain, $wp_lang_dir );
-
-		/** Translations: Secondly, look in plugin's "lang" folder = default */
-		$plugin_dir = basename( dirname( __FILE__ ) );
-		$lang_dir = apply_filters( 'ninja_forms_lang_dir', $plugin_dir . '/lang/' );
-		load_plugin_textdomain( $textdomain, FALSE, $lang_dir );
-	}
-
-	/**
-	 * Update our version number if necessary
-	 * 
-	 * @access public
-	 * @since 2.7
-	 * @return void
-	 */
-	public function update_version_number(){
-		$plugin_settings = nf_get_settings();
-
-		if ( !isset ( $plugin_settings['version'] ) OR ( NF_PLUGIN_VERSION != $plugin_settings['version'] ) ) {
-			$plugin_settings['version'] = NF_PLUGIN_VERSION;
-			update_option( 'ninja_forms_settings', $plugin_settings );
-		}
-	}
-
-	/**
-	 * Set $_SESSION variable used for storing items in transient variables
-	 * 
-	 * @access public
-	 * @since 2.7
-	 * @return void
-	 */	 
-	public function set_transient_id(){
-		if( !session_id() )
-	        session_start();
-		if ( !isset ( $_SESSION['ninja_forms_transient_id'] ) AND !is_admin() ) {
-			$t_id = ninja_forms_random_string();
-			// Make sure that our transient ID isn't currently in use.
-			while ( get_transient( $t_id ) !== false ) {
-				$_id = ninja_forms_random_string();
-			}
-			$_SESSION['ninja_forms_transient_id'] = $t_id;
-		}
-	}
-
-} // End Class
-
-/**
- * The main function responsible for returning The Highlander Ninja_Forms
- * Instance to functions everywhere.
- *
- * Use this function like you would a global variable, except without needing
- * to declare the global.
- *
- * Example: <?php $nf = Ninja_Forms(); ?>
- *
- * @since 2.7
- * @return object The Highlander Ninja_Forms Instance
- */
-function Ninja_Forms() {
-	return Ninja_Forms::instance();
+require_once dirname( __FILE__ ) . '/lib/NF_VersionSwitcher.php';
+require_once dirname( __FILE__ ) . '/lib/NF_Tracking.php';
+require_once dirname( __FILE__ ) . '/lib/NF_Conversion.php';
+require_once dirname( __FILE__ ) . '/lib/NF_ExceptionHandlerJS.php';
+require_once dirname( __FILE__ ) . '/lib/Conversion/Calculations.php';
+
+function ninja_forms_three_table_exists(){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'nf3_forms';
+    return ( $wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name );
 }
 
-Ninja_Forms();
+if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf2to3' ] ) && ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) ){
+
+    include 'deprecated/ninja-forms.php';
+
+    register_activation_hook( __FILE__, 'ninja_forms_activation_deprecated' );
+
+    function ninja_forms_activation_deprecated( $network_wide ){
+        include_once 'deprecated/includes/activation.php';
+
+        ninja_forms_activation( $network_wide );
+    }
+
+} else {
+
+    include_once 'lib/NF_Upgrade.php';
+    include_once 'lib/NF_AddonChecker.php';
+
+    include_once plugin_dir_path( __FILE__ ) . 'includes/deprecated.php';
+
+    /**
+     * Class Ninja_Forms
+     */
+    final class Ninja_Forms
+    {
+
+        /**
+         * @since 3.0
+         */
+        const VERSION = '3.1.9';
+
+        const WP_MIN_VERSION = '4.6';
+
+        /**
+         * @var Ninja_Forms
+         * @since 2.7
+         */
+        private static $instance;
+
+        /**
+         * Plugin Directory
+         *
+         * @since 3.0
+         * @var string $dir
+         */
+        public static $dir = '';
+
+        /**
+         * Plugin URL
+         *
+         * @since 3.0
+         * @var string $url
+         */
+        public static $url = '';
+
+        /**
+         * Admin Menus
+         *
+         * @since 3.0
+         * @var array
+         */
+        public $menus = array();
+
+        /**
+         * AJAX Controllers
+         *
+         * @since 3.0
+         * @var array
+         */
+        public $controllers = array();
+
+        /**
+         * Form Fields
+         *
+         * @since 3.0
+         * @var array
+         */
+        public $fields = array();
+
+        /**
+         * Form Actions
+         *
+         * @since 3.0
+         * @var array
+         */
+        public $actions = array();
+
+        /**
+         * Merge Tags
+         *
+         * @since 3.0
+         * @var array
+         */
+        public $merge_tags = array();
+
+        /**
+         * Metaboxes
+         *
+         * @since 3.0
+         * @var array
+         */
+        public $metaboxes = array();
+
+        /**
+         * Model Factory
+         *
+         * @var object
+         */
+        public $factory = '';
+
+        /**
+         * Logger
+         *
+         * @var string
+         */
+        protected $_logger = '';
+
+        /**
+         * @var NF_Session
+         */
+        protected $session = '';
+
+        /**
+         * @var NF_Tracking
+         */
+        public $tracking;
+
+        /**
+         * Plugin Settings
+         *
+         * @since 3.0
+         * @var array
+         */
+        protected $settings = array();
+
+        protected $requests = array();
+
+        protected $processes = array();
+
+        /**
+         * Main Ninja_Forms Instance
+         *
+         * Insures that only one instance of Ninja_Forms exists in memory at any one
+         * time. Also prevents needing to define globals all over the place.
+         *
+         * @since 2.7
+         * @static
+         * @staticvar array $instance
+         * @return Ninja_Forms Highlander Instance
+         */
+        public static function instance()
+        {
+            if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Ninja_Forms ) ) {
+                self::$instance = new Ninja_Forms;
+
+                self::$dir = plugin_dir_path( __FILE__ );
+
+                // Define old constants for backwards compatibility.
+                if( ! defined( 'NF_PLUGIN_DIR' ) ){
+                    define( 'NF_PLUGIN_DIR', self::$dir );
+                    define( 'NINJA_FORMS_DIR', self::$dir . 'deprecated' );
+                }
+
+                self::$url = plugin_dir_url( __FILE__ );
+                if( ! defined( 'NF_PLUGIN_URL' ) ){
+                    define( 'NF_PLUGIN_URL', self::$url );
+                }
+
+                update_option( 'ninja_forms_version', self::VERSION );
+
+                /*
+                 * Register our autoloader
+                 */
+                spl_autoload_register( array( self::$instance, 'autoloader' ) );
+
+                /*
+                 * Admin Menus
+                 */
+                self::$instance->menus[ 'forms' ]           = new NF_Admin_Menus_Forms();
+                self::$instance->menus[ 'dashboard' ]       = new NF_Admin_Menus_Dashboard();
+                self::$instance->menus[ 'add-new' ]         = new NF_Admin_Menus_AddNew();
+                self::$instance->menus[ 'submissions']      = new NF_Admin_Menus_Submissions();
+                self::$instance->menus[ 'import-export']    = new NF_Admin_Menus_ImportExport();
+                self::$instance->menus[ 'settings' ]        = new NF_Admin_Menus_Settings();
+                self::$instance->menus[ 'licenses']         = new NF_Admin_Menus_Licenses();
+                self::$instance->menus[ 'system_status']    = new NF_Admin_Menus_SystemStatus();
+                self::$instance->menus[ 'add-ons' ]         = new NF_Admin_Menus_Addons();
+                self::$instance->menus[ 'divider']          = new NF_Admin_Menus_Divider();
+                self::$instance->menus[ 'mock-data']        = new NF_Admin_Menus_MockData();
+
+                /*
+                 * AJAX Controllers
+                 */
+                self::$instance->controllers[ 'form' ]        = new NF_AJAX_Controllers_Form();
+                self::$instance->controllers[ 'preview' ]     = new NF_AJAX_Controllers_Preview();
+                self::$instance->controllers[ 'submission' ]  = new NF_AJAX_Controllers_Submission();
+                self::$instance->controllers[ 'savedfields' ] = new NF_AJAX_Controllers_SavedFields();
+
+                /*
+                 * REST Controllers
+                 */
+                self::$instance->controllers[ 'REST' ][ 'forms' ] = new NF_AJAX_REST_Forms();
+                self::$instance->controllers[ 'REST' ][ 'new-form-templates' ] = new NF_AJAX_REST_NewFormTemplates();
+
+                /*
+                 * Async Requests
+                 */
+                require_once Ninja_Forms::$dir . 'includes/Libraries/BackgroundProcessing/classes/wp-async-request.php';
+                self::$instance->requests[ 'delete-field' ] = new NF_AJAX_Requests_DeleteField();
+
+                /*
+                 * Background Processes
+                 */
+                require_once Ninja_Forms::$dir . 'includes/Libraries/BackgroundProcessing/wp-background-processing.php';
+                self::$instance->requests[ 'update-fields' ] = new NF_AJAX_Processes_UpdateFields();
+
+                /*
+                 * WP-CLI Commands
+                 */
+                if( class_exists( 'WP_CLI_Command' ) ) {
+                    WP_CLI::add_command('ninja-forms', 'NF_WPCLI_NinjaFormsCommand');
+                }
+
+                /*
+                 * Preview Page
+                 */
+                self::$instance->preview = new NF_Display_Preview();
+
+                /*
+                 * Shortcodes
+                 */
+                self::$instance->shortcodes = new NF_Display_Shortcodes();
+
+                /*
+                 * Submission CPT
+                 */
+                new NF_Admin_CPT_Submission();
+                new NF_Admin_CPT_DownloadAllSubmissions();
+                require_once Ninja_Forms::$dir . 'lib/StepProcessing/menu.php';
+                
+                /*
+                 * Submission Metabox
+                 */
+                new NF_Admin_Metaboxes_Calculations();
+
+                /*
+                 * Logger
+                 */
+                self::$instance->_logger = new NF_Database_Logger();
+
+                /*
+                 * Merge Tags
+                 */
+                self::$instance->merge_tags[ 'wp' ] = new NF_MergeTags_WP();
+                self::$instance->merge_tags[ 'fields' ] = new NF_MergeTags_Fields();
+                self::$instance->merge_tags[ 'calcs' ] = new NF_MergeTags_Calcs();
+                self::$instance->merge_tags[ 'form' ] = new NF_MergeTags_Form();
+                self::$instance->merge_tags[ 'other' ] = new NF_MergeTags_Other();
+                self::$instance->merge_tags[ 'deprecated' ] = new NF_MergeTags_Deprecated();
+
+                /*
+                 * Add Form Modal
+                 */
+                self::$instance->add_form_modal = new NF_Admin_AddFormModal();
+
+                /*
+                 * EOS Parser
+                 */
+                self::$instance->_eos[ 'parser' ] = require_once 'includes/Libraries/EOS/Parser.php';
+
+                /*
+                 * Plugin Settings
+                 */
+                self::$instance->settings = apply_filters( 'ninja_forms_settings', get_option( 'ninja_forms_settings' ) );
+
+                /*
+                 * Admin Notices System
+                 */
+                self::$instance->notices = new NF_Admin_Notices();
+
+                self::$instance->widgets[] = new NF_Widget();
+
+                /*
+                 * Opt-In Tracking
+                 */
+                self::$instance->tracking = new NF_Tracking();
+
+                /*
+                 * JS Exception Handler
+                 *
+                 * TODO: Review PR#2492 for improvements.
+                 */
+                // self::$instance->exception_handler_js = new NF_ExceptionHandlerJS();
+
+                /*
+                 * Activation Hook
+                 * TODO: Move to a permanent home.
+                 */
+                register_activation_hook( __FILE__, array( self::$instance, 'activation' ) );
+
+                self::$instance->metaboxes[ 'append-form' ] = new NF_Admin_Metaboxes_AppendAForm();
+
+                /*
+                 * Require EDD auto-update file
+                 */
+                if( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
+                    // Load our custom updater if it doesn't already exist
+                    require_once( self::$dir . 'includes/Integrations/EDD/EDD_SL_Plugin_Updater.php');
+                }
+                require_once self::$dir . 'includes/Integrations/EDD/class-extension-updater.php';
+            }
+
+            add_action( 'admin_notices', array( self::$instance, 'admin_notices' ) );
+
+            add_action( 'plugins_loaded', array( self::$instance, 'plugins_loaded' ) );
+
+            add_action( 'ninja_forms_available_actions', array( self::$instance, 'scrub_available_actions' ) );
+
+            add_action( 'init', array( self::$instance, 'init' ), 5 );
+            add_action( 'admin_init', array( self::$instance, 'admin_init' ), 5 );
+
+            return self::$instance;
+        }
+
+        public function init()
+        {
+            do_action( 'nf_init', self::$instance );
+        }
+
+        public function admin_init()
+        {
+            do_action( 'nf_admin_init', self::$instance );
+        }
+
+        public function scrub_available_actions( $actions )
+        {
+            foreach( $actions as $key => $action ){
+                if ( ! is_plugin_active( $action[ 'plugin_path' ] ) )  continue;
+                unset( $actions[ $key ] );
+            }
+            return $actions;
+        }
+
+        public function admin_notices()
+        {
+            // Notices filter and run the notices function.
+            $admin_notices = Ninja_Forms()->config( 'AdminNotices' );
+            self::$instance->notices->admin_notice( apply_filters( 'nf_admin_notices', $admin_notices ) );
+        }
+
+        public function plugins_loaded()
+        {
+            load_plugin_textdomain( 'ninja-forms', false, basename( dirname( __FILE__ ) ) . '/lang' );
+
+            /*
+             * Field Class Registration
+             */
+            self::$instance->fields = apply_filters( 'ninja_forms_register_fields', self::load_classes( 'Fields' ) );
+
+            if( ! apply_filters( 'ninja_forms_enable_credit_card_fields', false ) ){
+                unset( self::$instance->fields[ 'creditcard' ] );
+                unset( self::$instance->fields[ 'creditcardcvc' ] );
+                unset( self::$instance->fields[ 'creditcardexpiration' ] );
+                unset( self::$instance->fields[ 'creditcardfullname' ] );
+                unset( self::$instance->fields[ 'creditcardnumber' ] );
+                unset( self::$instance->fields[ 'creditcardzip' ] );
+            }
+
+            /*
+             * Form Action Registration
+             */
+            self::$instance->actions = apply_filters( 'ninja_forms_register_actions', self::load_classes( 'Actions' ) );
+
+            /*
+             * Merge Tag Registration
+             */
+            self::$instance->merge_tags = apply_filters( 'ninja_forms_register_merge_tags', self::$instance->merge_tags );
+
+            /*
+             * It's Ninja Time: Hook for Extensions
+             */
+            do_action( 'ninja_forms_loaded' );
+
+        }
+
+        /**
+         * Autoloader
+         *
+         * Autoload Ninja Forms classes
+         *
+         * @param $class_name
+         */
+        public function autoloader( $class_name )
+        {
+            if( class_exists( $class_name ) ) return;
+
+            /* Ninja Forms Prefix */
+            if (false !== strpos($class_name, 'NF_')) {
+                $class_name = str_replace('NF_', '', $class_name);
+                $classes_dir = realpath(plugin_dir_path(__FILE__)) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
+                $class_file = str_replace('_', DIRECTORY_SEPARATOR, $class_name) . '.php';
+                if (file_exists($classes_dir . $class_file)) {
+                    require_once $classes_dir . $class_file;
+                }
+            }
+
+            /* WP Ninjas Prefix */
+            if (false !== strpos($class_name, 'WPN_')) {
+                $class_name = str_replace('WPN_', '', $class_name);
+                $classes_dir = realpath(plugin_dir_path(__FILE__)) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
+                $class_file = str_replace('_', DIRECTORY_SEPARATOR, $class_name) . '.php';
+                if (file_exists($classes_dir . $class_file)) {
+                    require_once $classes_dir . $class_file;
+                }
+            }
+        }
+
+        /*
+         * PUBLIC API WRAPPERS
+         */
+
+        /**
+         * Form Model Factory Wrapper
+         *
+         * @param $id
+         * @return NF_Abstracts_ModelFactory
+         */
+        public function form( $id = '' )
+        {
+            global $wpdb;
+
+            static $forms;
+            if ( isset ( $forms[ $id ] ) ) {
+                return $forms[ $id ];
+            }
+
+            $forms[ $id ] = new NF_Abstracts_ModelFactory( $wpdb, $id );
+            return $forms[ $id ];
+        }
+
+        /**
+         * Logger Class Wrapper
+         *
+         * Example Use:
+         * Ninja_Forms()->logger()->log( 'debug', "Hello, {name}!", array( 'name' => 'world' ) );
+         * Ninja_Forms()->logger()->debug( "Hello, {name}!", array( 'name' => 'world' ) );
+         *
+         * @return string
+         */
+        public function logger()
+        {
+            return $this->_logger;
+        }
+
+        public function eos()
+        {
+            return new NF_EOS_Parser();
+        }
+
+        public function session()
+        {
+            if( ! $this->session ){
+                $this->session = new NF_Session();
+                $this->session->init();
+            }
+            return $this->session;
+        }
+
+        public function request( $action )
+        {
+            if( ! isset( $this->requests[ $action ] ) ) return new NF_AJAX_Requests_NullRequest();
+
+            return $this->requests[ $action ];
+        }
+
+        public function background_process( $action )
+        {
+            if( ! isset( $this->requests[ $action ] ) ) return new NF_AJAX_Processes_NullProcess();
+
+            return $this->requests[ $action ];
+        }
+
+	    /**
+	     * Get a setting
+	     *
+	     * @param string     $key
+	     * @param bool|false $default
+	     * @return bool
+	     */
+        public function get_setting( $key = '', $default = false )
+        {
+            if( empty( $key ) || ! isset( $this->settings[ $key ] ) ) return $default;
+
+            return $this->settings[ $key ];
+        }
+
+	    /**
+	     * Get all the settings
+	     *
+	     * @return array
+	     */
+        public function get_settings()
+        {
+            return ( is_array( $this->settings ) ) ? $this->settings : array();
+        }
+
+	    /**
+	     * Update a setting
+	     *
+	     * @param string           $key
+	     * @param mixed           $value
+	     * @param bool|false $defer_update Defer the database update of all settings
+	     */
+        public function update_setting( $key, $value, $defer_update = false )
+        {
+	        $this->settings[ $key ] = $value;
+	        if ( ! $defer_update ) {
+		        $this->update_settings();
+	        }
+        }
+
+	    /**
+	     * Save settings to database
+	     *
+	     * @param array $settings
+	     */
+        public function update_settings( $settings = array() )
+        {
+            if( ! is_array( $this->settings ) ) $this->settings = array();
+
+            if( $settings && is_array( $settings ) ) {
+                $this->settings = array_merge($this->settings, $settings);
+            }
+
+            update_option( 'ninja_forms_settings', $this->settings );
+        }
+
+
+        /**
+         * Display Wrapper
+         *
+         * @param $form_id
+         */
+        public function display( $form_id, $preview = FALSE )
+        {
+            if( ! $form_id ) return;
+
+            $noscript_message = __( 'Notice: JavaScript is required for this content.', 'ninja-forms' );
+            $noscript_message = apply_filters( 'ninja_forms_noscript_message', $noscript_message );
+
+            Ninja_Forms()->template( 'display-noscript-message.html.php', array( 'message' => $noscript_message ) );
+
+            if( ! $preview ) {
+                NF_Display_Render::localize($form_id);
+            } else {
+                NF_Display_Render::localize_preview($form_id);
+            }
+        }
+
+
+
+        /*
+         * PRIVATE METHODS
+         */
+
+        /**
+         * Load Classes from Directory
+         *
+         * @param string $prefix
+         * @return array
+         */
+        private static function load_classes( $prefix = '' )
+        {
+            $return = array();
+
+            $subdirectory = str_replace( '_', DIRECTORY_SEPARATOR, str_replace( 'NF_', '', $prefix ) );
+
+            $directory = 'includes/' . $subdirectory;
+
+            foreach (scandir( self::$dir . $directory ) as $path) {
+
+                $path = explode( DIRECTORY_SEPARATOR, str_replace( self::$dir, '', $path ) );
+                $filename = str_replace( '.php', '', end( $path ) );
+
+                $class_name = 'NF_' . $prefix . '_' . $filename;
+
+                if( ! class_exists( $class_name ) ) continue;
+
+                $return[ strtolower( $filename ) ] = new $class_name;
+            }
+
+            return $return;
+        }
+
+
+
+        /*
+         * STATIC METHODS
+         */
+
+        /**
+         * Template
+         *
+         * @param string $file_name
+         * @param array $data
+         */
+        public static function template( $file_name = '', array $data = array(), $return = FALSE )
+        {
+            if( ! $file_name ) return FALSE;
+
+            extract( $data );
+
+            $path = self::$dir . 'includes/Templates/' . $file_name;
+
+            if( ! file_exists( $path ) ) return FALSE;
+
+            if( $return ) return file_get_contents( $path );
+
+            include $path;
+        }
+
+        /**
+         * Config
+         *
+         * @param $file_name
+         * @return mixed
+         */
+        public static function config( $file_name )
+        {
+            return include self::$dir . 'includes/Config/' . $file_name . '.php';
+        }
+
+        /**
+         * Activation
+         */
+        public function activation() {
+            $migrations = new NF_Database_Migrations();
+            $migrations->migrate();
+
+            if( Ninja_Forms()->form()->get_forms() ) return;
+
+            $form = Ninja_Forms::template( 'formtemplate-contactform.nff', array(), TRUE );
+            Ninja_Forms()->form()->import_form( $form );
+        }
+
+        /**
+         * Deprecated Notice
+         *
+         * Example: Ninja_Forms::deprecated_hook( 'ninja_forms_old', '3.0', 'ninja_forms_new', debug_backtrace() );
+         *
+         * @param $deprecated
+         * @param $version
+         * @param null $replacement
+         * @param null $backtrace
+         */
+        public static function deprecated_notice( $deprecated, $version, $replacement = null, $backtrace = null )
+        {
+            do_action( 'ninja_forms_deprecated_call', $deprecated, $replacement, $version );
+
+            $show_errors = current_user_can( 'manage_options' );
+
+            // Allow plugin to filter the output error trigger
+            if ( WP_DEBUG && apply_filters( 'ninja_forms_deprecated_function_trigger_error', $show_errors ) ) {
+                if ( ! is_null( $replacement ) ) {
+                    trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Ninja Forms version %2$s! Use %3$s instead.', 'ninja-forms' ), $deprecated, $version, $replacement ) );
+                    // trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+                    // Alternatively we could dump this to a file.
+                } else {
+                    trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Ninja Forms version %2$s.', 'ninja-forms' ), $deprecated, $version ) );
+                    // trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+                    // Alternatively we could dump this to a file.
+                }
+            }
+        }
+
+    } // End Class Ninja_Forms
+
+
+
+    /**
+     * The main function responsible for returning The Highlander Ninja_Forms
+     * Instance to functions everywhere.
+     *
+     * Use this function like you would a global variable, except without needing
+     * to declare the global.
+     *
+     * Example: <?php $nf = Ninja_Forms(); ?>
+     *
+     * @since 2.7
+     * @return Ninja_Forms Highlander Instance
+     */
+    function Ninja_Forms()
+    {
+        return Ninja_Forms::instance();
+    }
+
+    Ninja_Forms();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Uninstall Hook
+    |--------------------------------------------------------------------------
+    */
+
+    register_uninstall_hook( __FILE__, 'ninja_forms_uninstall' );
+
+    function ninja_forms_uninstall(){
+
+        if( Ninja_Forms()->get_setting( 'delete_on_uninstall' ) ) {
+            require_once plugin_dir_path(__FILE__) . '/includes/Database/Migrations.php';
+            $migrations = new NF_Database_Migrations();
+            $migrations->nuke(TRUE, TRUE);
+            $migrations->nuke_settings(TRUE, TRUE);
+            $migrations->nuke_deprecated(TRUE, TRUE);
+        }
+    }
+
+    // Scheduled Action Hook
+    function nf_optin_send_admin_email( ) {
+        /*
+         * If we aren't opted in, or we've specifically opted out, then return false.
+         */
+        if ( ! Ninja_Forms()->tracking->is_opted_in() || Ninja_Forms()->tracking->is_opted_out() ) {
+            return false;
+        }
+
+        /*
+         * If we haven't already submitted our email to api.ninjaforms.com, submit it and set an option saying we have.
+         */
+
+        if ( get_option ( 'ninja_forms_optin_admin_email', false ) ) {
+            return false;
+        }
+
+        /*
+         * Ping api.ninjaforms.com
+         */
+
+        $admin_email = get_option('admin_email');
+        $url = home_url();
+        $response = wp_remote_post(
+            'http://api.ninjaforms.com',
+            array(
+                'body' => array( 'admin_email' => $admin_email, 'url' => $url ),
+            )
+        );
+
+        if( is_array($response) ) {
+            $header = $response['headers']; // array of http header lines
+            $body = $response['body']; // use the content
+        }
+
+        update_option( 'ninja_forms_optin_admin_email', true );
+    }
+
+    add_action( 'nf_optin_cron', 'nf_optin_send_admin_email' );
+
+    // Custom Cron Recurrences
+    function nf_custom_cron_job_recurrence( $schedules ) {
+        $schedules['nf-monthly'] = array(
+            'display' => __( 'Once per month', 'textdomain' ),
+            'interval' => 2678400,
+        );
+        return $schedules;
+    }
+    add_filter( 'cron_schedules', 'nf_custom_cron_job_recurrence' );
+
+    // Schedule Cron Job Event
+    function nf_optin_send_admin_email_cron_job() {
+        if ( ! wp_next_scheduled( 'nf_optin_cron' ) ) {
+            nf_optin_send_admin_email();
+            wp_schedule_event( current_time( 'timestamp' ), 'nf-monthly', 'nf_optin_cron' );
+        }
+    }
+
+    add_action( 'wp', 'nf_optin_send_admin_email_cron_job' );
+}
