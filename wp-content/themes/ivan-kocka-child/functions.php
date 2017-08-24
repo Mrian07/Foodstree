@@ -97,9 +97,9 @@ function get_pincode_sellers(){
 
 // terms filter to display the count of products in a category based on pincode selection
 function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
-	global $wpdb;
+  global $wpdb;
         
-	$taxonomy = $taxonomies[0];
+  $taxonomy = $taxonomies[0];
 
         if ( ! is_array($terms) && count($terms) < 1 )
                 return $terms;
@@ -117,7 +117,7 @@ function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
             }
         }
         
-	return $terms;
+  return $terms;
 }
 
 
@@ -1056,3 +1056,105 @@ function dump_request( $input ) {
 
 
 
+/**
+ * Adds a woocommerce categories to menu.
+ *
+ * @param      <type>  $items  The items
+ * @param      <type>  $menu   The menu 
+ * @return     array     
+ */
+function   add_woocommerce_categories_to_menu( $items, $menu )  {
+
+
+      $menu_name ="Primary Menu";
+      $parent_object_id = 1756; 
+
+
+      // If no menu found, just return the items without adding anything
+      if ( $menu->name != $menu_name && $menu->slug != $menu_name ) {
+          return $items;
+      }
+
+
+
+        // Find the menu item ID corresponding to the given post/page object ID
+        // If no post/page found, the subitems won't have any parent (will be on 1st level)
+        $parent_menu_item_id = 0;
+        foreach ( $items as $item ) {
+            if ( $parent_object_id == $item->object_id ) {
+                $parent_menu_item_id = $item->ID;
+                break;
+            }
+        }
+
+        $menu_order = count( $items ) + 1;  
+
+        $taxonomy     = 'product_cat';
+        $orderby      = 'name';  
+        $show_count   = 0;      // 1 for yes, 0 for no
+        $pad_counts   = 0;      // 1 for yes, 0 for no
+        $hierarchical = 1;      // 1 for yes, 0 for no  
+        $title        = '';  
+        $empty        = 0;
+
+        $cat_args = array(
+               'taxonomy'     => $taxonomy,
+               'orderby'      => $orderby,
+               'order'        => 'ASC',
+               'show_count'   => $show_count,
+               'pad_counts'   => $pad_counts,
+               'hierarchical' => $hierarchical,
+               'title_li'     => $title,
+               'hide_empty'   => $empty,
+        );
+       $all_categories = get_categories( $cat_args );
+       foreach ($all_categories as $cat) {
+          if($cat->category_parent == 0) {
+              $category_id = $cat->term_id;       
+              $cat_link =   get_term_link($cat->slug, 'product_cat') ;
+
+
+           
+              
+              $new_submenu_item = array(
+                  'text' => $cat->name,
+                  'url'  => $cat_link
+              );
+
+
+
+            // Create objects containing all (and only) those properties from WP_Post 
+            // used by WP to create a menu item
+              $items[] = (object) array(
+                'ID'                => $menu_order + 1000000000, // ID that WP won't use
+                'title'             => $new_submenu_item['text'],
+                'url'               => $new_submenu_item['url'],
+                'menu_item_parent'  => $parent_menu_item_id,
+                'menu_order'        => $menu_order,
+                // These are not necessary, but PHP warning will be thrown if undefined
+                'type'              => '',
+                'object'            => '',
+                'object_id'         => '',
+                'db_id'             => '',
+                'classes'           => '',
+            );
+            $menu_order++;
+
+
+
+
+            }
+        }
+ 
+        
+
+     /* echo "AJAJ AJENCY <pre> ";
+
+      print_r($items);*/
+        
+        return $items;
+    }
+
+
+
+add_filter( 'wp_get_nav_menu_items','add_woocommerce_categories_to_menu' , 10, 2);
