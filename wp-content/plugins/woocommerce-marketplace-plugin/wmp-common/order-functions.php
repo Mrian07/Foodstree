@@ -164,7 +164,7 @@ function wmp_count_orders( $user_id ) {
 function wmp_on_order_status_change( $order_id, $old_status, $new_status ) {
     global $wpdb;
 
-    
+
     $wpdb->update( $wpdb->prefix . 'wmp_orders',
         array( 'order_status' => $new_status ),
         array( 'order_id' => $order_id ),
@@ -390,6 +390,17 @@ add_action( 'woocommerce_checkout_update_order_meta', 'wmp_create_sub_order' );
 
 
 
+function check_if_order_has_cod($order_id){
+  global $wpdb;
+  $qry = "SELECT * FROM $wpdb->prefix"."woocommerce_order_items WHERE order_id=".$order_id." AND order_item_name='Additional COD fees'";
+  $cods = $wpdb->get_results( $qry );
+  if($cods){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 
 
 
@@ -444,10 +455,11 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
 
 
 
-        //Add COD Charge        
+        //Add COD Charge
         global $ajency_wmp;
         $cod_fee = $ajency_wmp->seller_additional_cod_amount($seller_id, $order_total);
-        if($cod_fee>0){
+        $is_parent_cod = check_if_order_has_cod($parent_order->id);
+        if($cod_fee>0 && $is_parent_cod){
             $cod_item_id = wc_add_order_item( $order_id, array(
                 'order_item_name' => 'Additional COD fees',
                 'order_item_type' => 'fee'
@@ -455,7 +467,7 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
             wc_add_order_item_meta( $cod_item_id, '_line_total', $cod_fee );
             $order_total = $order_total + (float) $cod_fee;
         }
-        
+
 
 
 
@@ -471,7 +483,7 @@ function wmp_create_seller_order( $parent_order, $seller_id, $seller_products ) 
         foreach ($bill_ship as $val) {
             $order_key = ltrim( $val, '_' );
             update_post_meta( $order_id, $val, $parent_order->$order_key );
-        }        
+        }
 
 
         // do shipping

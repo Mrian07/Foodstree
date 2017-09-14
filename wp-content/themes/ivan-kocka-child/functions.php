@@ -7,7 +7,7 @@ function enqueue_parent_theme_style() {
     wp_enqueue_style( 'parent-style', get_template_directory_uri().'/style.css' );
     //if(is_woocommerce()){
 
-    
+
     $data = array(
       'ajax_url'=>admin_url('admin-ajax.php'),
       'theme_url'=>get_stylesheet_directory_uri(),
@@ -32,11 +32,11 @@ function enqueue_parent_theme_style() {
 
 function get_authored_products($query) {
 
-  
+
   if($query->is_main_query()){
 
     if(((!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] == 'product') || is_woocommerce()) && !is_admin() ){
-      
+
     //check if post type is product or page is woocommerce template and not admin dashboard interface
    // if(($query->query_vars['post_type'] == 'product' || is_woocommerce()) && !is_admin()){
       $authors = get_pincode_sellers();
@@ -67,18 +67,18 @@ function get_authored_products($query) {
 // get seller ids based on pincode value saved in the cookie
 function get_pincode_sellers(){
     global $wpdb;
-    
+
     $sellers = array();
     if(isset($_COOKIE['pincode'])){
        $seller_ids = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['pincode'] ));
        $seller_ids = maybe_unserialize($seller_ids);
 
-             
+
        if(empty($seller_ids)){
            // NOT to fetch products if the pincode has no sellers
            $sellers[] = 0;
        }else{
-                        
+
            foreach ($seller_ids as $seller){
                //$sellers[] = (int)$seller;
 
@@ -87,7 +87,7 @@ function get_pincode_sellers(){
            }
 
        }
-        
+
     }else{
         // NOT to fetch products if the user_pincode is not set
         $sellers[] = 0;
@@ -98,25 +98,25 @@ function get_pincode_sellers(){
 // terms filter to display the count of products in a category based on pincode selection
 function get_terms_posts_count_filter( $terms, $taxonomies, $args ){
   global $wpdb;
-        
+
   $taxonomy = $taxonomies[0];
 
         if ( ! is_array($terms) && count($terms) < 1 )
                 return $terms;
-            
+
         if($taxonomy == 'product_cat' && !is_admin()){
             foreach ( $terms as $term )
             {
                 $author_ids = get_pincode_sellers();
                 $author_ids = implode(',',$author_ids);
-                
+
                 $result = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts p JOIN $wpdb->term_relationships "
                         . "rl ON p.ID = rl.object_id WHERE rl.term_taxonomy_id = $term->term_taxonomy_id AND "
                         . "p.post_status = 'publish' AND p.post_author IN ($author_ids)");
                 $term->count = $result;
             }
         }
-        
+
   return $terms;
 }
 
@@ -275,7 +275,7 @@ add_action('woocommerce_single_product_summary', 'woocommerce_template_single_ad
 function woo_rename_tabs( $tabs ) {
 
   $tabs['description']['title'] = __( 'Additional Information' );   // Rename the description tab
- 
+
   return $tabs;
 
 }
@@ -285,7 +285,7 @@ function woo_rename_tabs( $tabs ) {
 //Remove reviews tab
 add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
 function woo_remove_product_tabs( $tabs ) {
-    // unset( $tabs['reviews'] ); 
+    // unset( $tabs['reviews'] );
     return $tabs;
 }
 
@@ -302,12 +302,12 @@ function wc_hide_trailing_zeros( $trim ) {
 
 
 add_filter( 'woocommerce_get_availability', 'custom_get_availability', 1, 2);
-  
+
 function custom_get_availability( $availability, $_product ) {
-    
+
     if ( $_product->is_in_stock() ) $availability['availability'] = __('', 'woocommerce');
-  
-   
+
+
     if ( !$_product->is_in_stock() ) $availability['availability'] = __('', 'woocommerce');
         return $availability;
     }
@@ -352,7 +352,7 @@ foreach( $value as $method ){
 
     $rate = $method['rate'];
 
-  //for pincode base shipping price  
+  //for pincode base shipping price
   }else{
 
     $pincode = $_POST['calc_shipping_postcode'];
@@ -379,7 +379,7 @@ return $rate;
 function get_rate_by_pincode($user_id,$pincode){
   global $wpdb;
   $query = $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode LIKE %s", $pincode );
-    $sellers_info = $wpdb->get_var( $query );  
+    $sellers_info = $wpdb->get_var( $query );
     if(is_null($sellers_info)){
         $rate = 0;
     }else{
@@ -410,15 +410,15 @@ function get_rate_by_pincode($user_id,$pincode){
 
 
 
- 
+
 function seller_subtotal_data(){
-global $woocommerce; 
+global $woocommerce;
 
 $items = $woocommerce->cart->get_cart();
 
 $seller_count = array();
 foreach($items as $item => $values) {
-        
+
         $_product = $values['data']->post;
         $seller_id = $_product->post_author;
         $subtotal = $values['line_subtotal'];
@@ -475,18 +475,18 @@ add_action('woocommerce_cart_calculate_fees', 'seller_subtotal_data');*/
 
 function is_cod_servicable_current_cart(){
   global $woocommerce;
-    
+
     $seller_ids = array();
     foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
            $data = $values['data'];
            $post_data = $data->post;
            $seller_ids[] = (int)$post_data->post_author;
     }
-    
+
     $seller_ids = array_unique($seller_ids);
-    
+
     if(! is_cod_serviceable($seller_ids)){
-    
+
         return false;
     }else{
       return true;
@@ -498,9 +498,9 @@ function is_cod_servicable_current_cart(){
 
 //disable cod if sellers of cart products has no cod for the pincode
 function disable_cod_pincode_not_serviceable( $available_gateways ) {
-        
+
     /*if(! is_cod_servicable_current_cart()){
-    
+
         unset(  $available_gateways['cod'] );
     }*/
 
@@ -509,7 +509,7 @@ function disable_cod_pincode_not_serviceable( $available_gateways ) {
     }else{
       unset(  $available_gateways['cod'] );
     }
-    
+
     return $available_gateways;
 
 }
@@ -524,31 +524,31 @@ add_filter('woocommerce_available_payment_gateways','disable_cod_pincode_not_ser
 //check if sellers have COD on for the pincode
 function is_cod_serviceable($seller_ids){
     global $wpdb;
-    
+
     if(isset($_COOKIE['pincode'])){
        //$sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['user_pincode'] ));
        $sellers_data = $wpdb->get_var( $wpdb->prepare("SELECT seller_id FROM {$wpdb->prefix}pincodes WHERE pincode like %s ",$_COOKIE['pincode'] ));
        $sellers_data = maybe_unserialize($sellers_data);
-       
+
        if(empty($sellers_data))
            return false;
-       
+
        foreach($sellers_data as $seller_data){
-           
+
            if(! in_array((int) $seller_data['user_id'],$seller_ids))
                 continue;
-           
+
            if(!$seller_data['cod'])
                return false;
-           
+
        }
-       
+
        return true;
     }
     else{
         return false;
     }
-} 
+}
 
 
 
@@ -609,23 +609,23 @@ function wp_add_cod_charge( $cart_object ) {
  if(WC()->session->cart_cod == 'yes'){
 
    if(is_cod_servicable_current_cart()){
- 
+
     global $woocommerce;
 
     global $ajency_wmp;
 
     $cod_charge = $ajency_wmp->wmp_additional_cod_charge();
-  
-  
+
+
     $woocommerce->cart->add_fee( 'Additional COD fees', $cod_charge, true, 'standard' );
 
   }
 }
 
-  
-  
+
+
 }
- 
+
 add_action( 'woocommerce_cart_calculate_fees', 'wp_add_cod_charge' );
 
 
@@ -645,10 +645,10 @@ function check_pincode_session() {
 
   $pincode = $_POST['pincode'];
   $cod = $_POST['cod'];
- 
+
   setcookie('pincode', $pincode, time() + (86400 * 30), "/");
 
- 
+
     $unavailable_products = array();
     foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
            $data = $values['data'];
@@ -675,9 +675,9 @@ function check_pincode_session() {
         );
      }
 
-    
+
 echo json_encode($response);
-  
+
 
   die();
 }
@@ -717,12 +717,12 @@ function check_is_pincode_available_for_product() {
     $ispinchange = 'data-pinchanged="true"';
   }
 
-  
- 
+
+
 
   $post = get_post($product_id);
 
- 
+
   if(!check_if_seller_available($seller_id, $pincode)){
     $response = array(
       'status' => 'false',
@@ -731,15 +731,15 @@ function check_is_pincode_available_for_product() {
       );
   }else{
 
-   
+
     $response = array(
       'status' => 'true'
       );
   }
 
-    
+
 echo json_encode($response);
-  
+
 
   die();
 }
@@ -759,14 +759,14 @@ add_action( 'wp_ajax_wmp_change_pincode', 'wmp_change_pincode' );
 function wmp_change_pincode() {
 
   global $woocommerce;
- 
+
 
 $pincode = $_POST['pincode'];
 
- 
 
 
- 
+
+
   if(!isset($_COOKIE['pincode'])){
      setcookie('pincode', $pincode, time() + (86400 * 30), "/");
     $woocommerce->cart->empty_cart();
@@ -778,9 +778,9 @@ $pincode = $_POST['pincode'];
   $response = array(
       'status' => 'true'
       );
-     
+
 echo json_encode($response);
-  
+
 
   die();
 
@@ -830,7 +830,7 @@ function wmp_order_by_discount($query) {
 
 
 $args = array_merge( $query->query_vars, array( 'post_type' => 'product' ) );
-  
+
 $posts_array = query_posts( $args );
 
 $discount_data = array();
@@ -855,7 +855,7 @@ $product_ids = array_keys($discount_data);
 print_r($product_ids);
 echo "</pre>";*/
 
- 
+
   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
   if ( 'discount' == $orderby_value ) {
   $query->set('post__in', $product_ids);
@@ -874,11 +874,11 @@ echo "</pre>";*/
 function wmp_discount_catalog_ordering_args( $args ) {
   $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
   if ( 'discount' == $orderby_value ) {
-   
+
     $args['post_type'] = 'product';
 
     $posts_array = query_posts( $args );
-    
+
     $discount_data = array();
 foreach($posts_array as $pro){
 
@@ -938,13 +938,13 @@ function wmp_add_salediscount_to_catalog_orderby( $sortby ) {
  // add_filter( 'posts_orderby', 'sort_query_by_post_in', 10, 2 );
 
   function sort_query_by_post_in( $sortby, $query ) {
-    
+
 
 if ($query->is_main_query() && $query->is_post_type_archive()) {
 
 
 $args = array_merge( $query->query_vars, array( 'post_type' => 'product' ) );
-  
+
 $posts_array = query_posts( $args );
 
 $discount_data = array();
@@ -1001,10 +1001,10 @@ $orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby']
 
     global $product;
     if(isset($_COOKIE['pincode'])){
-     if(!check_if_seller_available($product->post->post_author, $_COOKIE['pincode'])){  
-        
+     if(!check_if_seller_available($product->post->post_author, $_COOKIE['pincode'])){
+
         echo 'This product cannot be shipped to your pincode - '.$_COOKIE['pincode'].' >>> <a id="change-pincode-list" data-product-id="'.$product->ID.'" data-seller-id="'.$product->post->post_author.'"><strong>Change pincode</strong></a>';
-        
+
        }
     }
   }
@@ -1039,7 +1039,7 @@ function update_review_for_old_products(){
     update_post_meta( $post_id,'wpcr3_enable', 1 );
     update_post_meta( $post_id,'wpcr3_format', 'product' );
   }
-  
+
 }
 
 // add_action( 'init', 'update_review_for_old_products' );
@@ -1060,14 +1060,14 @@ function dump_request( $input ) {
  * Adds a woocommerce categories to menu.
  *
  * @param      <type>  $items  The items
- * @param      <type>  $menu   The menu 
- * @return     array     
+ * @param      <type>  $menu   The menu
+ * @return     array
  */
 function   add_woocommerce_categories_to_menu( $items, $menu )  {
 
 
       $menu_name ="Primary Menu";
-      $parent_object_id = 1756; 
+      $parent_object_id = 1756;
 
 
       // If no menu found, just return the items without adding anything
@@ -1087,14 +1087,14 @@ function   add_woocommerce_categories_to_menu( $items, $menu )  {
             }
         }
 
-        $menu_order = count( $items ) + 1;  
+        $menu_order = count( $items ) + 1;
 
         $taxonomy     = 'product_cat';
-        $orderby      = 'name';  
+        $orderby      = 'name';
         $show_count   = 0;      // 1 for yes, 0 for no
         $pad_counts   = 0;      // 1 for yes, 0 for no
-        $hierarchical = 1;      // 1 for yes, 0 for no  
-        $title        = '';  
+        $hierarchical = 1;      // 1 for yes, 0 for no
+        $title        = '';
         $empty        = 0;
 
         $cat_args = array(
@@ -1110,12 +1110,12 @@ function   add_woocommerce_categories_to_menu( $items, $menu )  {
        $all_categories = get_categories( $cat_args );
        foreach ($all_categories as $cat) {
           if($cat->category_parent == 0) {
-              $category_id = $cat->term_id;       
+              $category_id = $cat->term_id;
               $cat_link =   get_term_link($cat->slug, 'product_cat') ;
 
 
-           
-              
+
+
               $new_submenu_item = array(
                   'text' => $cat->name,
                   'url'  => $cat_link
@@ -1123,7 +1123,7 @@ function   add_woocommerce_categories_to_menu( $items, $menu )  {
 
 
 
-            // Create objects containing all (and only) those properties from WP_Post 
+            // Create objects containing all (and only) those properties from WP_Post
             // used by WP to create a menu item
               $items[] = (object) array(
                 'ID'                => $menu_order + 1000000000, // ID that WP won't use
@@ -1145,13 +1145,13 @@ function   add_woocommerce_categories_to_menu( $items, $menu )  {
 
             }
         }
- 
-        
+
+
 
      /* echo "AJAJ AJENCY <pre> ";
 
       print_r($items);*/
-        
+
         return $items;
     }
 
