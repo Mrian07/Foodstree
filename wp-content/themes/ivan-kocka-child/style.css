@@ -875,6 +875,8 @@ div.woof_info_popup{
 .error_container.error_container{
     font-weight: 600;
     font-size: 1.2em;
+    position: relative;
+    z-index: 1;
 }
 
 .webdesign-newsLetter.webdesign-newsLetter .thanksText{
@@ -927,6 +929,14 @@ div.woof_info_popup{
 
 .woof_sid_auto_shortcode{
   display: none !important;
+}
+
+.subscribe-box-afteractionmessage{
+    margin-top: 1em;
+    font-weight: 600;
+    font-size: 1.3em;
+    position: relative;
+    top: 5px;
 }
 
 
