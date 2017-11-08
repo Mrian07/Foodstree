@@ -940,6 +940,12 @@ div.woof_info_popup{
 }
 
 
+.woocommerce form .form-row, .woocommerce-page form .form-row.custom-shipping-phone{
+    margin-top: -1em;
+}
+
+
+
 @media screen and (max-width: 650px){
     body{
         position: relative;
@@ -978,5 +984,14 @@ div.woof_info_popup{
     .iv-mobile-menu-wrapper{
 		z-index: 99999999 !important;
     }
+
+    .woocommerce form .form-row, .woocommerce-page form .form-row.custom-shipping-phone{
+        width: 100%;
+    }
+
 }
+
+
+
+
 

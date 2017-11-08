@@ -1158,3 +1158,38 @@ function   add_woocommerce_categories_to_menu( $items, $menu )  {
 
 
 add_filter( 'wp_get_nav_menu_items','add_woocommerce_categories_to_menu' , 10, 2);
+
+
+
+
+add_filter( 'woocommerce_shipping_fields' , 'my_additional_shipping_fields' );
+function my_additional_shipping_fields( $fields ) {
+    // $fields['shipping_email'] = array(
+    //     'label'         => __( 'Ship Email', 'woocommerce' ),
+    //     'required'      => false,
+    //     'class'         => array( 'form-row-first' ),
+    //     'validate'      => array( 'email' ),
+    // );
+    $fields['shipping_phone'] = array(
+        'label'         => __( 'Phone', 'woocommerce' ),
+        'required'      => false,
+        'class'         => array( 'form-row-first custom-shipping-phone' ),
+        'clear'         => true,
+        'validate'      => array( 'phone' ),
+    );
+    return $fields;
+}
+
+
+add_filter( 'woocommerce_admin_shipping_fields' , 'my_additional_admin_shipping_fields' );
+function my_additional_admin_shipping_fields( $fields ) {
+        // $fields['email'] = array(
+        //     'label' => __( 'Order Ship Email', 'woocommerce' ),
+        // );
+        $fields['phone'] = array(
+            'label' => __( 'Phone', 'woocommerce' ),
+        );
+        return $fields;
+}
+
+
